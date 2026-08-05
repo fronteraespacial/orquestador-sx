@@ -6,7 +6,7 @@ Texto listo para Slack o mail al compartir el orchestrator con el equipo.
 
 ## Bloque para Slack / mail
 
-**Asunto:** Orquestador SX v1.1.0 — instalación en ~5 min
+**Asunto:** Orquestador SX v1.1.1 — instalación en ~5 min
 
 Hola,
 
@@ -16,12 +16,12 @@ Compartimos la metodología **Orquestador SX** (subagentes T0–T3, `.lab`, gate
 |--------|--------|
 | **Repositorio** | https://github.com/fronteraespacial/orquestador-sx |
 | **Guía first run** | https://github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md |
-| **Release v1.1.0** | https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.0 |
+| **Release v1.1.1** | https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.1 |
 
-Descargá **`spacex-orchestrator-v1.1.0.zip`** (nombre histórico del asset) desde el release y verificá el digest SHA256:
+Descargá **`orquestador-sx-v1.1.1.zip`** desde el release (v1.1.0: `spacex-orchestrator-v1.1.0.zip`) y verificá el digest SHA256:
 
 ```text
-6266226d32380a3be9691373c2f7bed52f9a0a086fb0ee1fc9f00dbd1df91f6d  spacex-orchestrator-v1.1.0.zip
+876fe30736b25bb4c4829c9e657b0951f11121de6785d263a382901309d0e393  orquestador-sx-v1.1.1.zip
 ```
 
 Repo **público discreto** (link-only): compartir solo con quien lo necesite; no promocionar en redes.
