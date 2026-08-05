@@ -21,15 +21,15 @@ jobs:
       - name: Build release zip
         run: |
           VERSION="${{ steps.ver.outputs.version }}"
-          ZIP="spacex-orchestrator-v${VERSION}.zip"
+          ZIP="orquestador-sx-v${VERSION}.zip"
           mkdir -p /tmp/release-staging
           rsync -a --exclude='.git' \
             --exclude='tooling/bench/worktrees' \
             --exclude='tooling/bench/results' \
             --exclude='.lab' \
             --exclude='*.zip' \
-            ./ /tmp/release-staging/spacex-orchestrator/
-          (cd /tmp/release-staging && zip -r "$GITHUB_WORKSPACE/$ZIP" spacex-orchestrator)
+            ./ /tmp/release-staging/orquestador-sx/
+          (cd /tmp/release-staging && zip -r "$GITHUB_WORKSPACE/$ZIP" orquestador-sx)
           echo "ZIP=$ZIP" >> "$GITHUB_ENV"
 
       - name: Generate SHA256SUMS

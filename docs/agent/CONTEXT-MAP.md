@@ -1,6 +1,6 @@
 # Context map — token budget (agentes)
 
-Presupuestos para sesiones orquestadas sobre el pack v1.1.0. Objetivo: cargar lo mínimo operativo.
+Presupuestos para sesiones orquestadas sobre el pack v1.2.0. Objetivo: cargar lo mínimo operativo.
 
 ## Tier 0 — siempre (≤ ~15k tokens efectivos)
 

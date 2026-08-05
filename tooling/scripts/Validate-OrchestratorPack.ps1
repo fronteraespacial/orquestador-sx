@@ -57,13 +57,17 @@ $RequiredRuntimeAssets = @(
 
 $RequiredCliScripts = @(
     'tooling/scripts/Orchestrator.ps1',
-    'tooling/scripts/orchestrator.sh'
+    'tooling/scripts/orchestrator.sh',
+    'tooling/scripts/orchestrator',
+    'tooling/scripts/install-orchestrator.sh'
 )
 
 $RequiredDocsWaveB = @(
     'docs/human/FIRST-RUN.md',
     'docs/human/TEAM-SHARE.md',
     'docs/agent/AGENT-BOOTSTRAP-PROMPT.md',
+    'docs/agent/DEVICE-INSTALL-PROMPT.md',
+    'docs/agent/UPDATE-PHRASE.md',
     'docs/maintainer/RELEASE.md'
 )
 

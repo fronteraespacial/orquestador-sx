@@ -241,6 +241,65 @@ function Invoke-Status {
     }
 }
 
+function Get-LatestReleaseTag {
+    $gh = Get-Command gh -ErrorAction SilentlyContinue
+    if ($gh) {
+        $releaseJson = gh release view --repo $DefaultRepo --json tagName 2>&1
+        if ($LASTEXITCODE -ne 0) { throw "gh release view failed: $releaseJson" }
+        return ($releaseJson | ConvertFrom-Json).tagName
+    }
+
+    $api = "https://api.github.com/repos/$DefaultRepo/releases/latest"
+    try {
+        $release = Invoke-RestMethod -Uri $api -Method Get -Headers @{ 'User-Agent' = 'orquestador-sx' }
+        return [string]$release.tag_name
+    }
+    catch {
+        throw "Failed to fetch latest release (install gh CLI or ensure HTTPS access): $($_.Exception.Message)"
+    }
+}
+
+function Save-ReleaseAssets {
+    param(
+        [string] $Tag,
+        [string] $WorkDir
+    )
+
+    $gh = Get-Command gh -ErrorAction SilentlyContinue
+    if ($gh) {
+        Push-Location $WorkDir
+        try {
+            gh release download $Tag --repo $DefaultRepo --pattern 'SHA256SUMS' --pattern '*.zip' 2>&1 | Out-Host
+            if ($LASTEXITCODE -ne 0) { throw 'gh release download failed' }
+        }
+        finally {
+            Pop-Location
+        }
+        return
+    }
+
+    $ver = $Tag.TrimStart('v')
+    $base = "https://github.com/$DefaultRepo/releases/download/$Tag"
+    $sumsPath = Join-Path $WorkDir 'SHA256SUMS'
+    Invoke-WebRequest -Uri "$base/SHA256SUMS" -OutFile $sumsPath -UseBasicParsing
+
+    $zipNames = @("orquestador-sx-v$ver.zip", "spacex-orchestrator-v$ver.zip")
+    $downloaded = $false
+    foreach ($name in $zipNames) {
+        try {
+            Invoke-WebRequest -Uri "$base/$name" -OutFile (Join-Path $WorkDir $name) -UseBasicParsing
+            $downloaded = $true
+            break
+        }
+        catch {
+            continue
+        }
+    }
+    if (-not $downloaded) {
+        throw "Release zip not found for tag $Tag"
+    }
+}
+
 function Test-CheckThrottle {
     param([object] $Lock)
 
@@ -299,29 +358,18 @@ function Invoke-UpdateCheck {
 
     if (-not (Test-CheckThrottle -Lock $lock)) { exit 0 }
 
-    $gh = Get-Command gh -ErrorAction SilentlyContinue
-    if (-not $gh) {
-        Write-Warning 'gh CLI not found. Install GitHub CLI and run gh auth login.'
-        exit 1
-    }
-
     $currentVer = if ($lock) { $lock.version } else { Get-PackVersion }
     Write-Host "Checking release for $DefaultRepo (current: $currentVer)..." -ForegroundColor Cyan
 
-    $releaseJson = gh release view --repo $DefaultRepo --json tagName,createdAt 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "gh release view failed: $releaseJson"
-    }
-
-    $release = $releaseJson | ConvertFrom-Json
-    $remoteTag = $release.tagName.TrimStart('v')
+    $tagName = Get-LatestReleaseTag
+    $remoteTag = $tagName.TrimStart('v')
     Save-CheckTimestamp -ProjectRoot $root
 
     if ($remoteTag -eq $currentVer) {
         Write-Host "Up to date ($remoteTag)." -ForegroundColor Green
     }
     else {
-        Write-Host "Update available: $currentVer -> $remoteTag (tag $($release.tagName))" -ForegroundColor Yellow
+        Write-Host "Update available: $currentVer -> $remoteTag (tag $tagName)" -ForegroundColor Yellow
         Write-Host "Run: Orchestrator.ps1 update --apply -TargetPath `"$root`"" -ForegroundColor Yellow
     }
 }
@@ -353,17 +401,11 @@ function Invoke-UpdateApply {
     $root = if ($TargetPath) { (Resolve-Path -LiteralPath $TargetPath).Path } else { (Get-Location).Path }
     $lock = Read-LockFile -Path (Get-ProjectLockPath -Root $root)
 
-    $gh = Get-Command gh -ErrorAction SilentlyContinue
-    if (-not $gh) { throw 'gh CLI required for update --apply. Run gh auth login.' }
-
     if (-not (Test-Path -LiteralPath $CacheRoot)) {
         New-Item -ItemType Directory -Path $CacheRoot -Force | Out-Null
     }
 
-    $releaseJson = gh release view --repo $DefaultRepo --json tagName,assets 2>&1
-    if ($LASTEXITCODE -ne 0) { throw "gh release view failed: $releaseJson" }
-    $release = $releaseJson | ConvertFrom-Json
-    $tag = $release.tagName
+    $tag = Get-LatestReleaseTag
     $ver = $tag.TrimStart('v')
 
     $workDir = Join-Path $CacheRoot "apply-$tag"
@@ -371,11 +413,9 @@ function Invoke-UpdateApply {
     New-Item -ItemType Directory -Path $workDir -Force | Out-Null
 
     Write-Host "Downloading $tag from $DefaultRepo..." -ForegroundColor Cyan
+    Save-ReleaseAssets -Tag $tag -WorkDir $workDir
     Push-Location $workDir
     try {
-        gh release download $tag --repo $DefaultRepo --pattern 'SHA256SUMS' --pattern '*.zip' 2>&1 | Out-Host
-        if ($LASTEXITCODE -ne 0) { throw 'gh release download failed' }
-
         $sums = Get-ChildItem -Filter 'SHA256SUMS' | Select-Object -First 1
         if (-not $sums) { throw 'SHA256SUMS not found in release assets' }
         Verify-Sha256Sums -SumsFile $sums.FullName -Dir $workDir

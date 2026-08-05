@@ -10,7 +10,7 @@
 4. Skill canónica (post-install): `.agents/skills/orchestrator/SKILL.md`
 5. Entrypoint Cursor (post-install): `.cursor/agents/orchestrator.md`
 
-## Árbol v1.1.0
+## Árbol v1.2.0
 
 | Ruta | Rol |
 |------|-----|
@@ -18,7 +18,7 @@
 | [`runtime/`](runtime/) | Templates instalables |
 | [`tooling/`](tooling/) | Scripts, bench, sandbox piloto |
 | [`docs/human/`](docs/human/) | Onboarding e instalación por IDE |
-| [`docs/agent/`](docs/agent/) | Handoff, routing, context map |
+| [`docs/agent/`](docs/agent/) | Handoff, routing, DEVICE-INSTALL, UPDATE-PHRASE |
 | [`docs/maintainer/`](docs/maintainer/) | Distribución y release |
 
 ## No tocar (artefactos regenerables)
@@ -35,4 +35,6 @@
 .\tooling\scripts\Install-Orchestrator.ps1
 ```
 
-Los stubs en root (`00–09`, `templates/`, `scripts/`) redirigen al canónico v1.1.0.
+Los stubs en root (`00–09`, `templates/`, `scripts/`) redirigen al canónico v1.2.0.
+
+**Install vía agente:** [`docs/agent/DEVICE-INSTALL-PROMPT.md`](docs/agent/DEVICE-INSTALL-PROMPT.md) · **Update:** [`docs/agent/UPDATE-PHRASE.md`](docs/agent/UPDATE-PHRASE.md)

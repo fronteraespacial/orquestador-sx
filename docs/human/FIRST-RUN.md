@@ -1,42 +1,65 @@
-# First run (5 minutes)
+# First run (5 minutes) — multi-OS
 
-Guía humana para la primera instalación del **Orquestador SX** v1.1.1.
+Guía humana para la primera instalación del **Orquestador SX** v1.2.0 en **Windows, Linux o macOS**.
 
 **Repositorio canónico:** [github.com/fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)
 
 **Guía canónica (este doc en GitHub):** [github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md](https://github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md)
 
-**Release estable (v1.1.1):** [github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.1](https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.1)
+**Release estable (v1.2.0):** [github.com/fronteraespacial/orquestador-sx/releases/tag/v1.2.0](https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.2.0)
 
-Descargar `orquestador-sx-v1.1.1.zip` desde el release (v1.1.0: asset `spacex-orchestrator-v1.1.0.zip`) y verificar:
+Descargar **`orquestador-sx-v1.2.0.zip`** desde el release y verificar:
 
 ```text
-876fe30736b25bb4c4829c9e657b0951f11121de6785d263a382901309d0e393  orquestador-sx-v1.1.1.zip
+PLACEHOLDER_SHA256  orquestador-sx-v1.2.0.zip
 ```
 
 Alternativa sin `gh`: clonar el repo o descargar el zip del release desde el navegador — no requiere autenticación.
 
+## Instalación vía agente (recomendado)
+
+Pegá esto a tu agente en Cursor (o IDE con terminal):
+
+```text
+Instalá orquestador-sx desde https://github.com/fronteraespacial/orquestador-sx
+```
+
+O el prompt completo: [`docs/agent/DEVICE-INSTALL-PROMPT.md`](../agent/DEVICE-INSTALL-PROMPT.md).
+
+El agente **sí puede** ejecutar los scripts documentados del pack (clone/local + init + status). Sin esa frase/link, solo te ofrece los comandos — no instala solo.
+
 ## Prerrequisitos
 
-1. **Cursor** (o IDE destino) instalado.
-2. **PowerShell 5.1+** (Windows) o **bash** (WSL/Linux).
-3. **GitHub CLI** (`gh`) — **opcional**. Solo hace falta para `update --check` / `update --apply` desde la CLI; los releases públicos se descargan sin auth:
+| SO | Shell | Notas |
+|----|-------|-------|
+| Windows | PowerShell 5.1+ | `Orchestrator.ps1` |
+| Linux / WSL | bash 3.2+ | `orchestrator.sh` |
+| macOS | bash 3.2+ (system) | `orchestrator.sh`; SHA via `shasum -a 256` |
 
-   ```powershell
-   gh auth login   # opcional
-   ```
+- **Cursor** (o IDE destino) instalado.
+- **GitHub CLI** (`gh`) — **opcional**. Releases públicos se descargan por HTTPS sin auth.
 
 ## Paso 1 — Validar el pack (opcional)
 
 Desde la raíz del pack descargado o clonado:
 
+**Windows:**
+
 ```powershell
 .\tooling\scripts\Validate-OrchestratorPack.ps1 -Strict
 ```
 
+**Linux / macOS / WSL:**
+
+```bash
+./tooling/scripts/validate-orchestrator-pack.sh --strict
+```
+
 ## Paso 2 — Init en tu repo
 
-**Sandbox (prueba segura, sin tocar tu home):**
+### Windows
+
+**Sandbox (prueba segura):**
 
 ```powershell
 .\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot
@@ -48,55 +71,81 @@ Desde la raíz del pack descargado o clonado:
 .\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
 ```
 
-**User scope (global Cursor + skill; requiere confirmación):**
+**User scope (global Cursor + skill):**
 
 ```powershell
 .\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope
 ```
 
-Preview sin cambios:
+Preview: `-WhatIf`
 
-```powershell
-.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot -WhatIf
-```
+### Linux / macOS / WSL
 
-WSL:
+**Sandbox:**
 
 ```bash
-./tooling/scripts/orchestrator.sh init --scope project --source local --target ./tooling/sandbox/pilot --whatif
+./tooling/scripts/orchestrator.sh init --scope project --source local --target ./tooling/sandbox/pilot --yes
 ```
 
+**Proyecto real:**
+
+```bash
+./tooling/scripts/orchestrator.sh init --scope project --source local --target /path/to/your-repo --yes
+```
+
+Preview: `--whatif`
+
+Wrapper opcional: `./tooling/scripts/orchestrator init …` (detecta OS en Git Bash).
+
 ## Paso 3 — Status
+
+**Windows:**
 
 ```powershell
 .\tooling\scripts\Orchestrator.ps1 status -TargetPath C:\path\to\your-repo
 ```
 
-Debe mostrar `.orchestrator-lock.json`, manifiesto de instalación y skill presente si `enabled: true`.
+**Unix:**
 
-## Paso 4 — Leer metodología + activar orquestación
+```bash
+./tooling/scripts/orchestrator.sh status --target /path/to/your-repo
+```
 
-1. [`canon/01-METHODOLOGY-SPACEX.md`](../canon/01-METHODOLOGY-SPACEX.md) — T0–T3 y oleadas.
-2. En Cursor: regla bootstrap (`cj-orchestrator-bootstrap`, auto) + skill `.agents/skills/orchestrator/SKILL.md`.
-3. Para sesiones profundas: `@cj-orchestrator-mandatory` o entrypoint `.cursor/agents/orchestrator.md`.
+Debe mostrar `.orchestrator-lock.json`, manifiesto y skill presente si `enabled: true`.
 
-**Agentes LLM:** pegar el prompt de [`docs/agent/AGENT-BOOTSTRAP-PROMPT.md`](../docs/agent/AGENT-BOOTSTRAP-PROMPT.md) al iniciar una sesión orquestada.
+## Paso 4 — Metodología + orquestación
 
-## Paso 5 — Updates (consentimiento explícito)
+1. [`canon/01-METHODOLOGY-SPACEX.md`](../canon/01-METHODOLOGY-SPACEX.md)
+2. Regla bootstrap + skill `.agents/skills/orchestrator/SKILL.md`
+3. Sesiones profundas: `@cj-orchestrator-mandatory`
 
-Los agentes **no** descargan ni aplican updates solos.
+**Agentes LLM (repo ya instalado):** [`AGENT-BOOTSTRAP-PROMPT.md`](../agent/AGENT-BOOTSTRAP-PROMPT.md)
+
+## Paso 5 — Updates
+
+Frase canónica al agente:
+
+```text
+Actualizá la metodología orquestadora desde GitHub
+```
+
+Ver [`UPDATE-PHRASE.md`](../agent/UPDATE-PHRASE.md). La CLI verifica `SHA256SUMS` (HTTPS o `gh`).
 
 ```powershell
-# Comprobar release (máx. 1 vez / 24h; requiere gh si usás CLI)
+# Windows
 .\tooling\scripts\Orchestrator.ps1 update -Check -TargetPath C:\path\to\your-repo
-
-# Aplicar (verifica SHA256SUMS, backup, reinstall)
 .\tooling\scripts\Orchestrator.ps1 update -Apply -TargetPath C:\path\to\your-repo
+```
+
+```bash
+# Unix
+./tooling/scripts/orchestrator.sh update --check --target /path/to/your-repo
+./tooling/scripts/orchestrator.sh update --apply --target /path/to/your-repo
 ```
 
 ## Opt-out
 
-Editar `.orchestrator-lock.json` → `"enabled": false`, o:
+`"enabled": false` en el lock, o:
 
 ```powershell
 .\tooling\scripts\Orchestrator.ps1 uninstall -Scope project -TargetPath C:\path\to\your-repo
@@ -104,5 +153,5 @@ Editar `.orchestrator-lock.json` → `"enabled": false`, o:
 
 ## Siguiente
 
-- Equipo: [`TEAM-SHARE.md`](TEAM-SHARE.md) · onboarding [`TEAM-ONBOARDING.md`](TEAM-ONBOARDING.md)
-- Maintainer release: [`../maintainer/RELEASE.md`](../maintainer/RELEASE.md)
+- Equipo: [`TEAM-SHARE.md`](TEAM-SHARE.md)
+- Maintainer: [`../maintainer/RELEASE.md`](../maintainer/RELEASE.md)

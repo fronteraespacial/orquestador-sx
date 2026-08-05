@@ -1,13 +1,15 @@
-# SpaceX Orchestrator Windows Pack — Brief para el agente instalador
+# SpaceX Orchestrator — Brief para el agente instalador (multi-OS)
 
-**Versión:** 2026-08-05  
+**Versión:** 2026-08-05 (pack 1.2.0)  
 **Origen:** metodología SpaceX multi-CLI (contrato transversal portable)  
-**Destino:** Windows Desktop — Cursor IDE/CLI, Antigravity, OpenCode, Codex  
+**Destino:** Windows, Linux, macOS — Cursor IDE/CLI, Antigravity, OpenCode, Codex  
 **Idioma:** español (instalación) + prompts de roles ES/EN mixtos
 
 ## Objetivo
 
-Instalar (o adaptar) el **Orquestador universal de ejecución directa cero** + subagentes en las instancias Windows del usuario: misma filosofía, spawn/paths/modelos adaptados por CLI.
+Instalar (o adaptar) el **Orquestador universal de ejecución directa cero** + subagentes en el dispositivo del usuario: misma filosofía, spawn/paths/modelos adaptados por CLI y SO.
+
+**Install vía agente:** frase `Instalá orquestador-sx desde https://github.com/fronteraespacial/orquestador-sx` o [`docs/agent/DEVICE-INSTALL-PROMPT.md`](../docs/agent/DEVICE-INSTALL-PROMPT.md). El agente **puede** ejecutar `Orchestrator.ps1` / `orchestrator.sh` documentados; sin frase/link, solo ofrecer init.
 
 El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, planifica oleadas, delega y fusiona handoffs. **Jamás** edita, corre tests, despliega, hace web research ni explora el sistema (incluido T0). Los hijos ejecutan. Cursor solo puede **auditar** esta política (best-effort), no imponerla por completo.
 
@@ -44,7 +46,7 @@ El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, plan
 ## Envelope del instalador
 
 ```markdown
-## Complexity: T2 — Install SpaceX orchestrator on Windows multi-CLI
+## Complexity: T2 — Install SpaceX orchestrator multi-OS multi-CLI
 ## Role: implementer
 ## Wave: 2 — execute
 **Objetivo:** Instalar Orquestador zero-exec + 6 roles (+ OpenCode skeptic/expert) en Cursor, Antigravity, OpenCode y Codex (stubs).
@@ -63,18 +65,16 @@ El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, plan
 5. `AGENTS.md` mergeado desde template; checklist 09 reportada.
 6. Documentado: Cursor = best-effort audit; OpenCode/Codex = deny más fuerte si está cableado.
 
-## Paths Windows (resumen)
+## Paths por SO (resumen)
 
-| Pieza | Ubicación típica |
-|-------|------------------|
-| Cursor user/project agents | `%USERPROFILE%\.cursor\agents\` / `<repo>\.cursor\agents\` |
-| Cursor rules | `%USERPROFILE%\.cursor\rules\` o repo |
-| Skills | `%USERPROFILE%\.agents\skills\orchestrator\` o repo |
-| Antigravity agents | `<repo>\.agents\agents\<role>\agent.md` |
-| OpenCode | `%USERPROFILE%\.config\opencode\` o `%APPDATA%\opencode\` + repo |
-| Codex | `%USERPROFILE%\.codex\agents\` |
-| Lab | **`<repo>\.lab\`** (canónico; no `projects\.lab`) |
-| AGENTS.md | `<repo>\AGENTS.md` |
+| Pieza | Windows | Linux / macOS |
+|-------|---------|---------------|
+| CLI entry | `Orchestrator.ps1` | `orchestrator.sh` / `orchestrator` |
+| Cursor agents | `%USERPROFILE%\.cursor\agents\` / repo | `~/.cursor/agents/` / repo |
+| Skills | `%USERPROFILE%\.agents\skills\orchestrator\` | `~/.agents/skills/orchestrator/` |
+| Antigravity agents | `<repo>\.agents\agents\<role>\` | `<repo>/.agents/agents/<role>/` |
+| OpenCode | `%USERPROFILE%\.config\opencode\` | `~/.config/opencode/` |
+| Lab | `<repo>\.lab\` | `<repo>/.lab/` |
 
 **Antes de copiar:** resolver paths reales; **merge**, no overwrite ciego.
 

@@ -2,6 +2,23 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.0] - 2026-08-05
+
+### Added
+
+- **Install multi-OS vía agente:** frases canónicas ES (install + update); [`docs/agent/DEVICE-INSTALL-PROMPT.md`](docs/agent/DEVICE-INSTALL-PROMPT.md), [`docs/agent/UPDATE-PHRASE.md`](docs/agent/UPDATE-PHRASE.md).
+- **Wrapper CLI:** `tooling/scripts/orchestrator` (detecta OS → `.ps1` / `.sh`).
+- **`install-orchestrator.sh`** (Linux / macOS / WSL); stub compat `install-orchestrator-wsl.sh`.
+- **Release HTTPS sin `gh`:** `update --check` / `--apply` vía API/assets públicos cuando `gh` no está instalado.
+- **Lab APPROVE:** `.lab/2026-08-05-device-install-clarity/` — claridad prompt cold-agent.
+
+### Changed
+
+- Bootstrap / skill / `AGENT-BOOTSTRAP-PROMPT`: agente **puede** ejecutar scripts con link/frase canónica; sin frase, solo ofrecer init.
+- `orchestrator.sh`: header Linux/macOS/WSL; SHA256 via `sha256sum` **o** `shasum -a 256`.
+- `FIRST-RUN`, `TEAM-SHARE`, `README`, `canon/00`, `start/README`: multi-OS agent-driven; dejan de centrarse en “Windows Pack”.
+- Asset release renombrado: **`orquestador-sx-v1.2.0.zip`** (+ SHA256SUMS).
+
 ## [1.1.1] - 2026-08-05
 
 ### Changed

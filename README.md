@@ -1,16 +1,16 @@
-# Orquestador SX — Windows Pack
+# Orquestador SX — multi-OS agent pack
 
-**Versión:** `1.1.1` ([`VERSION`](VERSION)) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
+**Versión:** `1.2.0` ([`VERSION`](VERSION)) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
-Pack distribuible de la metodología **Orquestador SpaceX + subagentes** para Windows (Cursor, Antigravity, OpenCode, Codex). Instalación segura, validación automatizada y benchmark reproducible.
+Pack distribuible de la metodología **Orquestador SpaceX + subagentes** para **Windows, Linux y macOS** (Cursor, Antigravity, OpenCode, Codex). Instalación impulsada por agente vía link/frase canónica, validación automatizada y benchmark reproducible.
 
-**Entry LLM:** [`AGENTS.md`](AGENTS.md) · **Bootstrap:** [`start/README.md`](start/README.md) · **First run:** [`docs/human/FIRST-RUN.md`](docs/human/FIRST-RUN.md)
+**Entry LLM:** [`AGENTS.md`](AGENTS.md) · **Bootstrap:** [`start/README.md`](start/README.md) · **First run:** [`docs/human/FIRST-RUN.md`](docs/human/FIRST-RUN.md) · **Install agente:** [`docs/agent/DEVICE-INSTALL-PROMPT.md`](docs/agent/DEVICE-INSTALL-PROMPT.md)
 
 **Repo canónico:** [github.com/fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)
 
 Repositorio **público discreto** (link-only): compartir solo por enlace directo con quien lo necesite; no promocionar en redes ni listados públicos.
 
-## Árbol v1.1.0
+## Árbol v1.2.0
 
 | Ruta | Contenido |
 |------|-----------|
@@ -31,30 +31,32 @@ Stubs en root (`00–09`, `templates/`, `scripts/`, `bench/`, `sandbox/`) rediri
 .\tooling\scripts\Validate-OrchestratorPack.ps1 -Strict
 
 # 2. Init en sandbox piloto (lock + templates)
-.\tooling\scripts\Orchestrator.ps1 init --scope project --source local --target .\tooling\sandbox\pilot
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot
 
 # 3. Status (sin red)
 .\tooling\scripts\Orchestrator.ps1 status -TargetPath .\tooling\sandbox\pilot
 
 # 4. Preview init (sin cambios)
-.\tooling\scripts\Orchestrator.ps1 init --scope project --source local --target .\tooling\sandbox\pilot -WhatIf
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot -WhatIf
 
 # 5. Instalador legacy (sin lock) sigue disponible
 .\tooling\scripts\Install-Orchestrator.ps1
 
 # 6. User scope (solo paths globales; NO Antigravity agents bajo $HOME)
-.\tooling\scripts\Orchestrator.ps1 init --scope user --source local -ConfirmUserScope
+.\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope
 ```
 
-En WSL / Linux:
+En Linux / macOS / WSL:
 
 ```bash
 ./tooling/scripts/validate-orchestrator-pack.sh --strict
-./tooling/scripts/orchestrator.sh init --scope project --source local --target ./tooling/sandbox/pilot
+./tooling/scripts/orchestrator.sh init --scope project --source local --target ./tooling/sandbox/pilot --yes
 ./tooling/scripts/orchestrator.sh status --target ./tooling/sandbox/pilot
 ```
 
-## Modos de instalación (PowerShell)
+**Install vía agente:** `Instalá orquestador-sx desde https://github.com/fronteraespacial/orquestador-sx`
+
+## Modos de instalación
 
 | Modo | Switch | Destino | Riesgo |
 |------|--------|---------|--------|
@@ -69,7 +71,7 @@ En WSL / Linux:
 
 ## Validación
 
-Comprueba árbol canónico v1.1.0 (`canon/`, `runtime/`, `tooling/`), frontmatter, gates, secretos.
+Comprueba árbol canónico v1.2.0 (`canon/`, `runtime/`, `tooling/`), frontmatter, gates, secretos.
 
 ```powershell
 .\tooling\scripts\Validate-OrchestratorPack.ps1 -Strict
@@ -97,9 +99,11 @@ Ver [`tooling/bench/README.md`](tooling/bench/README.md).
 
 | Documento | Propósito |
 |-----------|-----------|
-| [`docs/human/FIRST-RUN.md`](docs/human/FIRST-RUN.md) | Primera instalación (5 min) |
+| [`docs/human/FIRST-RUN.md`](docs/human/FIRST-RUN.md) | Primera instalación multi-OS (5 min) |
+| [`docs/agent/DEVICE-INSTALL-PROMPT.md`](docs/agent/DEVICE-INSTALL-PROMPT.md) | Prompt install dispositivo |
+| [`docs/agent/UPDATE-PHRASE.md`](docs/agent/UPDATE-PHRASE.md) | Frase update metodología |
 | [`docs/human/TEAM-ONBOARDING.md`](docs/human/TEAM-ONBOARDING.md) | Primer día |
-| [`docs/agent/AGENT-BOOTSTRAP-PROMPT.md`](docs/agent/AGENT-BOOTSTRAP-PROMPT.md) | Prompt agente |
+| [`docs/agent/AGENT-BOOTSTRAP-PROMPT.md`](docs/agent/AGENT-BOOTSTRAP-PROMPT.md) | Prompt orquestación |
 | [`docs/agent/AGENT-HANDOFF.md`](docs/agent/AGENT-HANDOFF.md) | Continuidad agente |
 | [`docs/agent/CONTEXT-MAP.md`](docs/agent/CONTEXT-MAP.md) | Presupuesto tokens |
 | [`docs/maintainer/RELEASE.md`](docs/maintainer/RELEASE.md) | Proceso release |

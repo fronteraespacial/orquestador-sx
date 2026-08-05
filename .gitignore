@@ -1,4 +1,10 @@
+# Local release zips (maintainer builds; CI publishes)
+/*.zip
+orquestador-sx-*.zip
+spacex-orchestrator-*.zip
+
 # Local install / pilot artifacts
+tooling/sandbox/pilot/.orchestrator-lock.json
 tooling/sandbox/pilot/.cursor/
 tooling/sandbox/pilot/.agents/
 tooling/sandbox/pilot/.lab/
