@@ -1,7 +1,12 @@
 # GEMINI.md — Antigravity root rules (compatibility layer)
 
-> **Primary workspace rule:** `.agents/rules/spacex-orchestrator.md` (copy from pack `runtime/antigravity/rules/`).  
+> **Primary workspace rules:** `.agents/rules/spacex-orchestrator.md` + `.agents/rules/cj-orchestrator-bootstrap.md` (copy from pack `runtime/antigravity/rules/`).  
+> **Always On:** Antigravity → **Customizations** → enable both rules in the **project repo** (not a blank chat).  
 > This `GEMINI.md` remains for Antigravity builds that load root rules only — **merge** with local user rules; do not overwrite wholesale.
+
+**Bootstrap:** check `.orchestrator-lock.json` before orchestrated work; missing → offer `Orchestrator init` on this repo; lock OK → load `.agents/skills/orchestrator/SKILL.md`. No init/update from chat without canonical install/update frase.
+
+**En criollo (REQUIRED):** technical handoffs/close-outs include `## En criollo` (3–6 frases prácticas). See bootstrap rule + `AGENTS.md`.
 
 **Lab root:** `.lab/` at repo root — **do not** use `projects/.lab/` (legacy).
 

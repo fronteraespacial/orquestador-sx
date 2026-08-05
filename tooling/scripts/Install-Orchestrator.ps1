@@ -56,6 +56,7 @@ function Get-ProjectTemplateMap {
     }
 
     $map.Add(@{ Src = 'antigravity\rules\spacex-orchestrator.md'; Dst = '.agents\rules\spacex-orchestrator.md' })
+    $map.Add(@{ Src = 'antigravity\rules\cj-orchestrator-bootstrap.md'; Dst = '.agents\rules\cj-orchestrator-bootstrap.md' })
 
     $skills = @('SKILL.md', 'reference.md', 'reference.wsl.md')
     foreach ($s in $skills) {

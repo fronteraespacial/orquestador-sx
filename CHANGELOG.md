@@ -2,6 +2,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.4] - 2026-08-05
+
+### Added
+
+- **Antigravity bootstrap rule:** `runtime/antigravity/rules/cj-orchestrator-bootstrap.md` — lock check, offer init, load skill, En criollo REQUIRED; Always On via Customizations.
+- **Install project map:** copies bootstrap rule to `.agents/rules/cj-orchestrator-bootstrap.md` (PS1 + sh).
+
+### Changed
+
+- **`runtime/antigravity/rules/spacex-orchestrator.md`**, **`runtime/GEMINI.md`:** lock/bootstrap/En criollo pointers (no essay duplication).
+- **`runtime/project/AGENTS.md`:** Antigravity rules path + Always On note alongside Cursor criollo.
+- **`docs/human/FIRST-RUN.md`**, **`docs/human/install/antigravity-windows.md`:** init project → open repo in Antigravity → Always On for bootstrap + spacex-orchestrator.
+- **Validators:** require Antigravity bootstrap asset and installed path.
+
 ## [1.2.3] - 2026-08-05
 
 ### Changed

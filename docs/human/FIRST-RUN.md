@@ -117,10 +117,21 @@ Debe mostrar `.orchestrator-lock.json`, manifiesto y skill presente si `enabled:
 
 1. [`canon/01-METHODOLOGY-SPACEX.md`](../canon/01-METHODOLOGY-SPACEX.md)
 2. Regla bootstrap + skill `.agents/skills/orchestrator/SKILL.md`
-3. Sesiones profundas: `@cj-orchestrator-mandatory`
+3. Sesiones profundas: `@cj-orchestrator-mandatory` (Cursor)
 4. **En criollo:** el init de proyecto copia `.cursor/rules/cj-criollo-changelog.mdc` (explicación práctica obligatoria en cada cierre técnico)
 
 **Agentes LLM (repo ya instalado):** [`AGENT-BOOTSTRAP-PROMPT.md`](../agent/AGENT-BOOTSTRAP-PROMPT.md)
+
+### Antigravity (Windows)
+
+Antigravity es **project-only**: la metodología vive en el **repo donde corriste init**, no en un chat vacío.
+
+1. **Init project** en tu repo (Paso 2) — copia `.agents/rules/`, `.agents/agents/`, `GEMINI.md`, lock, skill.
+2. **Abrí ese repo** como workspace en Antigravity (File → Open Folder → la carpeta con `.orchestrator-lock.json`).
+3. **Customizations → Always On:** activá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (rules en `.agents/rules/`).
+4. Verificá status: lock presente + skill cargable.
+
+Detalle: [`install/antigravity-windows.md`](install/antigravity-windows.md).
 
 ## Paso 5 — Updates
 

@@ -1,7 +1,12 @@
 # SpaceX Orchestrator — Antigravity workspace rule
 
 **Install path:** copy to `<repo>/.agents/rules/spacex-orchestrator.md`  
+**Always On:** Antigravity → **Customizations** → enable this rule + `cj-orchestrator-bootstrap.md`.  
 **Compat layer:** `GEMINI.md` at repo root (merge, do not replace user rules).
+
+**Bootstrap:** before orchestrated work, check `.orchestrator-lock.json` (`enabled`, `version`, `sha256`). Missing lock → offer `Orchestrator init` (project scope); agents must not fetch/apply updates from chat unless the user pasted a canonical install/update frase. Lock OK → load `.agents/skills/orchestrator/SKILL.md`.
+
+**En criollo (REQUIRED):** handoffs and close-outs include `## En criollo` (3–6 frases prácticas). Pack installs Cursor rule `.cursor/rules/cj-criollo-changelog.mdc`; Antigravity follows the same contract via bootstrap + `AGENTS.md`.
 
 Load `.agents/skills/orchestrator/SKILL.md` for full Algorithm, envelopes, and anti-patterns.
 

@@ -5,7 +5,8 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 ## Bootstrap
 
 - Before orchestrated work, check **`.orchestrator-lock.json`** at repo root (`enabled`, `version`, `sha256`). If missing, ask the human to run `Orchestrator init` — agents must not fetch or apply updates from chat. **Exception:** if the user pastes a FIRST-RUN / DEVICE-INSTALL link or canonical install/update frase, agents **may** run documented pack scripts; without that, **offer only**.
-- Canonical skill: **`.agents/skills/orchestrator/SKILL.md`** (load when lock is OK). Manual deep rule: `@cj-orchestrator-mandatory`.
+- Canonical skill: **`.agents/skills/orchestrator/SKILL.md`** (load when lock is OK). Manual deep rule: `@cj-orchestrator-mandatory` (Cursor).
+- **Antigravity rules:** `.agents/rules/cj-orchestrator-bootstrap.md` + `.agents/rules/spacex-orchestrator.md` — set **Always On** in Antigravity Customizations on the **initialized project repo** (open that folder as workspace; blank chats have no pack assets).
 
 ## Orchestration
 
@@ -33,7 +34,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 Children return ≤40 lines with the canonical section for their role (see pack `02-ROLES-HANDOFFS-GATES.md`). Orchestrator forwards **deltas** into the next envelope only.
 
-**En criollo (REQUIRED):** la metodología exige bloque `## En criollo` (3–6 frases: qué cambia para humano/equipo/dispositivo — install, update, chats, modelos, links, fricción) en todo cierre de implementación / handoff al humano. El pack instala la regla en **`.cursor/rules/cj-criollo-changelog.mdc`** (`alwaysApply`); AGENTS + skill la marcan obligatoria. `@cj-criollo-changelog` para sesiones profundas.
+**En criollo (REQUIRED):** la metodología exige bloque `## En criollo` (3–6 frases: qué cambia para humano/equipo/dispositivo — install, update, chats, modelos, links, fricción) en todo cierre de implementación / handoff al humano. Cursor: **`.cursor/rules/cj-criollo-changelog.mdc`** (`alwaysApply`; `@cj-criollo-changelog`). Antigravity: bootstrap rule + esta sección; mismo contrato en skill.
 
 ## Lab
 

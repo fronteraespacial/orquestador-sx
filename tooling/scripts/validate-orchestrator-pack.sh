@@ -34,6 +34,7 @@ REQUIRED_ASSETS=(
   runtime/antigravity/agents/skeptic/agent.md
   runtime/antigravity/agents/deletion/agent.md
   runtime/antigravity/rules/spacex-orchestrator.md
+  runtime/antigravity/rules/cj-orchestrator-bootstrap.md
   runtime/project/AGENTS.md
   runtime/skills/orchestrator/reference.wsl.md
   runtime/opencode/opencode.jsonc.example
@@ -224,6 +225,15 @@ check_bootstrap_rule() {
   pass "Bootstrap rule present"
 }
 
+check_agy_bootstrap_rule() {
+  local f="$PACK_ROOT/runtime/antigravity/rules/cj-orchestrator-bootstrap.md"
+  [[ -f "$f" ]] || { fail "Missing Antigravity bootstrap rule"; return; }
+  grep -qiE 'Always On|Customizations' "$f" || { fail "Antigravity bootstrap must mention Always On / Customizations"; return; }
+  grep -q 'orchestrator-lock.json' "$f" || { fail "Antigravity bootstrap must mention .orchestrator-lock.json"; return; }
+  grep -qi 'En criollo' "$f" || { fail "Antigravity bootstrap must mention En criollo"; return; }
+  pass "Antigravity bootstrap rule present"
+}
+
 printf '\nSpaceX Orchestrator Pack Validator\n\n'
 
 for a in "${REQUIRED_ASSETS[@]}"; do
@@ -240,6 +250,7 @@ done
 
 check_lock_example_schema
 check_bootstrap_rule
+check_agy_bootstrap_rule
 
 [[ -f "$PACK_ROOT/VERSION" ]] && pass "VERSION" || fail "Missing VERSION"
 
@@ -272,6 +283,7 @@ if [[ -n "$TARGET" && -d "$TARGET" ]]; then
     .agents/agents/skeptic/agent.md \
     .agents/agents/deletion/agent.md \
     .agents/rules/spacex-orchestrator.md \
+    .agents/rules/cj-orchestrator-bootstrap.md \
     .agents/skills/orchestrator/reference.wsl.md \
     AGENTS.md \
     .lab/README.md; do

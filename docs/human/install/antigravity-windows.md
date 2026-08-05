@@ -2,35 +2,54 @@
 
 Antigravity carga subagentes desde `.agents/agents/` con frontmatter `subagent: true` y se invocan vía **`invoke_subagent`**.
 
-**Reglas:** preferir `.agents/rules/spacex-orchestrator.md` (workspace). **`GEMINI.md`** en repo root = capa de compatibilidad para builds que solo leen root rules.
+**Reglas:** `.agents/rules/cj-orchestrator-bootstrap.md` (lock/skill/En criollo) + `.agents/rules/spacex-orchestrator.md` (orquestación). **`GEMINI.md`** en repo root = capa de compatibilidad para builds que solo leen root rules.
+
+**Crítico:** Antigravity es **project-only**. Un chat “de cero” sin abrir un repo con init **no** ve la metodología — no hay user-scope Antigravity en el pack.
 
 ## 1. Paths Windows
 
 | Pieza | Path |
 |-------|------|
-| **Workspace rule (primary)** | `<repo>\.agents\rules\spacex-orchestrator.md` |
+| **Bootstrap rule (Always On)** | `<repo>\.agents\rules\cj-orchestrator-bootstrap.md` |
+| **Workspace rule (Always On)** | `<repo>\.agents\rules\spacex-orchestrator.md` |
 | Agents | `<repo>\.agents\agents\<role>\agent.md` |
 | Skill | `<repo>\.agents\skills\orchestrator\SKILL.md` |
 | Root rules (compat) | `<repo>\GEMINI.md` |
+| Lock | `<repo>\.orchestrator-lock.json` |
 | Lab | `<repo>\.lab\` (**única ruta operativa**; no usar `projects/.lab/`) |
 
 Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `verifier` (6 base) + opcionales `skeptic`, `deletion`.
 
-## 2. Pasos
+## 2. Pasos (orden correcto)
 
-1. Crear `\.lab\` en la raíz del repo si no existe. **No** usar `projects/.lab/` como path operativo.
-2. Copiar `runtime/antigravity/rules/spacex-orchestrator.md` → `.agents/rules/`.
-3. Copiar árbol `runtime/antigravity/agents/*` → `.agents/agents/` (8 roles si incluís skeptic + deletion).
-4. Copiar `runtime/skills/orchestrator/SKILL.md`.
-5. Copiar `runtime/GEMINI.md` → `GEMINI.md` del repo (**merge** si ya existe: conservar reglas locales; **añadir** header, zero-exec, routing, gates). GEMINI apunta a `.agents/rules/` como fuente primaria.
-6. Ajustar modelos en frontmatter: `agy models` (o UI). Aliases `flash` / `pro` → preferir IDs concretos (`gemini-3.6-flash-high`, `gemini-3.1-pro-high`). Remapear si falta el ID.
-7. Confirmar Orquestador de sesión **zero direct execution** en hilo principal (regla + GEMINI).
-8. Documentar cleanup: al terminar loop, **matar subagentes idle** (UI / `manage_subagents` si existe).
+1. **Init project** en el repo destino (recomendado: CLI del pack):
+
+   ```powershell
+   .\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
+   ```
+
+2. **Abrí ese repo** en Antigravity: File → Open Folder → carpeta con `.orchestrator-lock.json` (no un chat suelto ni solo el pack sin init).
+
+3. **Customizations → Always On:** marcá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (ambas en `.agents/rules/`).
+
+4. Confirmá lock + skill (`Orchestrator.ps1 status -TargetPath …`).
+
+5. Crear `\.lab\` en la raíz si no existe. **No** usar `projects/.lab/` como path operativo.
+
+6. Copia manual (solo si no usás init): `runtime/antigravity/rules/*` → `.agents/rules/`; agents; skill; `GEMINI.md` (**merge** si ya existe).
+
+7. Ajustar modelos en frontmatter: `agy models` (o UI). Aliases `flash` / `pro` → preferir IDs concretos (`gemini-3.6-flash-high`, `gemini-3.1-pro-high`).
+
+8. Confirmar Orquestador de sesión **zero direct execution** en hilo principal (rules + GEMINI).
+
+9. Documentar cleanup: al terminar loop, **matar subagentes idle** (UI / `manage_subagents` si existe).
 
 ## 3. Contenido crítico (no omitir)
 
-En `.agents/rules/spacex-orchestrator.md` y GEMINI (compat):
+En `.agents/rules/cj-orchestrator-bootstrap.md`, `.agents/rules/spacex-orchestrator.md` y GEMINI (compat):
 
+- **Lock/bootstrap:** chequear `.orchestrator-lock.json`; offer init; load skill when OK
+- **En criollo REQUIRED** en handoffs/close-out (3–6 frases prácticas)
 - Header `## Complexity` / Role / Action Delegate (T0 incluido)
 - **Zero direct execution** en hilo principal
 - Routing table (6 base + skeptic/deletion opcionales)

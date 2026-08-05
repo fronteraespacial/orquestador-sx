@@ -165,6 +165,7 @@ append_project_entries() {
     "antigravity/agents/skeptic/agent.md|.agents/agents/skeptic/agent.md"
     "antigravity/agents/deletion/agent.md|.agents/agents/deletion/agent.md"
     "antigravity/rules/spacex-orchestrator.md|.agents/rules/spacex-orchestrator.md"
+    "antigravity/rules/cj-orchestrator-bootstrap.md|.agents/rules/cj-orchestrator-bootstrap.md"
     "skills/orchestrator/SKILL.md|.agents/skills/orchestrator/SKILL.md"
     "skills/orchestrator/reference.md|.agents/skills/orchestrator/reference.md"
     "skills/orchestrator/reference.wsl.md|.agents/skills/orchestrator/reference.wsl.md"

@@ -48,6 +48,7 @@ $RequiredRuntimeAssets = @(
     'runtime/antigravity/agents/skeptic/agent.md',
     'runtime/antigravity/agents/deletion/agent.md',
     'runtime/antigravity/rules/spacex-orchestrator.md',
+    'runtime/antigravity/rules/cj-orchestrator-bootstrap.md',
     'runtime/project/AGENTS.md',
     'runtime/skills/orchestrator/reference.wsl.md',
     'runtime/opencode/opencode.jsonc.example',
@@ -434,6 +435,32 @@ function Test-BootstrapRule {
     Add-Pass 'Bootstrap rule present'
 }
 
+function Test-AgyBootstrapRule {
+    $path = Join-Path $PackRoot 'runtime\antigravity\rules\cj-orchestrator-bootstrap.md'
+    if (-not (Test-Path -LiteralPath $path)) {
+        Add-Error 'Missing Antigravity bootstrap rule'
+        return
+    }
+    $raw = Get-Content -LiteralPath $path -Raw
+    if ($raw -notmatch '(?i)Always On|Customizations') {
+        Add-Error 'Antigravity bootstrap must mention Always On / Customizations'
+        return
+    }
+    if ($raw -notmatch '(?i)orchestrator-lock\.json') {
+        Add-Error 'Antigravity bootstrap must mention .orchestrator-lock.json'
+        return
+    }
+    if ($raw -notmatch '(?i)En criollo') {
+        Add-Error 'Antigravity bootstrap must mention En criollo'
+        return
+    }
+    $bodyLines = @($raw -split '\r?\n' | Where-Object { $_.Trim() -ne '' }).Count
+    if ($bodyLines -gt 20) {
+        Add-Warn "Antigravity bootstrap has $bodyLines lines (target micro rule)"
+    }
+    Add-Pass 'Antigravity bootstrap rule present'
+}
+
 function Test-InstallTarget {
     param([string] $Target)
     if (-not $Target -or -not (Test-Path -LiteralPath $Target)) {
@@ -450,6 +477,7 @@ function Test-InstallTarget {
         '.agents\agents\skeptic\agent.md',
         '.agents\agents\deletion\agent.md',
         '.agents\rules\spacex-orchestrator.md',
+        '.agents\rules\cj-orchestrator-bootstrap.md',
         '.agents\skills\orchestrator\reference.wsl.md',
         'AGENTS.md',
         '.lab\README.md'
@@ -508,6 +536,7 @@ Test-OperationalProjectsLab -ScanRoots @(
 Test-GatesDocumented
 Test-LockExampleSchema
 Test-BootstrapRule
+Test-AgyBootstrapRule
 Test-SecretPatterns -ScanRoots @($PackRoot)
 Test-InstallTarget -Target $TargetPath
 Test-RuntimeErrors
