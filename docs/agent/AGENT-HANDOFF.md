@@ -34,8 +34,13 @@ Documento de continuidad para reanudar pruebas, instalación y orquestación sin
 
 ### Windows user — NOT (by design)
 
-- `.agents\agents\` — Antigravity = **project-only**
-- `GEMINI.md` / `AGENTS.md` / `.lab` at user home — **not** in User scope
+- `.agents\agents\` — Antigravity role agents = **project-only**
+- `AGENTS.md` / `.lab` at user home — **not** in User scope
+
+### Windows user — Antigravity global (v1.2.5+)
+
+- `%USERPROFILE%\.gemini\GEMINI.md` — merged `<!-- spacex-orchestrator-sx -->` block via **`init -Scope user -ConfirmUserScope`**
+- **Not** repo-root `GEMINI.md` under `$HOME` — Desktop reads `.gemini/GEMINI.md`
 
 ### Sandbox pilot
 

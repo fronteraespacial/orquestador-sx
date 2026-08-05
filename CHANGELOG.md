@@ -2,6 +2,26 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.6] - 2026-08-05
+
+### Changed
+
+- **`## En criollo` timing:** explicitado en regla `cj-criollo-changelog`, skill, implementer, canon 01/02, `AGENTS.md`, Antigravity rules y `GEMINI*.md` — solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada.
+
+## [1.2.5] - 2026-08-05
+
+### Added
+
+- **`runtime/antigravity/GEMINI.user.md`:** micro global template (≤15 líneas) — lock check, ask before init project, load skill, En criollo.
+- **User scope Antigravity Desktop:** `init -Scope user -ConfirmUserScope` merge en `%USERPROFILE%\.gemini\GEMINI.md` / `$HOME/.gemini/GEMINI.md` (bloque `<!-- spacex-orchestrator-sx BEGIN/END -->`; overwrite solo del bloque marcado).
+
+### Changed
+
+- **`Install-Orchestrator.ps1`**, **`install-orchestrator.sh`:** merge conservador GEMINI user; agents/AGENTS/.lab siguen project-only.
+- **`docs/human/FIRST-RUN.md`**, **`install/antigravity-windows.md`**, **`TEAM-SHARE.md`:** flujo Desktop = init user una vez → chats nuevos preguntan → init project al aceptar; Always On ya no es único camino.
+- **`docs/agent/AGENT-HANDOFF.md`:** user-scope AGY = GEMINI global en `.gemini/`, no agents en home.
+- **Validators:** exigen asset `runtime/antigravity/GEMINI.user.md`.
+
 ## [1.2.4] - 2026-08-05
 
 ### Added

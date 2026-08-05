@@ -35,6 +35,7 @@ REQUIRED_ASSETS=(
   runtime/antigravity/agents/deletion/agent.md
   runtime/antigravity/rules/spacex-orchestrator.md
   runtime/antigravity/rules/cj-orchestrator-bootstrap.md
+  runtime/antigravity/GEMINI.user.md
   runtime/project/AGENTS.md
   runtime/skills/orchestrator/reference.wsl.md
   runtime/opencode/opencode.jsonc.example
@@ -234,6 +235,18 @@ check_agy_bootstrap_rule() {
   pass "Antigravity bootstrap rule present"
 }
 
+check_gemini_user_template() {
+  local f="$PACK_ROOT/runtime/antigravity/GEMINI.user.md"
+  [[ -f "$f" ]] || { fail "Missing Antigravity user GEMINI template"; return; }
+  grep -q 'orchestrator-lock.json' "$f" || { fail "GEMINI.user.md must mention .orchestrator-lock.json"; return; }
+  grep -qiE 'Never init alone|Nunca init' "$f" || { fail "GEMINI.user.md must forbid init alone"; return; }
+  grep -qi 'En criollo' "$f" || { fail "GEMINI.user.md must mention En criollo"; return; }
+  local lines
+  lines="$(wc -l < "$f" | tr -d ' ')"
+  [[ "$lines" -le 15 ]] || warn "GEMINI.user.md has $lines lines (target micro <=15)"
+  pass "Antigravity user GEMINI template present"
+}
+
 printf '\nSpaceX Orchestrator Pack Validator\n\n'
 
 for a in "${REQUIRED_ASSETS[@]}"; do
@@ -251,6 +264,7 @@ done
 check_lock_example_schema
 check_bootstrap_rule
 check_agy_bootstrap_rule
+check_gemini_user_template
 
 [[ -f "$PACK_ROOT/VERSION" ]] && pass "VERSION" || fail "Missing VERSION"
 

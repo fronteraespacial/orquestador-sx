@@ -35,9 +35,10 @@ Options:
 User scope installs ONLY global-safe paths:
   ~/.cursor/agents, ~/.cursor/rules, ~/.agents/skills/orchestrator,
   ~/.config/opencode/opencode.jsonc [, ~/.codex/ with --include-codex]
+  ~/.gemini/GEMINI.md (merged spacex-orchestrator-sx block)
 
 NOT under user scope (project-level Antigravity — invalid global config):
-  ~/.agents/agents/*, ~/GEMINI.md, ~/AGENTS.md, ~/.lab/
+  ~/.agents/agents/*, ~/GEMINI.md (repo root), ~/AGENTS.md, ~/.lab/
 EOF
 }
 
@@ -139,6 +140,57 @@ copy_template() {
 
   cp "$src" "$dst"
   echo "copied:$dst"
+}
+
+SPACEX_GEMINI_BEGIN='<!-- spacex-orchestrator-sx BEGIN -->'
+SPACEX_GEMINI_END='<!-- spacex-orchestrator-sx END -->'
+GEMINI_USER_TEMPLATE='antigravity/GEMINI.user.md'
+
+merge_spacex_gemini_user() {
+  local template="$1" dst="$2" backup_root="$3" install_target="$4"
+  local rel="${template#$RUNTIME_ROOT/}"
+
+  if [[ ! -f "$template" ]]; then
+    warn "Missing template: $rel"
+    echo "missing:$rel"
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$dst")"
+
+  if [[ -f "$dst" ]]; then
+    local backup_rel="${dst#$install_target/}"
+    local backup_path="$backup_root/$backup_rel"
+    mkdir -p "$(dirname "$backup_path")"
+    cp "$dst" "$backup_path" 2>/dev/null || true
+  fi
+
+  local mode
+  mode="$(python3 - "$template" "$dst" <<'PY'
+import re, sys, os
+template_path, dst = sys.argv[1], sys.argv[2]
+begin = '<!-- spacex-orchestrator-sx BEGIN -->'
+end = '<!-- spacex-orchestrator-sx END -->'
+body = open(template_path, encoding='utf-8').read().strip()
+block = f"{begin}\n{body}\n{end}"
+if os.path.isfile(dst):
+    text = open(dst, encoding='utf-8').read()
+    pat = re.compile(r'<!--\s*spacex-orchestrator-sx BEGIN\s*-->.*?<!--\s*spacex-orchestrator-sx END\s*-->', re.S)
+    if pat.search(text):
+        new_text = pat.sub(block, text, count=1)
+        mode = 'refreshed'
+    else:
+        trimmed = text.rstrip()
+        new_text = (trimmed + '\n\n' + block + '\n') if trimmed else (block + '\n')
+        mode = 'copied'
+else:
+    new_text = block + '\n'
+    mode = 'copied'
+open(dst, 'w', encoding='utf-8', newline='\n').write(new_text)
+print(mode)
+PY
+)"
+  echo "${mode}:$dst"
 }
 
 append_project_entries() {
@@ -248,7 +300,7 @@ missing_count=0
 if [[ "$SCOPE" == "user" ]]; then
   append_user_entries ENTRIES
   [[ "$INCLUDE_CODEX" == true ]] && append_codex_entries ENTRIES
-  log "User scope: Antigravity agents/GEMINI/AGENTS/.lab excluded (project-level only)."
+  log "User scope: merges ~/.gemini/GEMINI.md; agents/AGENTS/.lab remain project-only."
 else
   append_project_entries ENTRIES
   [[ "$INCLUDE_CODEX" == true ]] && append_codex_entries ENTRIES
@@ -272,6 +324,17 @@ for entry in "${ENTRIES[@]}"; do
     missing:*)   MISSING+=("${result#missing:}"); warn "  ! ${result#missing:}" ;;
   esac
 done
+
+if [[ "$SCOPE" == "user" ]]; then
+  gemini_dst="$INSTALL_TARGET/.gemini/GEMINI.md"
+  gemini_src="$RUNTIME_ROOT/$GEMINI_USER_TEMPLATE"
+  result="$(merge_spacex_gemini_user "$gemini_src" "$gemini_dst" "$BACKUP_DIR" "$INSTALL_TARGET")"
+  case "$result" in
+    copied:*)    COPIED+=("${result#copied:}"); log "  + ${result#copied:} (GEMINI block)" ;;
+    refreshed:*) REFRESHED+=("${result#refreshed:}"); log "  ~ ${result#refreshed:} (GEMINI block)" ;;
+    missing:*)   MISSING+=("${result#missing:}"); warn "  ! ${result#missing:}" ;;
+  esac
+fi
 
 copied_count=${#COPIED[@]}
 refreshed_count=${#REFRESHED[@]}

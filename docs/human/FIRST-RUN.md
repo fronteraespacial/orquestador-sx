@@ -71,11 +71,13 @@ Desde la raíz del pack descargado o clonado:
 .\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
 ```
 
-**User scope (global Cursor + skill):**
+**User scope (global Cursor + skill + Antigravity GEMINI):**
 
 ```powershell
 .\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope
 ```
+
+Instala Cursor global + skill + **merge** en `%USERPROFILE%\.gemini\GEMINI.md` (bloque `spacex-orchestrator-sx`). Una vez por máquina: chats nuevos en Antigravity Desktop ya preguntan si preparar el proyecto cuando abrís un repo sin lock.
 
 Preview: `-WhatIf`
 
@@ -124,12 +126,15 @@ Debe mostrar `.orchestrator-lock.json`, manifiesto y skill presente si `enabled:
 
 ### Antigravity (Windows)
 
-Antigravity es **project-only**: la metodología vive en el **repo donde corriste init**, no en un chat vacío.
+Antigravity carga reglas globales desde **`%USERPROFILE%\.gemini\GEMINI.md`** (Desktop) y metodología completa en el **repo** donde corrés init project.
 
-1. **Init project** en tu repo (Paso 2) — copia `.agents/rules/`, `.agents/agents/`, `GEMINI.md`, lock, skill.
-2. **Abrí ese repo** como workspace en Antigravity (File → Open Folder → la carpeta con `.orchestrator-lock.json`).
-3. **Customizations → Always On:** activá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (rules en `.agents/rules/`).
-4. Verificá status: lock presente + skill cargable.
+**Flujo recomendado (una vez por máquina + por repo):**
+
+1. **Init user** (Paso 2, `-Scope user -ConfirmUserScope`) — merge del bloque SpaceX en `~/.gemini/GEMINI.md`. Chats nuevos ya **preguntan** si querés preparar el proyecto cuando el workspace no tiene lock.
+2. **Init project** en tu repo (Paso 2) — copia `.agents/rules/`, `.agents/agents/`, `GEMINI.md`, lock, skill.
+3. **Abrí ese repo** como workspace en Antigravity (File → Open Folder → carpeta con `.orchestrator-lock.json`).
+4. **Customizations → Always On:** activá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (rules en `.agents/rules/`) — refuerzo en repo; no es el único camino si ya hiciste init user.
+5. Verificá status: lock presente + skill cargable.
 
 Detalle: [`install/antigravity-windows.md`](install/antigravity-windows.md).
 

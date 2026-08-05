@@ -4,12 +4,13 @@ Antigravity carga subagentes desde `.agents/agents/` con frontmatter `subagent: 
 
 **Reglas:** `.agents/rules/cj-orchestrator-bootstrap.md` (lock/skill/En criollo) + `.agents/rules/spacex-orchestrator.md` (orquestación). **`GEMINI.md`** en repo root = capa de compatibilidad para builds que solo leen root rules.
 
-**Crítico:** Antigravity es **project-only**. Un chat “de cero” sin abrir un repo con init **no** ve la metodología — no hay user-scope Antigravity en el pack.
+**Global Desktop:** `%USERPROFILE%\.gemini\GEMINI.md` — bloque `<!-- spacex-orchestrator-sx BEGIN/END -->` instalado con **`init -Scope user -ConfirmUserScope`**. Chats nuevos preguntan si preparar el proyecto; playground sin repo ignora el bloque.
 
 ## 1. Paths Windows
 
 | Pieza | Path |
 |-------|------|
+| **Global GEMINI (Desktop)** | `%USERPROFILE%\.gemini\GEMINI.md` (merge user init) |
 | **Bootstrap rule (Always On)** | `<repo>\.agents\rules\cj-orchestrator-bootstrap.md` |
 | **Workspace rule (Always On)** | `<repo>\.agents\rules\spacex-orchestrator.md` |
 | Agents | `<repo>\.agents\agents\<role>\agent.md` |
@@ -22,7 +23,15 @@ Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `ver
 
 ## 2. Pasos (orden correcto)
 
-1. **Init project** en el repo destino (recomendado: CLI del pack):
+0. **Init user** (una vez por máquina — recomendado antes de Antigravity):
+
+   ```powershell
+   .\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope
+   ```
+
+   Merge conservador en `~/.gemini/GEMINI.md`. Si ya tenés reglas propias, solo se añade/reemplaza el bloque marcado.
+
+1. **Init project** en el repo destino:
 
    ```powershell
    .\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
@@ -30,7 +39,7 @@ Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `ver
 
 2. **Abrí ese repo** en Antigravity: File → Open Folder → carpeta con `.orchestrator-lock.json` (no un chat suelto ni solo el pack sin init).
 
-3. **Customizations → Always On:** marcá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (ambas en `.agents/rules/`).
+3. **Customizations → Always On:** marcá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (refuerzo en repo; opcional si global GEMINI + init user ya activos).
 
 4. Confirmá lock + skill (`Orchestrator.ps1 status -TargetPath …`).
 

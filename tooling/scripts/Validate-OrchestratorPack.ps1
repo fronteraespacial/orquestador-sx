@@ -49,6 +49,7 @@ $RequiredRuntimeAssets = @(
     'runtime/antigravity/agents/deletion/agent.md',
     'runtime/antigravity/rules/spacex-orchestrator.md',
     'runtime/antigravity/rules/cj-orchestrator-bootstrap.md',
+    'runtime/antigravity/GEMINI.user.md',
     'runtime/project/AGENTS.md',
     'runtime/skills/orchestrator/reference.wsl.md',
     'runtime/opencode/opencode.jsonc.example',
@@ -461,6 +462,32 @@ function Test-AgyBootstrapRule {
     Add-Pass 'Antigravity bootstrap rule present'
 }
 
+function Test-GeminiUserTemplate {
+    $path = Join-Path $PackRoot 'runtime\antigravity\GEMINI.user.md'
+    if (-not (Test-Path -LiteralPath $path)) {
+        Add-Error 'Missing Antigravity user GEMINI template (runtime/antigravity/GEMINI.user.md)'
+        return
+    }
+    $raw = Get-Content -LiteralPath $path -Raw
+    if ($raw -notmatch '(?i)orchestrator-lock\.json') {
+        Add-Error 'GEMINI.user.md must mention .orchestrator-lock.json'
+        return
+    }
+    if ($raw -notmatch '(?i)Never init alone|Nunca init') {
+        Add-Error 'GEMINI.user.md must forbid init alone'
+        return
+    }
+    if ($raw -notmatch '(?i)En criollo') {
+        Add-Error 'GEMINI.user.md must mention En criollo'
+        return
+    }
+    $lineCount = @($raw -split '\r?\n').Count
+    if ($lineCount -gt 15) {
+        Add-Warn "GEMINI.user.md has $lineCount lines (target micro <=15)"
+    }
+    Add-Pass 'Antigravity user GEMINI template present'
+}
+
 function Test-InstallTarget {
     param([string] $Target)
     if (-not $Target -or -not (Test-Path -LiteralPath $Target)) {
@@ -537,6 +564,7 @@ Test-GatesDocumented
 Test-LockExampleSchema
 Test-BootstrapRule
 Test-AgyBootstrapRule
+Test-GeminiUserTemplate
 Test-SecretPatterns -ScanRoots @($PackRoot)
 Test-InstallTarget -Target $TargetPath
 Test-RuntimeErrors

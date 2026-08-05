@@ -31,6 +31,9 @@ $ErrorActionPreference = 'Stop'
 $PackRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $RuntimeRoot = Join-Path $PackRoot 'runtime'
 $DefaultSandbox = Join-Path $PackRoot 'tooling\sandbox\pilot'
+$SpacexGeminiBegin = '<!-- spacex-orchestrator-sx BEGIN -->'
+$SpacexGeminiEnd = '<!-- spacex-orchestrator-sx END -->'
+$GeminiUserTemplateRel = 'antigravity\GEMINI.user.md'
 
 function Get-ProjectTemplateMap {
     $map = [System.Collections.Generic.List[hashtable]]::new()
@@ -176,7 +179,8 @@ function New-InstallManifest {
         missing_source = [System.Collections.ArrayList]@()
         excluded_user  = @(
             'Antigravity .agents/agents/* (project-level only — not valid under $HOME)',
-            'GEMINI.md, AGENTS.md, .lab/ (project-level only)'
+            'AGENTS.md, repo-root GEMINI.md, .lab/ (project-level only)',
+            'User Antigravity global: ~/.gemini/GEMINI.md (merged block, not excluded)'
         )
     }
 }
@@ -206,6 +210,93 @@ function Backup-ExistingFile {
         New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
     }
     Copy-Item -LiteralPath $FilePath -Destination $backupDest -Force
+}
+
+function Get-SpacexGeminiUserBlock {
+    param([string] $TemplateFile)
+
+    if (-not (Test-Path -LiteralPath $TemplateFile)) {
+        throw "Missing Antigravity user GEMINI template: $TemplateFile"
+    }
+    $body = (Get-Content -LiteralPath $TemplateFile -Raw).TrimEnd()
+    return "$SpacexGeminiBegin`r`n$body`r`n$SpacexGeminiEnd"
+}
+
+function Merge-SpacexGeminiUser {
+    param(
+        [string] $DestFile,
+        [string] $TemplateFile,
+        [hashtable] $Manifest,
+        [string] $BackupRoot,
+        [string] $InstallTargetRoot
+    )
+
+    $relSrc = $TemplateFile.Substring($RuntimeRoot.Length).TrimStart('\', '/')
+    if (-not (Test-Path -LiteralPath $TemplateFile)) {
+        $Manifest.missing_source.Add($relSrc) | Out-Null
+        Write-Warning "Missing template source: $relSrc"
+        return
+    }
+
+    $block = Get-SpacexGeminiUserBlock -TemplateFile $TemplateFile
+    $destDir = Split-Path -Parent $DestFile
+    if ($destDir -and -not (Test-Path -LiteralPath $destDir)) {
+        if ($PSCmdlet.ShouldProcess($destDir, 'Create directory')) {
+            New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+        }
+    }
+
+    $exists = Test-Path -LiteralPath $DestFile
+    $action = 'Copy template'
+    $refreshed = $false
+
+    if ($exists) {
+        $existing = Get-Content -LiteralPath $DestFile -Raw
+        if ($null -eq $existing) { $existing = '' }
+        if ($existing -match '(?s)<!--\s*spacex-orchestrator-sx BEGIN\s*-->.*?<!--\s*spacex-orchestrator-sx END\s*-->') {
+            if ($PSCmdlet.ShouldProcess($DestFile, 'Replace spacex-orchestrator-sx GEMINI block')) {
+                Backup-ExistingFile -FilePath $DestFile -BackupRoot $BackupRoot -InstallTargetRoot $InstallTargetRoot
+            }
+            $newContent = [regex]::Replace(
+                $existing,
+                '(?s)<!--\s*spacex-orchestrator-sx BEGIN\s*-->.*?<!--\s*spacex-orchestrator-sx END\s*-->',
+                $block
+            )
+            $action = 'Refresh spacex-orchestrator-sx GEMINI block'
+            $refreshed = $true
+        }
+        else {
+            if ($PSCmdlet.ShouldProcess($DestFile, 'Append spacex-orchestrator-sx GEMINI block')) {
+                Backup-ExistingFile -FilePath $DestFile -BackupRoot $BackupRoot -InstallTargetRoot $InstallTargetRoot
+            }
+            $trimmed = $existing.TrimEnd()
+            $newContent = if ($trimmed) { "$trimmed`r`n`r`n$block`r`n" } else { "$block`r`n" }
+            $action = 'Append spacex-orchestrator-sx GEMINI block'
+        }
+    }
+    else {
+        $newContent = "$block`r`n"
+    }
+
+    if ($PSCmdlet.ShouldProcess($DestFile, $action)) {
+        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($DestFile, $newContent, $utf8NoBom)
+        $hash = if (-not $WhatIfPreference) { (Get-FileHash -LiteralPath $DestFile -Algorithm SHA256).Hash } else { '(whatif)' }
+        $entry = @{
+            source = $relSrc
+            dest   = $DestFile
+            sha256 = $hash
+            merge  = 'spacex-orchestrator-sx block'
+        }
+        if ($refreshed) {
+            $Manifest.refreshed.Add($entry) | Out-Null
+            Write-Host "  ~ refresh $DestFile (GEMINI block)" -ForegroundColor Yellow
+        }
+        else {
+            $Manifest.copied.Add($entry) | Out-Null
+            Write-Host "  + $DestFile (GEMINI block)" -ForegroundColor Green
+        }
+    }
 }
 
 function Copy-TemplateSafe {
@@ -311,9 +402,10 @@ if ($RefreshSandbox) {
 if ($Scope -eq 'User') {
     Write-Warning "USER SCOPE - global paths only under $installTarget"
     Write-Warning '  Installs: .cursor/agents, .cursor/rules, .agents/skills/orchestrator, .config/opencode/opencode.jsonc'
+    Write-Warning '  Antigravity Desktop: merge ~/.gemini/GEMINI.md (spacex-orchestrator-sx block)'
     if ($IncludeCodex) { Write-Warning '  Also: .codex/agents, .codex/config.toml ( -IncludeCodex )' }
     Write-Warning 'NOT installed under User scope (project-level - invalid global config):'
-    Write-Warning '  .agents/agents/*, GEMINI.md, AGENTS.md, .lab/'
+    Write-Warning '  .agents/agents/*, repo-root GEMINI.md, AGENTS.md, .lab/'
     if (-not $WhatIfPreference -and -not $PSCmdlet.ShouldProcess($installTarget, 'Install orchestrator (User scope - global paths only)')) {
         Write-Host 'Cancelled.' -ForegroundColor Yellow
         return
@@ -349,14 +441,16 @@ Write-Host "`nCopying templates ($(if ($allowOverwrite) { 'refresh enabled for p
 
 foreach ($entry in $templateMap) {
     $src = Join-Path $RuntimeRoot $entry.Src
-    $dst = if ($Scope -eq 'User') {
-        Join-Path $installTarget $entry.Dst
-    }
-    else {
-        Join-Path $installTarget $entry.Dst
-    }
+    $dst = Join-Path $installTarget $entry.Dst
     Copy-TemplateSafe -SourceFile $src -DestFile $dst -Manifest $manifest `
         -BackupRoot $backupRoot -InstallTargetRoot $installTarget -AllowOverwrite:$allowOverwrite
+}
+
+if ($Scope -eq 'User') {
+    $geminiUserDest = Join-Path $installTarget '.gemini\GEMINI.md'
+    $geminiUserSrc = Join-Path $RuntimeRoot $GeminiUserTemplateRel
+    Merge-SpacexGeminiUser -DestFile $geminiUserDest -TemplateFile $geminiUserSrc `
+        -Manifest $manifest -BackupRoot $backupRoot -InstallTargetRoot $installTarget
 }
 
 Write-Verbose 'Skipped archive: runtime/archive/reference.cj-linux.md'
