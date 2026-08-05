@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.1.1] - 2026-08-05
+
+### Changed
+
+- Repo canónico renombrado a **`fronteraespacial/orquestador-sx`** (público discreto, link-only).
+- `$DefaultRepo` / `DEFAULT_REPO` en CLI apuntan al nuevo slug.
+- Docs humanas, agente y maintainer: URLs actualizadas; `gh auth` opcional; sin requisito de invite/org privado.
+- `SECURITY.md`: nota repo público, sin PAT, anti-popularización social.
+- Asset release `spacex-orchestrator-v1.1.0.zip` conserva nombre histórico (SHA256SUMS v1.1.0 sin cambio).
+
 ## [1.1.0] - 2026-08-05
 
 ### Added

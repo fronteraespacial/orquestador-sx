@@ -34,4 +34,4 @@ Punto de entrada post-factorización v1.1.0.
 
 Instalación por IDE: [`docs/human/install/`](../docs/human/install/).
 
-**Repo canónico:** [github.com/fronteraespacial/spacex-orchestrator](https://github.com/fronteraespacial/spacex-orchestrator)
+**Repo canónico:** [github.com/fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)

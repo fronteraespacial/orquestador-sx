@@ -44,7 +44,7 @@ This skill defines **contract**. Runtimes vary in how hard they enforce it.
 | **Update apply** | **Never** auto-apply. Ask human to run apply after narrating delta. | `Orchestrator update --apply` (SHA256 verified) |
 | **Opt-out** | If `enabled: false`, stop insisting; respect user choice. | Edit lock or `uninstall` |
 
-**Source of truth:** [`fronteraespacial/spacex-orchestrator`](https://github.com/fronteraespacial/spacex-orchestrator) releases when `source: release`; local pack when `source: local`. Agents load this skill from installed paths only — not from the network.
+**Source of truth:** [`fronteraespacial/orquestador-sx`](https://github.com/fronteraespacial/orquestador-sx) releases when `source: release`; local pack when `source: local`. Agents load this skill from installed paths only — not from the network.
 
 ## Idea
 

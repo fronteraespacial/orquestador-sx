@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACK_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 INSTALL_SCRIPT="$SCRIPT_DIR/install-orchestrator-wsl.sh"
-DEFAULT_REPO="fronteraespacial/spacex-orchestrator"
+DEFAULT_REPO="fronteraespacial/orquestador-sx"
 CACHE_ROOT="${XDG_CACHE_HOME:-$HOME/.cache}/spacex-orchestrator"
 USER_LOCK_DIR="$HOME/.spacex-orchestrator"
 CHECK_THROTTLE_HOURS=24

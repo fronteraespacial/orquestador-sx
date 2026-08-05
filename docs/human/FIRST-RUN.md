@@ -1,24 +1,29 @@
 # First run (5 minutes)
 
-Guía humana para la primera instalación del **SpaceX Orchestrator** v1.1.0.
+Guía humana para la primera instalación del **Orquestador SX** v1.1.0.
 
-**Repositorio canónico:** [github.com/fronteraespacial/spacex-orchestrator](https://github.com/fronteraespacial/spacex-orchestrator)
+**Repositorio canónico:** [github.com/fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)
 
-**Release estable (v1.1.0):** [github.com/fronteraespacial/spacex-orchestrator/releases/tag/v1.1.0](https://github.com/fronteraespacial/spacex-orchestrator/releases/tag/v1.1.0)
+**Guía canónica (este doc en GitHub):** [github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md](https://github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md)
 
-Descargar spacex-orchestrator-v1.1.0.zip y verificar:
+**Release estable (v1.1.0):** [github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.0](https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.0)
 
-`	ext
+Descargar `spacex-orchestrator-v1.1.0.zip` (nombre histórico del asset) desde el release y verificar:
+
+```text
 6266226d32380a3be9691373c2f7bed52f9a0a086fb0ee1fc9f00dbd1df91f6d  spacex-orchestrator-v1.1.0.zip
-`
+```
+
+Alternativa sin `gh`: clonar el repo o descargar el zip del release desde el navegador — no requiere autenticación.
 
 ## Prerrequisitos
 
 1. **Cursor** (o IDE destino) instalado.
 2. **PowerShell 5.1+** (Windows) o **bash** (WSL/Linux).
-3. Para updates desde GitHub: **GitHub CLI** (`gh`) con acceso a la org `fronteraespacial`:
+3. **GitHub CLI** (`gh`) — **opcional**. Solo hace falta para `update --check` / `update --apply` desde la CLI; los releases públicos se descargan sin auth:
+
    ```powershell
-   gh auth login
+   gh auth login   # opcional
    ```
 
 ## Paso 1 — Validar el pack (opcional)
@@ -82,7 +87,7 @@ Debe mostrar `.orchestrator-lock.json`, manifiesto de instalación y skill prese
 Los agentes **no** descargan ni aplican updates solos.
 
 ```powershell
-# Comprobar release (máx. 1 vez / 24h)
+# Comprobar release (máx. 1 vez / 24h; requiere gh si usás CLI)
 .\tooling\scripts\Orchestrator.ps1 update -Check -TargetPath C:\path\to\your-repo
 
 # Aplicar (verifica SHA256SUMS, backup, reinstall)

@@ -2,7 +2,7 @@
 
 Prompt autocontenido para pegar al iniciar una sesión orquestada. **No** reemplaza el canon ni la skill — los complementa.
 
-**Repo canónico:** [fronteraespacial/spacex-orchestrator](https://github.com/fronteraespacial/spacex-orchestrator)
+**Repo canónico:** [fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)
 
 ---
 

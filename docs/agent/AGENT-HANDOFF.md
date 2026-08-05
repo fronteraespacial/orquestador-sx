@@ -15,7 +15,7 @@ Documento de continuidad para reanudar pruebas, instalación y orquestación sin
 
 | Campo | Valor |
 |-------|-------|
-| Release | [v1.1.0](https://github.com/fronteraespacial/spacex-orchestrator/releases/tag/v1.1.0) |
+| Release | [v1.1.0](https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.1.0) |
 | Asset zip | spacex-orchestrator-v1.1.0.zip |
 | SHA256 (zip) | 6266226d32380a3be9691373c2f7bed52f9a0a086fb0ee1fc9f00dbd1df91f6d |
 

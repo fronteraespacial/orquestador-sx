@@ -35,4 +35,4 @@ Usar antes de zippear, taggear o compartir el pack.
 - [ ] `docs/maintainer/RELEASE.md` revisado
 - [ ] Orchestrator template `model: cursor-grok-4.5-high` (no `inherit`)
 - [ ] `.gitignore` excluye `tooling/bench/results/`, sandbox instalado, secretos
-- [ ] Tag `vX.Y.Z` + SHA256SUMS en release GitHub (`fronteraespacial/spacex-orchestrator`)
+- [ ] Tag `vX.Y.Z` + SHA256SUMS en release GitHub (`fronteraespacial/orquestador-sx`)

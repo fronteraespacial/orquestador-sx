@@ -1,8 +1,8 @@
 # Release process
 
-Procedimiento maintainer para publicar **fronteraespacial/spacex-orchestrator**.
+Procedimiento maintainer para publicar **fronteraespacial/orquestador-sx** (repo público discreto, link-only).
 
-## Flujo tag → zip → SHA256SUMS → invite
+## Flujo tag → zip → SHA256SUMS → compartir enlace
 
 ### 1. Pre-release checklist
 
@@ -30,7 +30,7 @@ El workflow `.github/workflows/release.yml` (on tag `v*`) empaqueta y sube asset
 
 | Asset | Contenido |
 |-------|-----------|
-| `spacex-orchestrator-vX.Y.Z.zip` | Pack completo excluyendo `tooling/bench/worktrees`, `tooling/bench/results`, `.lab/` opcional |
+| `spacex-orchestrator-vX.Y.Z.zip` | Pack completo excluyendo `tooling/bench/worktrees`, `tooling/bench/results`, `.lab/` opcional (nombre histórico del asset; no renombrar sin nuevo SHA256SUMS) |
 | `SHA256SUMS` | Formato GNU: `hash  filename` (dos espacios) |
 
 Generación manual (si hace falta fuera de CI):
@@ -48,10 +48,10 @@ $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLowerInvariant()
 ### 5. GitHub release
 
 ```powershell
-gh release create v1.1.0 $zip SHA256SUMS --repo fronteraespacial/spacex-orchestrator --title "v1.1.0" --notes-file CHANGELOG-snippet.md
+gh release create v1.1.0 $zip SHA256SUMS --repo fronteraespacial/orquestador-sx --title "v1.1.0" --notes-file CHANGELOG-snippet.md
 ```
 
-Repo **privado** — invitar colaboradores con acceso read antes de compartir `FIRST-RUN.md`.
+Repo **público** — cualquiera con el enlace puede clonar o descargar el zip del release sin invite ni `gh auth`. Compartir solo por link directo (no promocionar en redes).
 
 ### 6. Verificación post-release
 
@@ -62,10 +62,11 @@ Repo **privado** — invitar colaboradores con acceso read antes de compartir `F
 
 Debe verificar SHA256SUMS y reescribir `.orchestrator-lock.json` con `source: release`.
 
+---
 
-## Invitar colaboradores
+## Invitar colaboradores (opcional / legacy)
 
-Repo **privado** (`fronteraespacial/spacex-orchestrator`): antes de compartir [`FIRST-RUN.md`](../human/FIRST-RUN.md) o el zip, cada persona necesita acceso al repo u org.
+Solo aplica si el repo vuelve a ser **privado** o querés dar permisos `push` explícitos. Con repo público, la lectura no requiere invite.
 
 **Regla:** el maintainer debe indicar **usernames o emails concretos**. **No ejecutar invites reales** desde scripts o agentes si no hay lista explícita aprobada.
 
@@ -84,7 +85,7 @@ Sustituí `GITHUB_USERNAME` por el login exacto (minúsculas). Permisos típicos
 
 ```powershell
 gh api `
-  repos/fronteraespacial/spacex-orchestrator/collaborators/GITHUB_USERNAME `
+  repos/fronteraespacial/orquestador-sx/collaborators/GITHUB_USERNAME `
   -X PUT `
   -f permission=pull
 ```
@@ -92,10 +93,10 @@ gh api `
 Listar colaboradores actuales:
 
 ```powershell
-gh api repos/fronteraespacial/spacex-orchestrator/collaborators --jq '.[].login'
+gh api repos/fronteraespacial/orquestador-sx/collaborators --jq '.[].login'
 ```
 
-### Invitar a la organización (opcional)
+### Invitar a la organización (opcional / legacy)
 
 Si el equipo entra por org `fronteraespacial`, usá invitación por email (requiere permisos de org owner):
 
@@ -122,13 +123,13 @@ gh api orgs/fronteraespacial/invitations
 ### Alternativa interactiva
 
 ```powershell
-gh repo edit fronteraespacial/spacex-orchestrator --add-collaborator GITHUB_USERNAME
+gh repo edit fronteraespacial/orquestador-sx --add-collaborator GITHUB_USERNAME
 ```
 
-### Después del invite
+### Después del invite (solo si aplica)
 
 1. Confirmar que la persona aceptó (Settings → Collaborators / email de invitación org).
-2. Que ejecute `gh auth login` con una cuenta que vea `fronteraespacial/spacex-orchestrator`.
+2. Para `update --check` / `--apply` vía CLI: `gh auth login` (opcional para clone/download de releases públicos).
 3. Compartir [`TEAM-SHARE.md`](../human/TEAM-SHARE.md) (Slack/mail).
 
 ## Rollback
@@ -140,3 +141,4 @@ gh repo edit fronteraespacial/spacex-orchestrator --add-collaborator GITHUB_USER
 
 - **No** incluir secretos, `MODELS.local.md`, ni `tooling/bench/results/` en el zip.
 - Stubs root del pack Windows pueden archivarse tras un ciclo de release estable.
+- URLs antiguas `…/spacex-orchestrator` redirigen a `…/orquestador-sx` tras rename en GitHub.

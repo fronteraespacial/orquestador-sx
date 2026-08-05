@@ -1,12 +1,14 @@
-# SpaceX Orchestrator — Windows Pack
+# Orquestador SX — Windows Pack
 
-**Versión:** `1.1.0` ([`VERSION`](VERSION)) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
+**Versión:** `1.1.1` ([`VERSION`](VERSION)) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
 Pack distribuible de la metodología **Orquestador SpaceX + subagentes** para Windows (Cursor, Antigravity, OpenCode, Codex). Instalación segura, validación automatizada y benchmark reproducible.
 
 **Entry LLM:** [`AGENTS.md`](AGENTS.md) · **Bootstrap:** [`start/README.md`](start/README.md) · **First run:** [`docs/human/FIRST-RUN.md`](docs/human/FIRST-RUN.md)
 
-**Repo canónico:** [github.com/fronteraespacial/spacex-orchestrator](https://github.com/fronteraespacial/spacex-orchestrator)
+**Repo canónico:** [github.com/fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)
+
+Repositorio **público discreto** (link-only): compartir solo por enlace directo con quien lo necesite; no promocionar en redes ni listados públicos.
 
 ## Árbol v1.1.0
 

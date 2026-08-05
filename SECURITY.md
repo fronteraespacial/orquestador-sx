@@ -1,4 +1,10 @@
-# Security & privacy — SpaceX Orchestrator Windows Pack
+# Security & privacy — Orquestador SX Windows Pack
+
+## Repositorio público
+
+- **Repo canónico:** [fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx) — **público discreto** (link-only).
+- **No** incluir PAT, tokens ni credenciales en issues, PRs ni docs del pack.
+- **No promocionar** el repo en redes sociales, foros ni listados públicos; compartir solo por enlace directo con quien lo necesite.
 
 ## Alcance de instalación
 
