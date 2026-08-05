@@ -61,7 +61,7 @@ function Get-ProjectTemplateMap {
     $map.Add(@{ Src = 'antigravity\rules\spacex-orchestrator.md'; Dst = '.agents\rules\spacex-orchestrator.md' })
     $map.Add(@{ Src = 'antigravity\rules\cj-orchestrator-bootstrap.md'; Dst = '.agents\rules\cj-orchestrator-bootstrap.md' })
 
-    $skills = @('SKILL.md', 'reference.md', 'reference.wsl.md')
+    $skills = @('SKILL.md', 'reference.md', 'reference.wsl.md', 'reference.antigravity.md')
     foreach ($s in $skills) {
         $map.Add(@{ Src = "skills\orchestrator\$s"; Dst = ".agents\skills\orchestrator\$s" })
     }
@@ -91,7 +91,7 @@ function Get-UserTemplateMap {
     $map.Add(@{ Src = 'cursor\rules\cj-orchestrator-mandatory.mdc'; Dst = '.cursor\rules\cj-orchestrator-mandatory.mdc' })
     $map.Add(@{ Src = 'cursor\rules\cj-criollo-changelog.mdc'; Dst = '.cursor\rules\cj-criollo-changelog.mdc' })
 
-    $skills = @('SKILL.md', 'reference.md', 'reference.wsl.md')
+    $skills = @('SKILL.md', 'reference.md', 'reference.wsl.md', 'reference.antigravity.md')
     foreach ($s in $skills) {
         $map.Add(@{ Src = "skills\orchestrator\$s"; Dst = ".agents\skills\orchestrator\$s" })
     }

@@ -1,0 +1,96 @@
+# Orchestrator — Antigravity 2.0 Desktop wiring
+
+Primary spawn surface for **Antigravity Desktop**. Cursor/OpenCode use [reference.md](reference.md).
+
+## Spawn API (hard)
+
+| Step | API | Notes |
+|------|-----|-------|
+| Define | **`define_subagent`** | Role name + model alias + description |
+| Invoke | **`invoke_subagent`** | Pass compact envelope (≤40 lines expected back) |
+
+**Never** Cursor `Task` on this surface. Agent defs live in `.agents/agents/<role>/agent.md`.
+
+## Bootstrap (agent-native)
+
+Global `~/.gemini/GEMINI.md` (user init) asks before prepare. With human yes, agent **may scaffold in-repo** without CLI-only path:
+
+1. Write `.orchestrator-lock.json` — `enabled: true`, `version` from pack `VERSION` (≥1.2.7), `source: agent-native`, `installed_at` ISO8601.
+2. Materialize `.agents/skills/orchestrator/SKILL.md` (+ this file) from pack or GitHub raw/release [`fronteraespacial/orquestador-sx`](https://github.com/fronteraespacial/orquestador-sx). Path list: `runtime/antigravity/scaffold-manifest.json`.
+3. Copy Antigravity minimum: `.agents/rules/cj-orchestrator-bootstrap.md`, `.agents/rules/spacex-orchestrator.md`, `.agents/agents/<role>/agent.md`, repo `GEMINI.md` (merge).
+4. No network → ask local pack path or clone. **Ask-first always** — never silent init.
+
+CLI `Orchestrator.ps1 init -Scope project` remains valid **alternative** (Windows/Cursor).
+
+## Parent orchestrator (main thread)
+
+```markdown
+## Complexity: T<n> — <reason>
+## Role: Orchestrator
+## Action: Delegate to subagent (T0-T3)
+## Wave: <0|1|2|3> — <prep|research-lab|execute|verify>
+```
+
+- **Zero direct execution** — classify, gate, envelopes, spawn, merge deltas, narrate.
+- **T0 included** — reads → `explore`; any edit → `implementer`.
+- Kill idle subagents when loop completes.
+
+## Compact role system prompts (envelope seeds)
+
+Use as `system_prompt` / brief prefix when defining or invoking. Full defs: `.agents/agents/<role>/agent.md`.
+
+### explore
+
+Readonly local repo/MCP/system mapping. No web (→ scout). Handoff: `## Explore handoff` ≤40 lines. LIGHTWEIGHT: ≤8 tool calls.
+
+### scout
+
+External contrast only — official docs, GitHub issues, evidenced forums. No file writes. Deliver: `## External contrast` (REQUIRED/SKIPPED/COMPLEMENTARY). ≤5 sources.
+
+### maverick
+
+Counterintuitive what-ifs; CONSULT or LAB. LAB writes **only** `.lab/YYYY-MM-DD-mav-<slug>/`. Budget 3 attempts/theory → `## MAV-ESCALATE`. Proposes, never decides.
+
+### lab-runner
+
+Spike **only** under `.lab/YYYY-MM-DD-<slug>/` (repo root — **not** `projects/.lab/`). Verdict in REPORT: APPROVE|REVISE|REJECT|YIELD. No web. No prod paths.
+
+### implementer
+
+Sole prod writer. Greenfield requires lab **APPROVE**. No web. Handoff ≤40 lines + `Delete check:` + `Automation candidates:`.
+
+### verifier
+
+DoD evidence only — scripts, exit codes, file checks. `Verdict: PASS|FAIL|INCONCLUSIVE`. **REQUIRED** after implementer before “done”.
+
+### skeptic (T3 optional)
+
+Requirements audit — fuzzy/high-stakes. No code. Flag dumb reqs, missing acceptance, scope creep.
+
+### deletion (T3 optional)
+
+Delete proposals — what to remove instead of add. No code. Pair with Algorithm step 2.
+
+## Gates (same as universal skill)
+
+| Gate | Rule |
+|------|------|
+| **Lab** | Greenfield → scout (soft) → **lab-runner REQUIRED** → only **APPROVE** unlocks **implementer** |
+| **Maverick** | T2+ env/runtime anomaly → **maverick REQUIRED** (CONSULT min) |
+| **Verifier** | **implementer** ran → **verifier REQUIRED** before final narration |
+| **ESCALATE** | Child `## ESCALATE` (≥2 fails) → **scout** → retry with contrast or STOP |
+| **`.lab` root** | Repo root `.lab/` only |
+
+## Model aliases (remap on host)
+
+| Role | Default alias | Prefer ID |
+|------|---------------|-----------|
+| explore, scout, lab-runner, verifier, skeptic, deletion | `flash` | `gemini-3.6-flash-high` |
+| maverick, implementer | `pro` | `gemini-3.1-pro-high` |
+| orchestrator (parent) | heavy reasoning model on host | not `inherit` |
+
+Validate with `agy models` / UI; aliases are defaults.
+
+## Handoffs
+
+All children ≤40 lines. Orchestrator forwards **deltas only** into next envelope — not full transcripts.

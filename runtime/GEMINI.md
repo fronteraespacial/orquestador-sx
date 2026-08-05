@@ -4,7 +4,7 @@
 > **Always On:** Antigravity → **Customizations** → enable both rules in the **project repo** (not a blank chat).  
 > This `GEMINI.md` remains for Antigravity builds that load root rules only — **merge** with local user rules; do not overwrite wholesale.
 
-**Bootstrap:** check `.orchestrator-lock.json` before orchestrated work; missing → offer `Orchestrator init` on this repo; lock OK → load `.agents/skills/orchestrator/SKILL.md`. No init/update from chat without canonical install/update frase.
+**Bootstrap (agent-native):** check `.orchestrator-lock.json`. Missing → **ask** human (global `~/.gemini` block); on yes → **agent writes lock + materializes** `.agents/` tree — **no `Orchestrator.ps1` required** on Desktop. Canonical install frase may still use pack scripts. Lock OK → load `.agents/skills/orchestrator/SKILL.md`; **`define_subagent`** + **`invoke_subagent`** for delegation (never Cursor `Task`). No init/update from chat without canonical install/update frase.
 
 **En criollo (REQUIRED):** technical handoffs/close-outs include `## En criollo` **at the end** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. See bootstrap rule + `AGENTS.md`.
 

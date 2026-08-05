@@ -1,10 +1,28 @@
 # 04 — Instalar en Antigravity (Windows)
 
-Antigravity carga subagentes desde `.agents/agents/` con frontmatter `subagent: true` y se invocan vía **`invoke_subagent`**.
+Antigravity carga subagentes desde `.agents/agents/` con frontmatter `subagent: true` y se invocan vía **`define_subagent`** + **`invoke_subagent`**.
 
 **Reglas:** `.agents/rules/cj-orchestrator-bootstrap.md` (lock/skill/En criollo) + `.agents/rules/spacex-orchestrator.md` (orquestación). **`GEMINI.md`** en repo root = capa de compatibilidad para builds que solo leen root rules.
 
 **Global Desktop:** `%USERPROFILE%\.gemini\GEMINI.md` — bloque `<!-- spacex-orchestrator-sx BEGIN/END -->` instalado con **`init -Scope user -ConfirmUserScope`**. Chats nuevos preguntan si preparar el proyecto; playground sin repo ignora el bloque.
+
+## 0. Prerrequisito — agent-native (recomendado Desktop)
+
+**Path A — sin CLI (Antigravity Desktop):**
+
+1. Una vez por máquina: `Orchestrator.ps1 init -Scope user -ConfirmUserScope` (merge `~/.gemini/GEMINI.md`).
+2. Abrí el repo destino en Antigravity Desktop.
+3. En chat de trabajo, el agente **pregunta** si preparar con Orquestador SX.
+4. Si aceptás → el agente **crea** `.orchestrator-lock.json` y materializa skill/rules/agents (ver `runtime/antigravity/scaffold-manifest.json` y [`docs/agent/SCAFFOLD-MANIFEST.md`](../agent/SCAFFOLD-MANIFEST.md)).
+5. Customizations → **Always On**: `cj-orchestrator-bootstrap`, `spacex-orchestrator`.
+
+**Path B — CLI (opcional / avanzado / CI):**
+
+```powershell
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
+```
+
+Verifica: lock, `.agents/`, `GEMINI.md`.
 
 ## 1. Paths Windows
 
@@ -15,37 +33,36 @@ Antigravity carga subagentes desde `.agents/agents/` con frontmatter `subagent: 
 | **Workspace rule (Always On)** | `<repo>\.agents\rules\spacex-orchestrator.md` |
 | Agents | `<repo>\.agents\agents\<role>\agent.md` |
 | Skill | `<repo>\.agents\skills\orchestrator\SKILL.md` |
+| AGY wiring (opcional) | `<repo>\.agents\skills\orchestrator\reference.antigravity.md` |
 | Root rules (compat) | `<repo>\GEMINI.md` |
 | Lock | `<repo>\.orchestrator-lock.json` |
 | Lab | `<repo>\.lab\` (**única ruta operativa**; no usar `projects/.lab/`) |
 
 Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `verifier` (6 base) + opcionales `skeptic`, `deletion`.
 
-## 2. Pasos (orden correcto)
+## 2. Subagentes AGY 2.0
 
-0. **Init user** (una vez por máquina — recomendado antes de Antigravity):
+| Acción | API |
+|--------|-----|
+| Registrar rol | **`define_subagent`** (plantillas en SKILL § Antigravity 2.0 Desktop) |
+| Delegar | **`invoke_subagent`** |
+| **No usar** | Cursor `Task` |
 
-   ```powershell
-   .\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope
-   ```
+## 3. Pasos (Path A o B)
 
-   Merge conservador en `~/.gemini/GEMINI.md`. Si ya tenés reglas propias, solo se añade/reemplaza el bloque marcado.
+Tras scaffold (Path A) o init project (Path B):
 
-1. **Init project** en el repo destino:
+1. **Abrí ese repo** en Antigravity: File → Open Folder → carpeta con `.orchestrator-lock.json` (no un chat suelto ni solo el pack sin prep).
 
-   ```powershell
-   .\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
-   ```
+2. **Customizations → Always On:** marcá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`**.
 
-2. **Abrí ese repo** en Antigravity: File → Open Folder → carpeta con `.orchestrator-lock.json` (no un chat suelto ni solo el pack sin init).
+3. Confirmar agente llamó **`define_subagent`** para roles base (o agent.md materializados).
 
-3. **Customizations → Always On:** marcá **`cj-orchestrator-bootstrap`** y **`spacex-orchestrator`** (refuerzo en repo; opcional si global GEMINI + init user ya activos).
+4. Primera delegación de prueba: `invoke_subagent` → `explore` (readonly).
 
-4. Confirmá lock + skill (`Orchestrator.ps1 status -TargetPath …`).
+5. Confirmá lock + skill (`Orchestrator.ps1 status -TargetPath …`).
 
-5. Crear `\.lab\` en la raíz si no existe. **No** usar `projects/.lab/` como path operativo.
-
-6. Copia manual (solo si no usás init): `runtime/antigravity/rules/*` → `.agents/rules/`; agents; skill; `GEMINI.md` (**merge** si ya existe).
+6. Crear `\.lab\` en la raíz si no existe. **No** usar `projects/.lab/` como path operativo.
 
 7. Ajustar modelos en frontmatter: `agy models` (o UI). Aliases `flash` / `pro` → preferir IDs concretos (`gemini-3.6-flash-high`, `gemini-3.1-pro-high`).
 
@@ -53,39 +70,46 @@ Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `ver
 
 9. Documentar cleanup: al terminar loop, **matar subagentes idle** (UI / `manage_subagents` si existe).
 
-## 3. Contenido crítico (no omitir)
+## 4. Contenido crítico (no omitir)
 
 En `.agents/rules/cj-orchestrator-bootstrap.md`, `.agents/rules/spacex-orchestrator.md` y GEMINI (compat):
 
-- **Lock/bootstrap:** chequear `.orchestrator-lock.json`; offer init; load skill when OK
+- **Lock/bootstrap (agent-native):** chequear `.orchestrator-lock.json`; ask → materialize; load skill when OK
 - **En criollo REQUIRED** en handoffs/close-out (3–6 frases prácticas)
 - Header `## Complexity` / Role / Action Delegate (T0 incluido)
 - **Zero direct execution** en hilo principal
+- **`define_subagent` + `invoke_subagent`** (no Cursor `Task`)
 - Routing table (6 base + skeptic/deletion opcionales)
 - **Hard gates:** Lab greenfield REQUIRED (`.lab/` en raíz), Maverick env-anomaly REQUIRED, Verifier close-gate, ESCALATE→scout
 - **Best-effort:** Scout soft, T3 auditors optional, Scout fan-out waves
 - Lifecycle cleanup; naming `YYYY-MM-DD-mav-<slug>`
 - Separación explícita **hard rules** vs **best-effort**
 
-## 4. Cómo delega
+## 5. Cómo delega
 
 ```text
+define_subagent → register role (once per session if needed)
 invoke_subagent → role name matching folder / description
 Model parameter: flash | gemini-3.1-pro-high | … (aliases remapeables)
 ```
 
 Handoffs ≤40 líneas (igual que 02).
 
-## 5. Caveats
+## 6. Caveats
 
 - Si el modelo trata SKILL.md como “docs opcionales”, **`.agents/rules/` + GEMINI`** deben repetir gates hard.
 - No uses paths CJ-linux en prompts Windows.
 - Maverick: ID concreto (`gemini-3.1-pro-high`), no solo alias `pro`.
 - GEMINI solo = OK en builds viejos; ideal instalar **ambos** rule + GEMINI merge.
 
-## 6. Smoke
+## 7. Smoke
 
-1. Pedido greenfield → lab-runner en `.lab/` (raíz) antes de implementer.
-2. Pedido con anomalía de entorno T2 → maverick sin que el usuario lo pida.
-3. Tras edit de implementer → verifier antes de “listo”.
-4. Fin de sesión → subagentes idle terminados.
+0. Playground sin repo → **sin** metodología (control negativo).
+1. Repo sin lock → agente **pregunta** (no scaffold silencioso).
+2. Tras «sí» → lock `source: agent-native` + `.agents/skills/orchestrator/SKILL.md` existen.
+3. Pedido greenfield → lab-runner en `.lab/` (raíz) antes de implementer.
+4. Pedido con anomalía de entorno T2 → maverick sin que el usuario lo pida.
+5. Trabajo real → header T0–T3 + `invoke_subagent` (no Task).
+6. Tras edit de implementer → verifier antes de “listo”.
+7. Cierre → `## En criollo` presente.
+8. Fin de sesión → subagentes idle terminados.

@@ -50,8 +50,10 @@ $RequiredRuntimeAssets = @(
     'runtime/antigravity/rules/spacex-orchestrator.md',
     'runtime/antigravity/rules/cj-orchestrator-bootstrap.md',
     'runtime/antigravity/GEMINI.user.md',
+    'runtime/antigravity/scaffold-manifest.json',
     'runtime/project/AGENTS.md',
     'runtime/skills/orchestrator/reference.wsl.md',
+    'runtime/skills/orchestrator/reference.antigravity.md',
     'runtime/opencode/opencode.jsonc.example',
     'runtime/codex/config.toml.example',
     'runtime/codex/agents/orchestrator.toml',
@@ -462,6 +464,46 @@ function Test-AgyBootstrapRule {
     Add-Pass 'Antigravity bootstrap rule present'
 }
 
+function Test-AgyAgentNative {
+    $skillPath = Join-Path $PackRoot 'runtime\skills\orchestrator\SKILL.md'
+    if (-not (Test-Path -LiteralPath $skillPath)) {
+        Add-Error 'Missing SKILL.md for agent-native check'
+        return
+    }
+    $skill = Get-Content -LiteralPath $skillPath -Raw
+    if ($skill -notmatch '(?i)define_subagent') {
+        Add-Error 'SKILL.md must document define_subagent for Antigravity 2.0'
+        return
+    }
+    if ($skill -notmatch '(?i)agent-native') {
+        Add-Error 'SKILL.md must document agent-native bootstrap'
+        return
+    }
+
+    $refPath = Join-Path $PackRoot 'runtime\skills\orchestrator\reference.antigravity.md'
+    if (-not (Test-Path -LiteralPath $refPath)) {
+        Add-Error 'Missing reference.antigravity.md'
+        return
+    }
+
+    $manifestPath = Join-Path $PackRoot 'runtime\antigravity\scaffold-manifest.json'
+    if (-not (Test-Path -LiteralPath $manifestPath)) {
+        Add-Error 'Missing runtime/antigravity/scaffold-manifest.json'
+        return
+    }
+
+    $geminiUser = Join-Path $PackRoot 'runtime\antigravity\GEMINI.user.md'
+    if (Test-Path -LiteralPath $geminiUser) {
+        $gu = Get-Content -LiteralPath $geminiUser -Raw
+        if ($gu -match '(?i)init -Scope project' -and $gu -notmatch '(?i)agent-native|materializ|in-repo') {
+            Add-Error 'GEMINI.user.md must not mandate CLI project init without agent-native path'
+            return
+        }
+    }
+
+    Add-Pass 'Antigravity agent-native wiring present'
+}
+
 function Test-GeminiUserTemplate {
     $path = Join-Path $PackRoot 'runtime\antigravity\GEMINI.user.md'
     if (-not (Test-Path -LiteralPath $path)) {
@@ -473,7 +515,7 @@ function Test-GeminiUserTemplate {
         Add-Error 'GEMINI.user.md must mention .orchestrator-lock.json'
         return
     }
-    if ($raw -notmatch '(?i)Never init alone|Nunca init') {
+    if ($raw -notmatch '(?i)Never init alone|Never initialize without user approval|Nunca init') {
         Add-Error 'GEMINI.user.md must forbid init alone'
         return
     }
@@ -564,6 +606,7 @@ Test-GatesDocumented
 Test-LockExampleSchema
 Test-BootstrapRule
 Test-AgyBootstrapRule
+Test-AgyAgentNative
 Test-GeminiUserTemplate
 Test-SecretPatterns -ScanRoots @($PackRoot)
 Test-InstallTarget -Target $TargetPath

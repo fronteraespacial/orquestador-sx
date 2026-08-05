@@ -239,7 +239,7 @@ check_gemini_user_template() {
   local f="$PACK_ROOT/runtime/antigravity/GEMINI.user.md"
   [[ -f "$f" ]] || { fail "Missing Antigravity user GEMINI template"; return; }
   grep -q 'orchestrator-lock.json' "$f" || { fail "GEMINI.user.md must mention .orchestrator-lock.json"; return; }
-  grep -qiE 'Never init alone|Nunca init' "$f" || { fail "GEMINI.user.md must forbid init alone"; return; }
+  grep -qiE 'Never init alone|Never initialize without user approval|Nunca init' "$f" || { fail "GEMINI.user.md must forbid init alone"; return; }
   grep -qi 'En criollo' "$f" || { fail "GEMINI.user.md must mention En criollo"; return; }
   local lines
   lines="$(wc -l < "$f" | tr -d ' ')"

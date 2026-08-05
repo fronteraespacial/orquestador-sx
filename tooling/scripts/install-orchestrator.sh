@@ -221,6 +221,7 @@ append_project_entries() {
     "skills/orchestrator/SKILL.md|.agents/skills/orchestrator/SKILL.md"
     "skills/orchestrator/reference.md|.agents/skills/orchestrator/reference.md"
     "skills/orchestrator/reference.wsl.md|.agents/skills/orchestrator/reference.wsl.md"
+    "skills/orchestrator/reference.antigravity.md|.agents/skills/orchestrator/reference.antigravity.md"
     "project/AGENTS.md|AGENTS.md"
     "GEMINI.md|GEMINI.md"
     "project/lab/README.md|.lab/README.md"
@@ -247,6 +248,7 @@ append_user_entries() {
     "skills/orchestrator/SKILL.md|.agents/skills/orchestrator/SKILL.md"
     "skills/orchestrator/reference.md|.agents/skills/orchestrator/reference.md"
     "skills/orchestrator/reference.wsl.md|.agents/skills/orchestrator/reference.wsl.md"
+    "skills/orchestrator/reference.antigravity.md|.agents/skills/orchestrator/reference.antigravity.md"
     "opencode/opencode.jsonc.example|.config/opencode/opencode.jsonc"
   )
 }

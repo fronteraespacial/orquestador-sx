@@ -2,6 +2,23 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.7] - 2026-08-05
+
+### Added
+
+- **`runtime/skills/orchestrator/reference.antigravity.md`:** Antigravity 2.0 Desktop wiring (`define_subagent` + `invoke_subagent`, agent-native bootstrap, role templates).
+- **`runtime/antigravity/scaffold-manifest.json`:** path list for agent-native materialization after human yes.
+- **`docs/agent/SCAFFOLD-MANIFEST.md`:** agent copy list pointer for Desktop scaffold.
+
+### Changed
+
+- **Agent-native bootstrap (Antigravity Desktop):** global `GEMINI.user` ask → agent writes lock + `.agents/` tree — **`Orchestrator.ps1 init` not required** on Desktop (CLI remains Path B).
+- **`runtime/skills/orchestrator/SKILL.md`:** § Antigravity 2.0 Desktop with `define_subagent` templates (8 roles) + agent-native lock example.
+- **`runtime/antigravity/rules/cj-orchestrator-bootstrap.md`**, **`spacex-orchestrator.md`**, **`runtime/GEMINI.md`:** agent-native bootstrap + spawn API.
+- **`docs/human/install/antigravity-windows.md`:** Path A (agent-native) vs Path B (CLI); smoke tests for ask/scaffold/delegate.
+- **`Install-Orchestrator.ps1`**, **`install-orchestrator.sh`:** project map includes `reference.antigravity.md`.
+- **Validators:** require `reference.antigravity.md`, `scaffold-manifest.json`, `define_subagent` + `agent-native` tokens in SKILL.
+
 ## [1.2.6] - 2026-08-05
 
 ### Changed

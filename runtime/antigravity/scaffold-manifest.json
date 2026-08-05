@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0",
+  "description": "Minimum paths agent materializes after human approves AGY native init",
+  "lock": {
+    "path": ".orchestrator-lock.json",
+    "template": {
+      "schemaVersion": "1.0",
+      "enabled": true,
+      "source": "agent-native",
+      "policy": "track-stable",
+      "version": "1.2.x",
+      "sha256": "",
+      "installed_at": "<ISO8601>",
+      "last_check_at": ""
+    },
+    "notes": "Agent sets version/sha256 from pack VERSION/SHA256SUMS if workspace contains pack; else semver placeholder."
+  },
+  "paths": [
+    { "path": ".orchestrator-lock.json", "required": true },
+    { "path": ".agents/skills/orchestrator/SKILL.md", "required": true, "source": "runtime/skills/orchestrator/SKILL.md" },
+    { "path": ".agents/skills/orchestrator/reference.antigravity.md", "required": false, "source": "runtime/skills/orchestrator/reference.antigravity.md" },
+    { "path": ".agents/skills/orchestrator/reference.md", "required": false, "source": "runtime/skills/orchestrator/reference.md" },
+    { "path": ".agents/rules/cj-orchestrator-bootstrap.md", "required": true, "source": "runtime/antigravity/rules/cj-orchestrator-bootstrap.md" },
+    { "path": ".agents/rules/spacex-orchestrator.md", "required": true, "source": "runtime/antigravity/rules/spacex-orchestrator.md" },
+    { "path": ".agents/agents/explore/agent.md", "required": true },
+    { "path": ".agents/agents/scout/agent.md", "required": true },
+    { "path": ".agents/agents/maverick/agent.md", "required": true },
+    { "path": ".agents/agents/lab-runner/agent.md", "required": true },
+    { "path": ".agents/agents/implementer/agent.md", "required": true },
+    { "path": ".agents/agents/verifier/agent.md", "required": true },
+    { "path": ".agents/agents/skeptic/agent.md", "required": true },
+    { "path": ".agents/agents/deletion/agent.md", "required": true },
+    { "path": "GEMINI.md", "required": true, "merge": true },
+    { "path": "AGENTS.md", "required": false, "source": "runtime/project/AGENTS.md" },
+    { "path": ".lab/README.md", "required": true, "source": "runtime/project/lab/README.md" }
+  ],
+  "roles": [
+    "explore", "scout", "maverick", "lab-runner", "implementer", "verifier", "skeptic", "deletion"
+  ],
+  "post_scaffold": [
+    "define_subagent for each role (SKILL templates)",
+    "Remind human: Customizations → Always On on bootstrap + spacex-orchestrator rules",
+    "Load SKILL.md before orchestrated work"
+  ],
+  "forbidden": [
+    "Silent scaffold without human yes",
+    "Overwrite human GEMINI.md without merge",
+    "Require Orchestrator.ps1 init for AGY Desktop first-run"
+  ]
+}
