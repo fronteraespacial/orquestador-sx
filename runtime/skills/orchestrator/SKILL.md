@@ -62,8 +62,8 @@ On Antigravity Desktop, register roles with **`define_subagent`** and delegate w
 
 When global `~/.gemini/GEMINI.md` (user block) or bootstrap rule triggers ask-first:
 
-1. Human **yes** → agent **writes** `.orchestrator-lock.json` + materializes minimum tree (see `runtime/antigravity/scaffold-manifest.json` / [reference.antigravity.md](reference.antigravity.md)).
-2. Copy content from pack `runtime/` paths if the pack is open in workspace; else use embedded templates below.
+1. Human **yes** → agent **writes** `.orchestrator-lock.json` + **FETCH/COPY** minimum tree (see `runtime/antigravity/scaffold-manifest.json`, [SCAFFOLD-FETCH.md](../../antigravity/SCAFFOLD-FETCH.md), [reference.antigravity.md](reference.antigravity.md)). **Never generate or invent** SKILL/rules/agents.
+2. Source order: pack `runtime/` in workspace → GitHub raw (`rawBase` in manifest; `main` until tag `v1.2.8`) → ask local clone/zip. Run **integrity check** on SKILL (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`); on fail delete fake files and re-fetch or STOP.
 3. **`Orchestrator.ps1 init`** is **optional** (canonical-frase / advanced / SHA256 release path) — **not** required for AGY Desktop bootstrap.
 
 Lock example after agent scaffold:
@@ -391,6 +391,8 @@ Canonical root: **`.lab/`** at repo root (see pack `runtime/project/lab/README.m
 **Surface spawn:** Cursor → [reference.md](reference.md) (`Task`). Antigravity Desktop → [reference.antigravity.md](reference.antigravity.md) (`define_subagent` + `invoke_subagent` — **not** Cursor `Task`). Skills do **not** switch models — remap on host.
 
 ### Cursor model routing (pack policy)
+
+**Hard rule:** canonical Composer ID = **`composer-2.5-fast`**. **Never** `composer-2.5` without `-fast` (frontmatter, Task `model:`, or `[fast=false]`).
 
 While IDs exist on the host:
 

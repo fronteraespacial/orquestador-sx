@@ -13,7 +13,7 @@ Antigravity carga subagentes desde `.agents/agents/` con frontmatter `subagent: 
 1. Una vez por máquina: `Orchestrator.ps1 init -Scope user -ConfirmUserScope` (merge `~/.gemini/GEMINI.md`).
 2. Abrí el repo destino en Antigravity Desktop.
 3. En chat de trabajo, el agente **pregunta** si preparar con Orquestador SX.
-4. Si aceptás → el agente **crea** `.orchestrator-lock.json` y materializa skill/rules/agents (ver `runtime/antigravity/scaffold-manifest.json` y [`docs/agent/SCAFFOLD-MANIFEST.md`](../agent/SCAFFOLD-MANIFEST.md)).
+4. Si aceptás → el agente **FETCH/COPY** canónico: `.orchestrator-lock.json` + skill/rules/agents desde pack local o GitHub raw (ver `scaffold-manifest.json`, [`SCAFFOLD-FETCH.md`](../../runtime/antigravity/SCAFFOLD-FETCH.md), [`SCAFFOLD-MANIFEST.md`](../agent/SCAFFOLD-MANIFEST.md)). **Nunca** generar/inventar SKILL. Si aparece skill inventado → borrar `.agents/` fake y re-scaffold.
 5. Customizations → **Always On**: `cj-orchestrator-bootstrap`, `spacex-orchestrator`.
 
 **Path B — CLI (opcional / avanzado / CI):**
@@ -106,7 +106,7 @@ Handoffs ≤40 líneas (igual que 02).
 
 0. Playground sin repo → **sin** metodología (control negativo).
 1. Repo sin lock → agente **pregunta** (no scaffold silencioso).
-2. Tras «sí» → lock `source: agent-native` + `.agents/skills/orchestrator/SKILL.md` existen.
+2. Tras «sí» → lock `source: agent-native` + `.agents/skills/orchestrator/SKILL.md` existen y pasan integrity (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`; SKILL >> 20 líneas).
 3. Pedido greenfield → lab-runner en `.lab/` (raíz) antes de implementer.
 4. Pedido con anomalía de entorno T2 → maverick sin que el usuario lo pida.
 5. Trabajo real → header T0–T3 + `invoke_subagent` (no Task).

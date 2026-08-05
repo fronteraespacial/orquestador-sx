@@ -51,6 +51,7 @@ $RequiredRuntimeAssets = @(
     'runtime/antigravity/rules/cj-orchestrator-bootstrap.md',
     'runtime/antigravity/GEMINI.user.md',
     'runtime/antigravity/scaffold-manifest.json',
+    'runtime/antigravity/SCAFFOLD-FETCH.md',
     'runtime/project/AGENTS.md',
     'runtime/skills/orchestrator/reference.wsl.md',
     'runtime/skills/orchestrator/reference.antigravity.md',
@@ -492,11 +493,45 @@ function Test-AgyAgentNative {
         return
     }
 
+    try {
+        $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+        if (-not $manifest.rawBase) {
+            Add-Error 'scaffold-manifest.json must define rawBase for GitHub fetch'
+            return
+        }
+        if (-not $manifest.integrityMarkers) {
+            Add-Error 'scaffold-manifest.json must define integrityMarkers'
+            return
+        }
+    }
+    catch {
+        Add-Error "scaffold-manifest.json invalid JSON: $_"
+        return
+    }
+
+    $fetchGuide = Join-Path $PackRoot 'runtime\antigravity\SCAFFOLD-FETCH.md'
+    if (-not (Test-Path -LiteralPath $fetchGuide)) {
+        Add-Error 'Missing runtime/antigravity/SCAFFOLD-FETCH.md'
+        return
+    }
+
     $geminiUser = Join-Path $PackRoot 'runtime\antigravity\GEMINI.user.md'
     if (Test-Path -LiteralPath $geminiUser) {
         $gu = Get-Content -LiteralPath $geminiUser -Raw
-        if ($gu -match '(?i)init -Scope project' -and $gu -notmatch '(?i)agent-native|materializ|in-repo') {
+        if ($gu -match '(?i)init -Scope project' -and $gu -notmatch '(?i)agent-native|materializ|in-repo|FETCH|COPY') {
             Add-Error 'GEMINI.user.md must not mandate CLI project init without agent-native path'
+            return
+        }
+        if ($gu -match '(?i)(?<!(never |not ))generate.*(`\.agents|SKILL\.md)') {
+            Add-Error 'GEMINI.user.md must not instruct agent to generate SKILL — use FETCH/COPY'
+            return
+        }
+        if ($gu -notmatch '(?i)FETCH|COPY') {
+            Add-Error 'GEMINI.user.md must instruct FETCH/COPY for canonical scaffold'
+            return
+        }
+        if ($gu -notmatch 'T0') {
+            Add-Error 'GEMINI.user.md must document integrity markers (T0–T3)'
             return
         }
     }
@@ -521,6 +556,14 @@ function Test-GeminiUserTemplate {
     }
     if ($raw -notmatch '(?i)En criollo') {
         Add-Error 'GEMINI.user.md must mention En criollo'
+        return
+    }
+    if ($raw -match '(?i)(?<!(never |not ))generate.*(`\.agents|SKILL\.md)') {
+        Add-Error 'GEMINI.user.md must not instruct agent to generate SKILL — use FETCH/COPY'
+        return
+    }
+    if ($raw -notmatch '(?i)FETCH|COPY') {
+        Add-Error 'GEMINI.user.md must instruct FETCH/COPY for canonical scaffold'
         return
     }
     $lineCount = @($raw -split '\r?\n').Count

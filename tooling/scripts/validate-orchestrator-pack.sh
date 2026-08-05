@@ -36,6 +36,8 @@ REQUIRED_ASSETS=(
   runtime/antigravity/rules/spacex-orchestrator.md
   runtime/antigravity/rules/cj-orchestrator-bootstrap.md
   runtime/antigravity/GEMINI.user.md
+  runtime/antigravity/scaffold-manifest.json
+  runtime/antigravity/SCAFFOLD-FETCH.md
   runtime/project/AGENTS.md
   runtime/skills/orchestrator/reference.wsl.md
   runtime/opencode/opencode.jsonc.example
@@ -241,6 +243,10 @@ check_gemini_user_template() {
   grep -q 'orchestrator-lock.json' "$f" || { fail "GEMINI.user.md must mention .orchestrator-lock.json"; return; }
   grep -qiE 'Never init alone|Never initialize without user approval|Nunca init' "$f" || { fail "GEMINI.user.md must forbid init alone"; return; }
   grep -qi 'En criollo' "$f" || { fail "GEMINI.user.md must mention En criollo"; return; }
+  if grep -qiE 'generate.*(`\.agents|SKILL\.md)' "$f" && ! grep -qi 'never generate' "$f"; then
+    fail "GEMINI.user.md must not instruct generate SKILL — use FETCH/COPY"; return
+  fi
+  grep -qiE 'FETCH|COPY' "$f" || { fail "GEMINI.user.md must instruct FETCH/COPY"; return; }
   local lines
   lines="$(wc -l < "$f" | tr -d ' ')"
   [[ "$lines" -le 15 ]] || warn "GEMINI.user.md has $lines lines (target micro <=15)"

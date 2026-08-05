@@ -2,6 +2,22 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.8] - 2026-08-05
+
+### Added
+
+- **`runtime/antigravity/SCAFFOLD-FETCH.md`:** agent-facing FETCH/COPY checklist + raw GitHub URL examples.
+- **`scaffold-manifest.json`:** `rawBase`, `rawBaseFallback`, `rawPath` per file, `integrityMarkers`.
+
+### Changed
+
+- **Composer routing hard rule:** canonical ID `composer-2.5-fast`; never `composer-2.5` without `-fast` in operational templates/policy (`MODEL-ROUTING-POLICY.md`, `07-MODELS-MATRIX.md`, SKILL, AGENTS, mandatory rule).
+- **Antigravity bootstrap:** global `GEMINI.user` and project rules now **FETCH/COPY** canonical SKILL/agents/rules from pack or GitHub raw — **PROHIBIDO generate/invent** methodology content.
+- **Integrity gate:** after scaffold, SKILL must contain `T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`; fake short skills → delete and re-fetch.
+- **`SKILL.md` § Antigravity:** removed “embedded templates below” as SKILL source; templates remain for `define_subagent` only.
+- **`reference.antigravity.md`**, **`docs/agent/SCAFFOLD-MANIFEST.md`**, **`docs/human/install/antigravity-windows.md`:** fetch-first docs + integrity markers.
+- **Validators:** require `SCAFFOLD-FETCH.md`, `rawBase` in manifest, GEMINI.user must not say “generate”.
+
 ## [1.2.7] - 2026-08-05
 
 ### Added

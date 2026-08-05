@@ -56,6 +56,6 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
 | skeptic | T3 requirements audit | No |
 | deletion | T3 delete proposals | No |
 
-**Models (Cursor):** parent `cursor-grok-4.5-high`; maverick always `cursor-grok-4.5-high-fast`; lab clear → `composer-2.5-fast`, lab T2/T3/ambiguous/anomaly → Task `cursor-grok-4.5-high-fast`; implementer/light → `composer-2.5-fast`; verifier mechanical DoD → `composer-2.5-fast`, judgment DoD or Composer-tier writer → Task `cursor-grok-4.5-high-fast`. Composer fail → keep delta → one Grok High Fast corrective. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/agent/MODEL-ROUTING-POLICY.md`.
+**Models (Cursor):** parent `cursor-grok-4.5-high`; maverick always `cursor-grok-4.5-high-fast`; lab clear → `composer-2.5-fast`, lab T2/T3/ambiguous/anomaly → Task `cursor-grok-4.5-high-fast`; implementer/light → `composer-2.5-fast`; verifier mechanical DoD → `composer-2.5-fast`, judgment DoD or Composer-tier writer → Task `cursor-grok-4.5-high-fast`. **Never** `composer-2.5` without `-fast` (canonical = `composer-2.5-fast`). Composer fail → keep delta → one Grok High Fast corrective. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/agent/MODEL-ROUTING-POLICY.md`.
 
 **Wiring:** `.agents/skills/orchestrator/reference.md`

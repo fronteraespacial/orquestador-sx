@@ -56,8 +56,8 @@ Cursor already ships subagents (docs: [subagents](https://cursor.com/docs/subage
 **Task / model caveats (CLI):**
 
 - Prefer **project** `.cursor/agents/` (this workspace). User-level `~/.cursor/agents/` may not appear in CLI completions (known IDE/CLI mismatch).
-- Pass `model: "composer-2.5-fast"` when the Task allowlist permits. Live allowlist commonly includes `composer-2.5`, `composer-2.5-fast`, `grok-4.5-*`, `gemini-3-flash`, `gemini-3.5-flash`.
-- `model: inherit` in frontmatter can be unreliable on CLI — prefer an explicit ID, omit the field, or use `composer-2.5[fast=false]` when needed.
+- Pass `model: "composer-2.5-fast"` when the Task allowlist permits. **Never** non-Fast `composer-2.5` in operational routing (pack hard rule).
+- `model: inherit` in frontmatter can be unreliable on CLI — prefer explicit `composer-2.5-fast`, or omit the field.
 - If Task rejects or omits model override → paste **LIGHTWEIGHT MODE** from [SKILL.md](SKILL.md) into the child prompt.
 - Parent agent may still use tools (Cursor product design). CJ policy still prefers enrich → Task for T1+ prod edits; do not invent a fake `invoke_subagent` API.
 

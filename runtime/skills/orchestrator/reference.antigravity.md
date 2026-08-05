@@ -15,10 +15,11 @@ Primary spawn surface for **Antigravity Desktop**. Cursor/OpenCode use [referenc
 
 Global `~/.gemini/GEMINI.md` (user init) asks before prepare. With human yes, agent **may scaffold in-repo** without CLI-only path:
 
-1. Write `.orchestrator-lock.json` — `enabled: true`, `version` from pack `VERSION` (≥1.2.7), `source: agent-native`, `installed_at` ISO8601.
-2. Materialize `.agents/skills/orchestrator/SKILL.md` (+ this file) from pack or GitHub raw/release [`fronteraespacial/orquestador-sx`](https://github.com/fronteraespacial/orquestador-sx). Path list: `runtime/antigravity/scaffold-manifest.json`.
-3. Copy Antigravity minimum: `.agents/rules/cj-orchestrator-bootstrap.md`, `.agents/rules/spacex-orchestrator.md`, `.agents/agents/<role>/agent.md`, repo `GEMINI.md` (merge).
-4. No network → ask local pack path or clone. **Ask-first always** — never silent init.
+1. Write `.orchestrator-lock.json` — `enabled: true`, `version` from pack `VERSION` (≥1.2.8), `source: agent-native`, `installed_at` ISO8601.
+2. **FETCH/COPY only — PROHIBIDO inventar SKILL.** Materialize `.agents/skills/orchestrator/SKILL.md` (+ this file) from pack `runtime/` or GitHub raw [`fronteraespacial/orquestador-sx`](https://github.com/fronteraespacial/orquestador-sx) via `rawBase`/`rawPath` in `runtime/antigravity/scaffold-manifest.json`. Steps: [`SCAFFOLD-FETCH.md`](../../antigravity/SCAFFOLD-FETCH.md).
+3. Copy Antigravity minimum: rules, 8× `.agents/agents/<role>/agent.md`, repo `GEMINI.md` (merge), `.lab/README.md`.
+4. **Integrity check:** SKILL must contain `T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`. On fail → delete fake tree, re-fetch, or STOP.
+5. No network → ask local pack path or clone. **Ask-first always** — never silent init.
 
 CLI `Orchestrator.ps1 init -Scope project` remains valid **alternative** (Windows/Cursor).
 

@@ -20,6 +20,8 @@ El Orquestador **no necesita** modelo “con tools de edición”; necesita disc
 
 ## 2. Cursor
 
+**Regla dura Composer:** ID canónico **`composer-2.5-fast`**. **Nunca** `composer-2.5` sin `-fast` en routing operativo (frontmatter / Task `model:`).
+
 `agent --list-models` o UI. Estado versionado: [`docs/agent/MODEL-ROUTING-POLICY.md`](docs/agent/MODEL-ROUTING-POLICY.md).
 
 | Rol | Default pack | Notas |

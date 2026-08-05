@@ -8,6 +8,8 @@ This document separates **what was measured**, **external signals**, **the opera
 
 ## 1. Exact operational policy (Cursor)
 
+**Hard rule (Composer):** canonical ID = **`composer-2.5-fast`**. **Never** route to `composer-2.5` without `-fast` (no `composer-2.5[fast=false]`, no bare `composer-2.5` in frontmatter or Task `model:`). Cost delta vs non-Fast is negligible; speed wins.
+
 While these model IDs remain available on the host (`agent --list-models`):
 
 | Actor | Model ID | When |
@@ -90,7 +92,7 @@ The pack pins:
 1. Run `agent --list-models` (or UI equivalent).
 2. If `cursor-grok-4.5-high` is missing → nearest non-Fast Grok / frontier **high** reasoning ID; document in `MODELS.local.md` and install handoff.
 3. If `cursor-grok-4.5-high-fast` is missing → nearest Grok Fast / high-reasoning creativo ≥ implementer tier.
-4. If `composer-2.5-fast` is missing → nearest fast tool-use Composer (or `composer-2.5` if Fast absent).
+4. If `composer-2.5-fast` is missing → nearest **fast** tool-use Composer ID on the host; **never** fall back to non-Fast `composer-2.5`.
 5. Prefer Task `model:` override when frontmatter ID is wrong for the host; do not invent new roles.
 
 `model: inherit` is **not** the orchestrator default (CLI instability). Explicit `cursor-grok-4.5-high` is the verified template pin.

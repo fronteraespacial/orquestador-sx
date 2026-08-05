@@ -22,6 +22,8 @@ Primary reference for this pack. CJ-linux snapshot: `reference.cj-linux.md` (**a
 
 ## Cursor model defaults (pack)
 
+**Hard rule:** canonical Composer ID = **`composer-2.5-fast`**. Never `composer-2.5` without `-fast`.
+
 | Role | ID | Notes |
 |------|-----|-------|
 | orchestrator | `cursor-grok-4.5-high` | Explicit; not `inherit` |

@@ -1,6 +1,9 @@
 {
-  "schemaVersion": "1.0",
-  "description": "Minimum paths agent materializes after human approves AGY native init",
+  "schemaVersion": "1.1",
+  "description": "Minimum paths agent materializes after human approves AGY native init — FETCH/COPY only, never invent",
+  "rawBase": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/main",
+  "rawBaseFallback": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.7",
+  "rawBaseNote": "Prefer main until tag v1.2.8 exists on GitHub; then pin rawBase to v1.2.8. Each file: rawUrl = rawBase + '/' + rawPath.",
   "lock": {
     "path": ".orchestrator-lock.json",
     "template": {
@@ -8,41 +11,49 @@
       "enabled": true,
       "source": "agent-native",
       "policy": "track-stable",
-      "version": "1.2.x",
+      "version": "1.2.8",
       "sha256": "",
       "installed_at": "<ISO8601>",
       "last_check_at": ""
     },
-    "notes": "Agent sets version/sha256 from pack VERSION/SHA256SUMS if workspace contains pack; else semver placeholder."
+    "notes": "Agent sets version/sha256 from pack VERSION/SHA256SUMS if workspace contains pack; else from fetched rawBase tag or main."
   },
+  "integrityMarkers": [
+    "T0–T3",
+    "Zero direct execution",
+    "lab-runner",
+    "invoke_subagent"
+  ],
   "paths": [
     { "path": ".orchestrator-lock.json", "required": true },
-    { "path": ".agents/skills/orchestrator/SKILL.md", "required": true, "source": "runtime/skills/orchestrator/SKILL.md" },
-    { "path": ".agents/skills/orchestrator/reference.antigravity.md", "required": false, "source": "runtime/skills/orchestrator/reference.antigravity.md" },
-    { "path": ".agents/skills/orchestrator/reference.md", "required": false, "source": "runtime/skills/orchestrator/reference.md" },
-    { "path": ".agents/rules/cj-orchestrator-bootstrap.md", "required": true, "source": "runtime/antigravity/rules/cj-orchestrator-bootstrap.md" },
-    { "path": ".agents/rules/spacex-orchestrator.md", "required": true, "source": "runtime/antigravity/rules/spacex-orchestrator.md" },
-    { "path": ".agents/agents/explore/agent.md", "required": true },
-    { "path": ".agents/agents/scout/agent.md", "required": true },
-    { "path": ".agents/agents/maverick/agent.md", "required": true },
-    { "path": ".agents/agents/lab-runner/agent.md", "required": true },
-    { "path": ".agents/agents/implementer/agent.md", "required": true },
-    { "path": ".agents/agents/verifier/agent.md", "required": true },
-    { "path": ".agents/agents/skeptic/agent.md", "required": true },
-    { "path": ".agents/agents/deletion/agent.md", "required": true },
-    { "path": "GEMINI.md", "required": true, "merge": true },
-    { "path": "AGENTS.md", "required": false, "source": "runtime/project/AGENTS.md" },
-    { "path": ".lab/README.md", "required": true, "source": "runtime/project/lab/README.md" }
+    { "path": ".agents/skills/orchestrator/SKILL.md", "required": true, "source": "runtime/skills/orchestrator/SKILL.md", "rawPath": "runtime/skills/orchestrator/SKILL.md" },
+    { "path": ".agents/skills/orchestrator/reference.antigravity.md", "required": false, "source": "runtime/skills/orchestrator/reference.antigravity.md", "rawPath": "runtime/skills/orchestrator/reference.antigravity.md" },
+    { "path": ".agents/skills/orchestrator/reference.md", "required": false, "source": "runtime/skills/orchestrator/reference.md", "rawPath": "runtime/skills/orchestrator/reference.md" },
+    { "path": ".agents/rules/cj-orchestrator-bootstrap.md", "required": true, "source": "runtime/antigravity/rules/cj-orchestrator-bootstrap.md", "rawPath": "runtime/antigravity/rules/cj-orchestrator-bootstrap.md" },
+    { "path": ".agents/rules/spacex-orchestrator.md", "required": true, "source": "runtime/antigravity/rules/spacex-orchestrator.md", "rawPath": "runtime/antigravity/rules/spacex-orchestrator.md" },
+    { "path": ".agents/agents/explore/agent.md", "required": true, "source": "runtime/antigravity/agents/explore/agent.md", "rawPath": "runtime/antigravity/agents/explore/agent.md" },
+    { "path": ".agents/agents/scout/agent.md", "required": true, "source": "runtime/antigravity/agents/scout/agent.md", "rawPath": "runtime/antigravity/agents/scout/agent.md" },
+    { "path": ".agents/agents/maverick/agent.md", "required": true, "source": "runtime/antigravity/agents/maverick/agent.md", "rawPath": "runtime/antigravity/agents/maverick/agent.md" },
+    { "path": ".agents/agents/lab-runner/agent.md", "required": true, "source": "runtime/antigravity/agents/lab-runner/agent.md", "rawPath": "runtime/antigravity/agents/lab-runner/agent.md" },
+    { "path": ".agents/agents/implementer/agent.md", "required": true, "source": "runtime/antigravity/agents/implementer/agent.md", "rawPath": "runtime/antigravity/agents/implementer/agent.md" },
+    { "path": ".agents/agents/verifier/agent.md", "required": true, "source": "runtime/antigravity/agents/verifier/agent.md", "rawPath": "runtime/antigravity/agents/verifier/agent.md" },
+    { "path": ".agents/agents/skeptic/agent.md", "required": true, "source": "runtime/antigravity/agents/skeptic/agent.md", "rawPath": "runtime/antigravity/agents/skeptic/agent.md" },
+    { "path": ".agents/agents/deletion/agent.md", "required": true, "source": "runtime/antigravity/agents/deletion/agent.md", "rawPath": "runtime/antigravity/agents/deletion/agent.md" },
+    { "path": "GEMINI.md", "required": true, "merge": true, "source": "runtime/GEMINI.md", "rawPath": "runtime/GEMINI.md" },
+    { "path": "AGENTS.md", "required": false, "source": "runtime/project/AGENTS.md", "rawPath": "runtime/project/AGENTS.md" },
+    { "path": ".lab/README.md", "required": true, "source": "runtime/project/lab/README.md", "rawPath": "runtime/project/lab/README.md" }
   ],
   "roles": [
     "explore", "scout", "maverick", "lab-runner", "implementer", "verifier", "skeptic", "deletion"
   ],
   "post_scaffold": [
-    "define_subagent for each role (SKILL templates)",
+    "define_subagent for each role (SKILL templates in reference.antigravity.md)",
+    "Run integrity check on SKILL.md (integrityMarkers)",
     "Remind human: Customizations → Always On on bootstrap + spacex-orchestrator rules",
     "Load SKILL.md before orchestrated work"
   ],
   "forbidden": [
+    "Generate or invent SKILL.md, rules, or agent defs",
     "Silent scaffold without human yes",
     "Overwrite human GEMINI.md without merge",
     "Require Orchestrator.ps1 init for AGY Desktop first-run"

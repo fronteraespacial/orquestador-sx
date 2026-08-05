@@ -44,12 +44,14 @@ See `.lab/README.md`. Verdicts: APPROVE | REVISE | REJECT | YIELD. Never import 
 
 Skills do not switch models. Remap IDs per host (`07-MODELS-MATRIX.md` / optional `MODELS.local.md`).
 
+**Hard rule:** Composer canonical ID = **`composer-2.5-fast`**. Never `composer-2.5` without `-fast`.
+
 | Role | Default | When remap |
 |------|---------|------------|
-| Parent orchestrator | Grok High | — |
-| Implementer | Composer Fast | — |
-| Maverick / ambiguous lab | Grok High Fast | env anomaly, T2/T3 lab |
-| **Verifier (mechanical)** | Composer Fast | scripts, exit codes, lock/hash checks |
-| **Verifier (judgment)** | Grok High Fast (Task) | docs/prompt clarity, security/methodology; Composer-tier writer |
+| Parent orchestrator | `cursor-grok-4.5-high` | — |
+| Implementer / light roles | `composer-2.5-fast` | — |
+| Maverick / ambiguous lab | `cursor-grok-4.5-high-fast` | env anomaly, T2/T3 lab |
+| **Verifier (mechanical)** | `composer-2.5-fast` | scripts, exit codes, lock/hash checks |
+| **Verifier (judgment)** | `cursor-grok-4.5-high-fast` (Task) | docs/prompt clarity, security/methodology; Composer-tier writer |
 
 Parent spot-checks verifier handoff (1–2 claims; no full DoD re-run); cascade Grok Fast verifier if doubt. Detail: `docs/MODEL-ROUTING-POLICY.md`.

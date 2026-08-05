@@ -4,7 +4,7 @@
 **Always On:** Antigravity → **Customizations** → enable this rule + `cj-orchestrator-bootstrap.md`.  
 **Compat layer:** `GEMINI.md` at repo root (merge, do not replace user rules).
 
-**Bootstrap (agent-native):** before orchestrated work, check `.orchestrator-lock.json` (`enabled`, `version`, `sha256`). Missing lock → **ask** human (global `~/.gemini` block); on yes → **agent writes lock + materializes** `.agents/` tree (see `runtime/antigravity/scaffold-manifest.json`) — **no `Orchestrator.ps1` required** on Desktop. Canonical install/update frase may still use pack scripts. Lock OK → load `.agents/skills/orchestrator/SKILL.md`; **`define_subagent`** + **`invoke_subagent`** for delegation.
+**Bootstrap (agent-native):** before orchestrated work, check `.orchestrator-lock.json` (`enabled`, `version`, `sha256`). Missing lock → **ask** human (global `~/.gemini` block); on yes → **agent writes lock + FETCH/COPY** `.agents/` tree from pack or GitHub raw (see `scaffold-manifest.json` / `SCAFFOLD-FETCH.md`) — **never generate or invent** SKILL — **no `Orchestrator.ps1` required** on Desktop. Integrity: SKILL must contain `T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`. Canonical install/update frase may still use pack scripts. Lock OK → load `.agents/skills/orchestrator/SKILL.md`; **`define_subagent`** + **`invoke_subagent`** for delegation.
 
 **En criollo (REQUIRED):** handoffs and close-outs include `## En criollo` **at the end** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. Pack installs Cursor rule `.cursor/rules/cj-criollo-changelog.mdc`; Antigravity follows the same contract via bootstrap + `AGENTS.md`.
 

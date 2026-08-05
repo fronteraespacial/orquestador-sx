@@ -100,7 +100,7 @@ Cursor `readonly` is a **product hint**, not an absolute sandbox. It may reduce 
 
 ## Models (verified defaults — remappable)
 
-Parent default is **`cursor-grok-4.5-high`** (explicit; **not** `inherit`). Validate IDs with `agent --list-models`. Remap if missing — see `docs/MODEL-ROUTING-POLICY.md` §5 and `07-MODELS-MATRIX.md`.
+Parent default is **`cursor-grok-4.5-high`** (explicit; **not** `inherit`). **Composer hard rule:** canonical = **`composer-2.5-fast`** — never `composer-2.5` without `-fast`. Validate IDs with `agent --list-models`. Remap if missing — see `docs/MODEL-ROUTING-POLICY.md` §5 and `07-MODELS-MATRIX.md`.
 
 | Role | Default / Task `model:` | When / remap |
 |------|-------------------------|--------------|
