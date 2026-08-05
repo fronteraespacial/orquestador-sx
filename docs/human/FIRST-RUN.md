@@ -11,7 +11,7 @@ Guía humana para la primera instalación del **Orquestador SX** v1.2.0 en **Win
 Descargar **`orquestador-sx-v1.2.0.zip`** desde el release y verificar:
 
 ```text
-PLACEHOLDER_SHA256  orquestador-sx-v1.2.0.zip
+e2656ffde8dcccfb53164021de1fc671ea93b4238ef537e653c90a7562339aec  orquestador-sx-v1.2.0.zip
 ```
 
 Alternativa sin `gh`: clonar el repo o descargar el zip del release desde el navegador — no requiere autenticación.

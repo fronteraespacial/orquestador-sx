@@ -22,7 +22,7 @@ Metodología **Orquestador SX** (subagentes T0–T3, `.lab`, gates) para Cursor 
 Descargá **`orquestador-sx-v1.2.0.zip`** y verificá SHA256:
 
 ```text
-PLACEHOLDER_SHA256  orquestador-sx-v1.2.0.zip
+e2656ffde8dcccfb53164021de1fc671ea93b4238ef537e653c90a7562339aec  orquestador-sx-v1.2.0.zip
 ```
 
 Repo **público discreto** (link-only).
