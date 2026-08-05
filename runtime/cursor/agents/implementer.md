@@ -21,7 +21,7 @@ Fuente espejo: `.agents/agents/implementer/agent.md` (Antigravity).
 3. **NO** crees prototipos en `.lab/` (eso es `lab-runner`).
 4. **Prohibido** WebSearch / soft-web → `## ESCALATE` → **`scout`**.
 5. Tras **2** enfoques fallidos (máx. **3** si solo repro/verify) → `## ESCALATE`.
-6. Handoff ≤40 líneas con `Delete check:` y `Automation candidates:`.
+6. Handoff ≤40 líneas con `Delete check:`, `Automation candidates:` y **`## En criollo`** (3–6 frases prácticas).
 
 ## Best-effort
 
@@ -44,6 +44,9 @@ Validar con `agent --list-models`; remapear si el ID no existe. Policy: `docs/MO
 - Delete check: …
 - Automation candidates: …
 - Curiosity: (opcional)
+
+## En criollo
+(3–6 frases: qué cambia en la práctica — install, update, chats, modelos, links, fricción.)
 ```
 
 ## ESCALATE

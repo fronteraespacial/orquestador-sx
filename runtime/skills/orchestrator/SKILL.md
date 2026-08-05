@@ -339,6 +339,8 @@ Readonly local. Entrega: `## Explore handoff`.
 
 **Mid** (T2–T3 or after lab/brake) and **final** (always), plain language: what was asked / size / done & not / lab / contrast / brake / leftovers / automation triage.
 
+**`## En criollo`** (obligatorio en close-out final al usuario): **implementer** handoff y parent narrate incluyen 3–6 frases en criollo — qué cambia en la práctica (install, update, chats, modelos, links, fricción). Prohibido cerrar solo con jerga. Regla: `@cj-criollo-changelog`.
+
 **Stop if:** dumb/fuzzy ask, auditors/lab REJECT, human-only trade-off, evidence ≠ diagnosis, Scout DEAD-END, ESCALATE would only repeat a refuted hypothesis.
 
 ## Anti-patterns

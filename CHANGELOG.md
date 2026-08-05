@@ -2,6 +2,14 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.2] - 2026-08-05
+
+### Added
+
+- **Regla `cj-criollo-changelog`:** bloque obligatorio `## En criollo` (3–6 frases) en handoffs y close-out — qué cambia en la práctica (install, update, chats, modelos, links, fricción).
+- Updated: `runtime/cursor/rules/cj-criollo-changelog.mdc`, `runtime/skills/orchestrator/SKILL.md`, `runtime/project/AGENTS.md`, `runtime/cursor/agents/implementer.md`.
+- Instaladores (User + Project scope): copian la nueva rule junto a bootstrap + mandatory.
+
 ## [1.2.1] - 2026-08-05
 
 ### Changed

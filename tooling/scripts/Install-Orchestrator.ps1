@@ -45,6 +45,7 @@ function Get-ProjectTemplateMap {
 
     $map.Add(@{ Src = 'cursor\rules\cj-orchestrator-bootstrap.mdc'; Dst = '.cursor\rules\cj-orchestrator-bootstrap.mdc' })
     $map.Add(@{ Src = 'cursor\rules\cj-orchestrator-mandatory.mdc'; Dst = '.cursor\rules\cj-orchestrator-mandatory.mdc' })
+    $map.Add(@{ Src = 'cursor\rules\cj-criollo-changelog.mdc'; Dst = '.cursor\rules\cj-criollo-changelog.mdc' })
 
     $agyAgents = @(
         'explore', 'scout', 'maverick', 'implementer', 'lab-runner', 'verifier',
@@ -84,6 +85,7 @@ function Get-UserTemplateMap {
     }
     $map.Add(@{ Src = 'cursor\rules\cj-orchestrator-bootstrap.mdc'; Dst = '.cursor\rules\cj-orchestrator-bootstrap.mdc' })
     $map.Add(@{ Src = 'cursor\rules\cj-orchestrator-mandatory.mdc'; Dst = '.cursor\rules\cj-orchestrator-mandatory.mdc' })
+    $map.Add(@{ Src = 'cursor\rules\cj-criollo-changelog.mdc'; Dst = '.cursor\rules\cj-criollo-changelog.mdc' })
 
     $skills = @('SKILL.md', 'reference.md', 'reference.wsl.md')
     foreach ($s in $skills) {

@@ -30,6 +30,7 @@ REQUIRED_ASSETS=(
   runtime/cursor/agents/deletion.md
   runtime/cursor/rules/cj-orchestrator-bootstrap.mdc
   runtime/cursor/rules/cj-orchestrator-mandatory.mdc
+  runtime/cursor/rules/cj-criollo-changelog.mdc
   runtime/antigravity/agents/skeptic/agent.md
   runtime/antigravity/agents/deletion/agent.md
   runtime/antigravity/rules/spacex-orchestrator.md
@@ -267,6 +268,7 @@ if [[ -n "$TARGET" && -d "$TARGET" ]]; then
     .cursor/agents/deletion.md \
     .cursor/rules/cj-orchestrator-bootstrap.mdc \
     .cursor/rules/cj-orchestrator-mandatory.mdc \
+    .cursor/rules/cj-criollo-changelog.mdc \
     .agents/agents/skeptic/agent.md \
     .agents/agents/deletion/agent.md \
     .agents/rules/spacex-orchestrator.md \
