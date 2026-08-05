@@ -34,17 +34,21 @@ This skill defines **contract**. Runtimes vary in how hard they enforce it.
 - Any task where the parent must not burn tokens exploring or coding
 - Repo has a valid **`.orchestrator-lock.json`** with `enabled: true` (see Bootstrap)
 
-## Bootstrap / Update (consent required)
+## Bootstrap / Update (consent + canonical phrases)
 
-| Action | Agent may | Human runs |
-|--------|-----------|------------|
-| **First install** | Detect missing lock; **offer** `Orchestrator init --scope project` (or user scope). **Never** download, init, or overwrite from chat. | `Orchestrator.ps1 init` / `orchestrator.sh init` |
+| Action | Agent may | Human / agent with canonical phrase |
+|--------|-----------|--------------------------------------|
+| **First install** | Without link/frase: detect missing lock; **offer** init — **never** download alone. With link FIRST-RUN / DEVICE-INSTALL / `Instalá orquestador-sx desde …`: **run** documented scripts (OS: `.ps1` Windows; `.sh` Linux/macOS/WSL). | `Orchestrator init` / `orchestrator.sh init` |
 | **Status** | Read lock + `.install-manifest.json` locally; report drift. **No network.** | `Orchestrator status` |
-| **Update check** | Narrate if `update --check` would apply; **do not** call `gh` or fetch releases. | `Orchestrator update --check` (≤1/24h) |
-| **Update apply** | **Never** auto-apply. Ask human to run apply after narrating delta. | `Orchestrator update --apply` (SHA256 verified) |
-| **Opt-out** | If `enabled: false`, stop insisting; respect user choice. | Edit lock or `uninstall` |
+| **Update check** | With frase `Actualizá la metodología orquestadora desde GitHub`: run `update --check`. Else narrate only. | `Orchestrator update --check` (≤1/24h) |
+| **Update apply** | After check + short human yes (or canonical update frase): run `update --apply` (SHA256 verified). | `Orchestrator update --apply` |
+| **Opt-out** | If `enabled: false` or `No uses orquestador aquí`, stop insisting. | Edit lock or `uninstall` |
 
-**Source of truth:** [`fronteraespacial/orquestador-sx`](https://github.com/fronteraespacial/orquestador-sx) releases when `source: release`; local pack when `source: local`. Agents load this skill from installed paths only — not from the network.
+**Canonical install frase (ES):** `Instalá orquestador-sx desde https://github.com/fronteraespacial/orquestador-sx` — see [`docs/agent/DEVICE-INSTALL-PROMPT.md`](../../docs/agent/DEVICE-INSTALL-PROMPT.md).
+
+**Canonical update frase (ES):** `Actualizá la metodología orquestadora desde GitHub` — see [`docs/agent/UPDATE-PHRASE.md`](../../docs/agent/UPDATE-PHRASE.md).
+
+**Source of truth:** [`fronteraespacial/orquestador-sx`](https://github.com/fronteraespacial/orquestador-sx) releases when `source: release`; local pack when `source: local`. Agents load this skill from installed paths only — not from the network during orchestration.
 
 ## Idea
 
@@ -126,6 +130,17 @@ Annotate before spawning:
 | **3** | Verify / harvest | `verifier` (REQUIRED if implementer ran); automation triage; cleanup narration | Narrate; brake if needed; stop or cascade |
 
 Skip empty waves (e.g. T0: 0 → explore/implementer in 2 → verifier in 3 if writer ran). Never collapse wave 2 into the parent thread.
+
+### Multitask Mode / Build in Parallel (roles stay separate)
+
+**Multitask Mode does not collapse roles.** Parallelism is **multiple role spawns**, not one monolithic worker.
+
+| Rule | Detail |
+|------|--------|
+| **No monolith** | Multitask / Build in Parallel **does not** authorize one `generalPurpose` / Composer session to run lab + implement + verify + release in one thread. |
+| **Parent always spawns** | Orchestrator **always** delegates by role: `scout`/`maverick` per gates → **`lab-runner`** (greenfield; **`APPROVE`**) → **`implementer`** → **`verifier`**. Parallel = fan-out **across roles/envelopes**, not merged duties. |
+| **Monolithic worker** | Only when the **human explicitly** asks for a single agent to do everything. |
+| **Models** | Parent: Grok High. Implementers: scoped Composer. Maverick / ambiguous lab / post-verifier-fail recovery: Grok High Fast. |
 
 ## Complexity router
 
@@ -333,3 +348,5 @@ Readonly local. Entrega: `## Explore handoff`.
 - Research theater; inventing `scout-deep` or `Action: Direct Execution`
 - Treating Cursor `readonly` as hard enforcement
 - Assuming the skill switched the model
+- Multitask / Build in Parallel → one agent doing lab + implement + verify + release
+- Collapsing wave 2+3 into parent or a single `generalPurpose` “do it all” Task

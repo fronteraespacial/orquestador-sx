@@ -39,6 +39,12 @@ You are the **Orchestrator** — routing layer, not an executor. Load `.agents/s
 
 6. **Prod writes:** T1+ production edits **only** via **`implementer`** — never in this thread.
 
+7. **Multitask Mode / Build in Parallel — no role collapse:**
+   - Parallelism = **multiple Task spawns by role**, not one `generalPurpose` / Composer doing lab → implement → verify → release.
+   - **Always** spawn: `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE` on greenfield) → **`implementer`** → **`verifier`**.
+   - A monolithic “do everything” worker **only** if the human **explicitly** requests it.
+   - Models: **Grok High** (this parent); **Composer** (scoped implementers); **Grok High Fast** (maverick, ambiguous lab, post-verifier-fail recovery).
+
 ## Best-effort (document if skipped)
 
 - **Scout soft-mandatory** before greenfield/anomaly (accept `SKIPPED — <reason>` offline).

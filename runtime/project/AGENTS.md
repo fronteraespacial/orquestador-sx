@@ -4,13 +4,14 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 ## Bootstrap
 
-- Before orchestrated work, check **`.orchestrator-lock.json`** at repo root (`enabled`, `version`, `sha256`). If missing, ask the human to run `Orchestrator init` — agents must not fetch or apply updates from chat.
+- Before orchestrated work, check **`.orchestrator-lock.json`** at repo root (`enabled`, `version`, `sha256`). If missing, ask the human to run `Orchestrator init` — agents must not fetch or apply updates from chat. **Exception:** if the user pastes a FIRST-RUN / DEVICE-INSTALL link or canonical install/update frase, agents **may** run documented pack scripts; without that, **offer only**.
 - Canonical skill: **`.agents/skills/orchestrator/SKILL.md`** (load when lock is OK). Manual deep rule: `@cj-orchestrator-mandatory`.
 
 ## Orchestration
 
 - The **Orchestrator** receives the raw user prompt, classifies (T0–T3), writes a short internal gate, plans **waves 0–3**, delegates via the surface spawn API, and merges **compact handoffs (deltas only)**.
 - **Zero direct execution:** the Orchestrator does **not** edit, run tests, deploy, web-research, or explore the system — **including T0**. Children execute (`explore`, `scout`, `maverick`, `lab-runner`, `implementer`/`executor`, `verifier`).
+- **Multitask Mode / Build in Parallel:** does **not** collapse roles — no single `generalPurpose`/Composer doing lab + implement + verify + release. Parent **always** spawns by role: `lab-runner` (`APPROVE`) → `implementer` → `verifier` (scout/maverick per gates). Monolithic worker **only** if the human explicitly asks.
 - **Enforcement:** Cursor can **audit** this policy (best-effort); it cannot fully force the parent. Prefer stronger edit/bash deny on OpenCode/Codex when available. Antigravity: follow `GEMINI.md` + role agents.
 - Canonical skill: `.agents/skills/orchestrator/SKILL.md` (+ `reference.md`; WSL: `reference.wsl.md`). Do **not** treat `reference.cj-linux.md` as active wiring.
 
@@ -39,3 +40,5 @@ See `.lab/README.md`. Verdicts: APPROVE | REVISE | REJECT | YIELD. Never import 
 ## Models
 
 Skills do not switch models. Remap IDs per host (`07-MODELS-MATRIX.md` / optional `MODELS.local.md`).
+
+Pack defaults: **Grok High** parent orchestrator; **Composer** scoped implementers; **Grok High Fast** maverick, ambiguous lab, post-verifier-fail recovery.

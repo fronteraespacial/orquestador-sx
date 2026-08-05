@@ -8,8 +8,8 @@ Presupuestos para sesiones orquestadas sobre el pack v1.1.0. Objetivo: cargar lo
 |-------|---------|
 | [`../AGENTS.md`](../AGENTS.md) | Entry root del pack |
 | [`canon/01-METHODOLOGY-SPACEX.md`](../canon/01-METHODOLOGY-SPACEX.md) | T0–T3, `.lab/` |
-| Post-install: `.agents/skills/orchestrator/SKILL.md` | Gates hard |
-| Post-install: `.cursor/agents/orchestrator.md` | Zero-exec parent |
+| Post-install: `.agents/skills/orchestrator/SKILL.md` | Gates hard; Multitask = spawn roles, no collapse |
+| Post-install: `.cursor/agents/orchestrator.md` | Zero-exec parent; lab→implement→verify chain |
 
 ## Tier 1 — según tarea
 
@@ -29,6 +29,13 @@ Presupuestos para sesiones orquestadas sobre el pack v1.1.0. Objetivo: cargar lo
 | [`../docs/maintainer/DISTRIBUTION-CHECKLIST.md`](../docs/maintainer/DISTRIBUTION-CHECKLIST.md) | Release |
 | [`../docs/human/install/`](../docs/human/install/) | Instalación por IDE |
 | [`../tooling/bench/README.md`](../tooling/bench/README.md) | Benchmark opcional |
+
+## Multitask Mode (recordatorio)
+
+- **Build in Parallel ≠ monolith:** no un solo `generalPurpose`/Composer para lab + implement + verify + release.
+- Parent spawnea roles: `scout`/`maverick` (gates) → `lab-runner` (`APPROVE`) → `implementer` → `verifier`.
+- Worker monolítico solo si el humano lo pide explícitamente.
+- **Install/update scripts:** ejecutar solo con link FIRST-RUN / DEVICE-INSTALL o frase canónica; sin eso, ofrecer únicamente.
 
 ## No cargar en parent orchestrator
 

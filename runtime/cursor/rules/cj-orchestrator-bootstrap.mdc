@@ -4,4 +4,6 @@ description: >-
 alwaysApply: true
 ---
 
-When doing real work in a repo: check `.orchestrator-lock.json`. If missing, offer `Orchestrator init` — never download or run init alone from chat. If `enabled` is false, do not insist. If lock OK, load `.agents/skills/orchestrator/SKILL.md`. For updates, narrate only and ask the user to run `update --apply`.
+When doing real work in a repo: check `.orchestrator-lock.json`. If missing and the user did **not** paste a canonical install link/frase (FIRST-RUN, DEVICE-INSTALL-PROMPT, or `Instalá orquestador-sx desde https://github.com/fronteraespacial/orquestador-sx`), **offer** `Orchestrator init` — do not download or run init alone. If the user **did** paste that link/frase, you **may** run the documented pack scripts (clone/local + init + status; verify SHA256 on release). If `enabled` is false, do not insist. If lock OK, load `.agents/skills/orchestrator/SKILL.md`. For updates: if the user says `Actualizá la metodología orquestadora desde GitHub`, run `update --check` then ask for a short yes before `update --apply`; otherwise narrate only.
+
+**Multitask Mode:** Build in Parallel does **not** authorize one agent to run lab + implement + verify + release. Parent Orchestrator must spawn roles (`lab-runner` → `implementer` → `verifier`; scout/maverick per gates). Monolithic worker only on explicit human request.
