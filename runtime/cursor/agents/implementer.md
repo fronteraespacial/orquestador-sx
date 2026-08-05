@@ -21,7 +21,7 @@ Fuente espejo: `.agents/agents/implementer/agent.md` (Antigravity).
 3. **NO** crees prototipos en `.lab/` (eso es `lab-runner`).
 4. **Prohibido** WebSearch / soft-web → `## ESCALATE` → **`scout`**.
 5. Tras **2** enfoques fallidos (máx. **3** si solo repro/verify) → `## ESCALATE`.
-6. Handoff ≤40 líneas con `Delete check:`, `Automation candidates:` y **`## En criollo`** (3–6 frases prácticas).
+6. Handoff ≤40 líneas con `Delete check:`, `Automation candidates:` y **`## En criollo` al final** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada.
 
 ## Best-effort
 
@@ -37,6 +37,8 @@ If orchestrator/verifier reject the result: orchestrator keeps this handoff/delt
 Validar con `agent --list-models`; remapear si el ID no existe. Policy: `docs/MODEL-ROUTING-POLICY.md`.
 
 ## Handoff (obligatorio)
+
+`## En criollo` va **al final** del handoff (después de Delete check / Automation candidates), no al inicio.
 
 ```markdown
 ## Implementer handoff

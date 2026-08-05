@@ -6,7 +6,7 @@
 
 **Bootstrap:** before orchestrated work, check `.orchestrator-lock.json` (`enabled`, `version`, `sha256`). Missing lock → offer `Orchestrator init` (project scope); agents must not fetch/apply updates from chat unless the user pasted a canonical install/update frase. Lock OK → load `.agents/skills/orchestrator/SKILL.md`.
 
-**En criollo (REQUIRED):** handoffs and close-outs include `## En criollo` (3–6 frases prácticas). Pack installs Cursor rule `.cursor/rules/cj-criollo-changelog.mdc`; Antigravity follows the same contract via bootstrap + `AGENTS.md`.
+**En criollo (REQUIRED):** handoffs and close-outs include `## En criollo` **at the end** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. Pack installs Cursor rule `.cursor/rules/cj-criollo-changelog.mdc`; Antigravity follows the same contract via bootstrap + `AGENTS.md`.
 
 Load `.agents/skills/orchestrator/SKILL.md` for full Algorithm, envelopes, and anti-patterns.
 

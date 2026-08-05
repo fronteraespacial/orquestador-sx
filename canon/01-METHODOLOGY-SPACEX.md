@@ -38,7 +38,7 @@ Violación = fallo de proceso, no “el producto lo permitió”.
 
 `Delete check:` + `Automation candidates:` + `External contrast:` (según umbrales) + opcional `Curiosity:` + `ANOMALIA:` / `## ESCALATE` si aplica.
 
-**`## En criollo`** (obligatorio en todo cierre de implementación / handoff al humano): 3–6 frases sobre impacto real — install, update, chats, modelos, links, fricción. No es cosmético: es parte del contrato SpaceX (regla Cursor `cj-criollo-changelog`, instalada en `.cursor/rules/`).
+**`## En criollo`** (obligatorio **solo al cierre** de implementación / handoff al humano): 3–6 frases sobre impacto real — install, update, chats, modelos, links, fricción. **Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada.** No es cosmético: es parte del contrato SpaceX (regla Cursor `cj-criollo-changelog`, instalada en `.cursor/rules/`).
 
 ## 4. Header obligatorio (cada turno del Orquestador)
 
@@ -152,6 +152,6 @@ Nunca importar a prod. Solo APPROVE desbloquea archivos reales. Maverick: prefij
 
 ## 11. Narración y stop
 
-**Final siempre** (lenguaje simple): pedido / tamaño / hecho y no / lab / contraste / freno / leftovers / triage automation + **`## En criollo`** (3–6 frases prácticas).
+**Final siempre** (lenguaje simple): pedido / tamaño / hecho y no / lab / contraste / freno / leftovers / triage automation; **`## En criollo` al cierre** (3–6 frases prácticas — nunca como preámbulo del plan o de la oleada).
 
 **Stop si:** dumb/borroso, REJECT, trade-off humano, DEAD-END, reintentar hipótesis refutada.

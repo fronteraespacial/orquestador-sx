@@ -37,7 +37,7 @@ Wave 3  verifier + triage automation + narrate
 
 Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguiente sobre. Prohibido reenviar el transcript completo del hijo.
 
-**En criollo:** todo cierre al humano (implementer handoff, narrate final del Orquestador) incluye `## En criollo` — contrato metodológico, no tip opcional. Regla instalada: `.cursor/rules/cj-criollo-changelog.mdc`.
+**En criollo:** todo cierre al humano (implementer handoff, narrate final del Orquestador) incluye `## En criollo` **al final del mensaje entregado** — contrato metodológico, no tip opcional. Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. Regla instalada: `.cursor/rules/cj-criollo-changelog.mdc`.
 
 ## 4. Handoffs canónicos (≤40 líneas)
 

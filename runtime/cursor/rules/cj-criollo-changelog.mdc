@@ -1,12 +1,12 @@
 ---
 description: >-
-  Tras cambios técnicos: bloque ## En criollo (3–6 frases) — qué cambia en la
-  práctica para humano/equipo/dispositivo (install, update, chats, modelos,
-  links, fricción). Handoff, close-out y PR/changelog.
+  Al cierre del trabajo entregado: bloque ## En criollo (3–6 frases) — qué cambia
+  en la práctica (install, update, chats, modelos, links, fricción). Handoff,
+  close-out y PR/changelog. Nunca como preámbulo del plan o de la oleada.
 alwaysApply: true
 ---
 
-Every **technical change** (implement, handoff, PR/changelog close-out) must include **`## En criollo`**: 3–6 plain sentences on what changes **in practice** for humans, team, or device — install, update, chats, models, links, friction. No jargon-only summaries; translate each technical term to its real effect.
+Every **technical change** (implement, handoff, PR/changelog close-out) must include **`## En criollo` at the end** of the delivered work: 3–6 plain sentences on what changes **in practice** for humans, team, or device — install, update, chats, models, links, friction. **Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada.** No jargon-only summaries; translate each technical term to its real effect.
 
 - **Good:** "Si reinstalás o corrés update --apply, te copia la regla nueva a `.cursor/rules/`; los chats viejos no la ven sola — activala con @ o reinstalá."
 - **Bad:** "Added cj-criollo-changelog.mdc to runtime template map."

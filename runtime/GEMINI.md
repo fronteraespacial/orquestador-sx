@@ -6,7 +6,7 @@
 
 **Bootstrap:** check `.orchestrator-lock.json` before orchestrated work; missing → offer `Orchestrator init` on this repo; lock OK → load `.agents/skills/orchestrator/SKILL.md`. No init/update from chat without canonical install/update frase.
 
-**En criollo (REQUIRED):** technical handoffs/close-outs include `## En criollo` (3–6 frases prácticas). See bootstrap rule + `AGENTS.md`.
+**En criollo (REQUIRED):** technical handoffs/close-outs include `## En criollo` **at the end** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. See bootstrap rule + `AGENTS.md`.
 
 **Lab root:** `.lab/` at repo root — **do not** use `projects/.lab/` (legacy).
 
