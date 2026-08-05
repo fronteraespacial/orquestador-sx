@@ -4,6 +4,14 @@ Guía humana para la primera instalación del **SpaceX Orchestrator** v1.1.0.
 
 **Repositorio canónico:** [github.com/fronteraespacial/spacex-orchestrator](https://github.com/fronteraespacial/spacex-orchestrator)
 
+**Release estable (v1.1.0):** [github.com/fronteraespacial/spacex-orchestrator/releases/tag/v1.1.0](https://github.com/fronteraespacial/spacex-orchestrator/releases/tag/v1.1.0)
+
+Descargar spacex-orchestrator-v1.1.0.zip y verificar:
+
+`	ext
+6266226d32380a3be9691373c2f7bed52f9a0a086fb0ee1fc9f00dbd1df91f6d  spacex-orchestrator-v1.1.0.zip
+`
+
 ## Prerrequisitos
 
 1. **Cursor** (o IDE destino) instalado.
