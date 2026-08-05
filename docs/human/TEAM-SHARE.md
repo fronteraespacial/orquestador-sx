@@ -47,12 +47,12 @@ gh auth status
 Prueba segura en sandbox (no toca tu repo de producto):
 
 ```powershell
-.\tooling\scripts\Orchestrator.ps1 init --scope project --source local --target .\tooling\sandbox\pilot
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot
 .\tooling\scripts\Orchestrator.ps1 status -TargetPath .\tooling\sandbox\pilot
-.\tooling\scripts\Orchestrator.ps1 update --check -TargetPath .\tooling\sandbox\pilot
+.\tooling\scripts\Orchestrator.ps1 update -Check -TargetPath .\tooling\sandbox\pilot
 ```
 
-Para tu repo real, cambiá `--target` / `-TargetPath` por la ruta de tu proyecto (ver FIRST-RUN).
+Para tu repo real, cambiá `-TargetPath` por la ruta de tu proyecto (ver FIRST-RUN).
 
 ### Tres comandos — WSL (desde la raíz del pack)
 

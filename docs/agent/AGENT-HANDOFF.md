@@ -51,6 +51,40 @@ Documento de continuidad para reanudar pruebas, instalación y orquestación sin
 - agents, rule, skill, opencode
 - **No** `.agents/agents/` (Antigravity project-only)
 
+### Migrate local v1.1.0 (micro-regla + user lock) — 2026-08-05
+
+| Host | Resultado | Comando |
+|------|-----------|---------|
+| **Windows** | **PASS** | `.\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope` (CLI PowerShell: `-Scope`, no `--scope`) |
+| **WSL Ubuntu** | **PASS** | `bash tooling/scripts/orchestrator.sh init --scope user --source local --confirm-user-scope` desde `/mnt/c/Users/Julian/Downloads/spacex-orchestrator-windows-pack/spacex-orchestrator-windows-pack` |
+
+**Windows — paths y timestamps (UTC en disco)**
+
+| Artefacto | Path | LastWriteTime (UTC) |
+|-----------|------|---------------------|
+| bootstrap | `C:/Users/Julian/.cursor/rules/cj-orchestrator-bootstrap.mdc` | 2026-08-05 21:25:17 |
+| mandatory | `C:/Users/Julian/.cursor/rules/cj-orchestrator-mandatory.mdc` | 2026-08-05 19:26:53 |
+| skill | `C:/Users/Julian/.agents/skills/orchestrator/SKILL.md` | 2026-08-05 19:21:32 |
+| user lock | `C:/Users/Julian/.spacex-orchestrator/lock.json` | `installed_at`: 2026-08-05T21:30:12.6897990Z; `version`: 1.1.0; `sha256`: 1575e1af4a95f12f70b4ee6a6adce8160953d93ea17dc2611b90883ccc3ad3b8 |
+| manifest | `C:/Users/Julian/.install-manifest.json` | refresh en init (Copied +1 bootstrap) |
+
+- `Orchestrator.ps1 status` (pack root): user lock **1.1.0**; project lock ausente en pack root (esperado).
+- Smoke `update -Check`: exit **0** — `Up to date (1.1.0)` (gh release OK).
+
+**WSL — paths y timestamps (UTC)**
+
+| Artefacto | Path | mtime (UTC) |
+|-----------|------|-------------|
+| bootstrap | `/home/julian/.cursor/rules/cj-orchestrator-bootstrap.mdc` | 2026-08-05 21:30:24 |
+| mandatory | `/home/julian/.cursor/rules/cj-orchestrator-mandatory.mdc` | 2026-08-05 19:36:04 |
+| skill | `/home/julian/.agents/skills/orchestrator/SKILL.md` | 2026-08-05 19:36:04 |
+| user lock | `/home/julian/.spacex-orchestrator/lock.json` | `installed_at`: 2026-08-05T21:30:34Z; mismo `sha256` que Windows |
+
+- `orchestrator.sh status`: user lock **1.1.0**; project lock ausente en pack mount (esperado).
+- Smoke `update --check`: exit **4** — `gh auth login` / `GH_TOKEN` no configurado en WSL; no corrompe lock ni templates.
+- Nota: `orchestrator.sh init` devuelve exit **1** tras escribir lock aunque install OK (reproducible); artefactos y lock verificados manualmente.
+
+
 ---
 
 ## Cursor skill/rule policy (Q1)

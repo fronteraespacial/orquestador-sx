@@ -34,25 +34,25 @@ Desde la raíz del pack descargado o clonado:
 **Sandbox (prueba segura, sin tocar tu home):**
 
 ```powershell
-.\tooling\scripts\Orchestrator.ps1 init --scope project --source local --target .\tooling\sandbox\pilot
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot
 ```
 
 **Proyecto real:**
 
 ```powershell
-.\tooling\scripts\Orchestrator.ps1 init --scope project --source local --target C:\path\to\your-repo
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath C:\path\to\your-repo
 ```
 
 **User scope (global Cursor + skill; requiere confirmación):**
 
 ```powershell
-.\tooling\scripts\Orchestrator.ps1 init --scope user --source local -ConfirmUserScope
+.\tooling\scripts\Orchestrator.ps1 init -Scope user -Source local -ConfirmUserScope
 ```
 
 Preview sin cambios:
 
 ```powershell
-.\tooling\scripts\Orchestrator.ps1 init --scope project --source local --target .\tooling\sandbox\pilot -WhatIf
+.\tooling\scripts\Orchestrator.ps1 init -Scope project -Source local -TargetPath .\tooling\sandbox\pilot -WhatIf
 ```
 
 WSL:
@@ -83,10 +83,10 @@ Los agentes **no** descargan ni aplican updates solos.
 
 ```powershell
 # Comprobar release (máx. 1 vez / 24h)
-.\tooling\scripts\Orchestrator.ps1 update --check -TargetPath C:\path\to\your-repo
+.\tooling\scripts\Orchestrator.ps1 update -Check -TargetPath C:\path\to\your-repo
 
 # Aplicar (verifica SHA256SUMS, backup, reinstall)
-.\tooling\scripts\Orchestrator.ps1 update --apply -TargetPath C:\path\to\your-repo
+.\tooling\scripts\Orchestrator.ps1 update -Apply -TargetPath C:\path\to\your-repo
 ```
 
 ## Opt-out
@@ -94,7 +94,7 @@ Los agentes **no** descargan ni aplican updates solos.
 Editar `.orchestrator-lock.json` → `"enabled": false`, o:
 
 ```powershell
-.\tooling\scripts\Orchestrator.ps1 uninstall --scope project --target C:\path\to\your-repo
+.\tooling\scripts\Orchestrator.ps1 uninstall -Scope project -TargetPath C:\path\to\your-repo
 ```
 
 ## Siguiente
