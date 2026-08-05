@@ -17,6 +17,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y 
 - **`SKILL.md` § Antigravity:** removed “embedded templates below” as SKILL source; templates remain for `define_subagent` only.
 - **`reference.antigravity.md`**, **`docs/agent/SCAFFOLD-MANIFEST.md`**, **`docs/human/install/antigravity-windows.md`:** fetch-first docs + integrity markers.
 - **Validators:** require `SCAFFOLD-FETCH.md`, `rawBase` in manifest, GEMINI.user must not say “generate”.
+- **Ops:** `rawBase` pinned to tag `v1.2.8`; `rawBaseFallback` → `main` (removed broken `v1.2.7` 404); SCAFFOLD-FETCH examples aligned.
 
 ## [1.2.7] - 2026-08-05
 

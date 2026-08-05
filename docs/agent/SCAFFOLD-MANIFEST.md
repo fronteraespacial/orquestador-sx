@@ -16,7 +16,7 @@ When a human accepts Orquestador SX prep in Antigravity Desktop, the agent **FET
 
 ## GitHub raw
 
-Manifest field `rawBase` (currently `main` until tag `v1.2.8`; fallback `v1.2.7`). Per-file URL: `{rawBase}/{rawPath}`.
+Manifest field `rawBase` (pin `v1.2.8`; fallback `main`). Per-file URL: `{rawBase}/{rawPath}`.
 
 ## Integrity markers (required in SKILL.md)
 
