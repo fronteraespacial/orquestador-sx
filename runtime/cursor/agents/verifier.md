@@ -30,9 +30,15 @@ Fuente espejo: `.agents/agents/verifier/agent.md` (Antigravity).
 - Sé escéptico: no aceptes claims sin evidencia.
 - Cita salida de error relevante en FAIL.
 
-## Model (remappable)
+## Model (remappable — parent picks at spawn)
 
-Default `composer-2.5-fast`. Validar con `agent --list-models`; preferir modelo fiable en seguir DoD.
+| Default (frontmatter) | When |
+|-----------------------|------|
+| `composer-2.5-fast` | **Mechanical DoD only** — validate scripts, exit codes, file existence, lock/status, hash checks |
+
+**Parent remap → `cursor-grok-4.5-high-fast`** when the envelope needs **judgment** (docs install/update, prompt clarity, security/methodology) **or** the writer was Composer-tier (avoid Composer-verifies-Composer on design). Pass Task `model:` — frontmatter stays Composer Fast as pack default.
+
+Validate IDs with `agent --list-models`.
 
 ## Handoff (obligatorio)
 

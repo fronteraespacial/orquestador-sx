@@ -17,9 +17,21 @@ While these model IDs remain available on the host (`agent --list-models`):
 | **Lab-runner (complex)** | `cursor-grok-4.5-high-fast` | Lab is **T2/T3**, **ambiguous**, or **anomalous** (WSL / Docker / proxy / env); also after insufficient verifier or `## ESCALATE` |
 | **Lab-runner (clear)** | `composer-2.5-fast` | Clear, bounded hypothesis; default frontmatter — **do not** force Grok on every simple lab |
 | **Implementer / repetitive roles** | `composer-2.5-fast` | Repetitive/fast work, mechanical refactors, surgical edits with clear paths + DoD |
-| **explore, scout, verifier, skeptic, deletion** | `composer-2.5-fast` | Light / tool-use defaults (no new roles) |
+| **explore, scout, skeptic, deletion** | `composer-2.5-fast` | Light / tool-use defaults (no new roles) |
+| **Verifier (mechanical DoD)** | `composer-2.5-fast` | Validate scripts, exit codes, file existence, lock/status, hash checks |
+| **Verifier (judgment DoD)** | `cursor-grok-4.5-high-fast` (Task `model:`) | Docs install/update, prompt clarity, security/methodology; **or** writer was Composer-tier (avoid Composer-verifies-Composer on design) |
 
-**No new roles.** Remap only if an ID is missing on the host (see §5 and [`../../canon/07-MODELS-MATRIX.md`](../../canon/07-MODELS-MATRIX.md)).
+**No new roles.** Parent orchestrator picks verifier model at spawn. Remap only if an ID is missing on the host (see §5 and [`../../canon/07-MODELS-MATRIX.md`](../../canon/07-MODELS-MATRIX.md)).
+
+### 1.0 Verifier routing & parent spot-check
+
+| DoD type | Verifier model | Examples |
+|----------|----------------|----------|
+| **Mechanical** | `composer-2.5-fast` | Script exit codes, file exists, lock schema, hash match |
+| **Judgment** | `cursor-grok-4.5-high-fast` | Install/update doc clarity, prompt wording, security/methodology review |
+| **Composer writer** | `cursor-grok-4.5-high-fast` | Any non-mechanical acceptance when implementer was Composer-family |
+
+After verifier handoff, parent (`cursor-grok-4.5-high`) **spot-checks 1–2 claims** against evidence — **does not** re-run the full DoD. If doubt remains → cascade one verifier pass on Grok Fast (or §1.1 corrective chain).
 
 ### 1.1 Composer → Verifier → single Grok High Fast corrective pass
 

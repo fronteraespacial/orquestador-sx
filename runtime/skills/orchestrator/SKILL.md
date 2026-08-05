@@ -140,7 +140,7 @@ Skip empty waves (e.g. T0: 0 → explore/implementer in 2 → verifier in 3 if w
 | **No monolith** | Multitask / Build in Parallel **does not** authorize one `generalPurpose` / Composer session to run lab + implement + verify + release in one thread. |
 | **Parent always spawns** | Orchestrator **always** delegates by role: `scout`/`maverick` per gates → **`lab-runner`** (greenfield; **`APPROVE`**) → **`implementer`** → **`verifier`**. Parallel = fan-out **across roles/envelopes**, not merged duties. |
 | **Monolithic worker** | Only when the **human explicitly** asks for a single agent to do everything. |
-| **Models** | Parent: Grok High. Implementers: scoped Composer. Maverick / ambiguous lab / post-verifier-fail recovery: Grok High Fast. |
+| **Models** | Parent: Grok High. Implementers: scoped Composer. Maverick / ambiguous lab / post-verifier-fail recovery: Grok High Fast. Verifier: Composer Fast (mechanical DoD) or Grok Fast (judgment / Composer-writer). |
 
 ## Complexity router
 
@@ -255,7 +255,7 @@ Canonical root: **`.lab/`** at repo root (see pack `runtime/project/lab/README.m
 | **maverick** | Counterintuitive what-ifs; own `.lab/*-mav-*/` | Heavy/medium |
 | **lab-runner** | Only `.lab/<id>/` | Fast (clear) / Heavy-fast (complex) |
 | **implementer** | Sole prod writer | Fast/reliable |
-| **verifier** | DoD evidence | Reliable |
+| **verifier** | DoD evidence | Fast (mechanical) / Grok Fast (judgment) |
 | **skeptic** / **deletion** (T3) | Audit reqs / propose deletes; no code | Medium |
 
 **Surface spawn:** see [reference.md](reference.md). Skills do **not** switch models — Cursor IDs live in `.cursor/agents/*.md` / Task `model:`.
@@ -271,7 +271,13 @@ While IDs exist on the host:
 | Lab clear / bounded | `composer-2.5-fast` (frontmatter default) |
 | Lab T2/T3, ambiguous, or env anomaly | Task `cursor-grok-4.5-high-fast` |
 | Implementer + light repetitive | `composer-2.5-fast` |
-| explore / scout / verifier / skeptic / deletion | `composer-2.5-fast` |
+| explore / scout / skeptic / deletion | `composer-2.5-fast` |
+| **verifier (mechanical DoD)** | `composer-2.5-fast` — validate scripts, exit codes, file existence, lock/status, hash checks |
+| **verifier (judgment DoD)** | Task → `cursor-grok-4.5-high-fast` — docs install/update, prompt clarity, security/methodology; **or** writer was Composer-tier (avoid Composer-verifies-Composer on design) |
+
+**Verifier routing:** parent picks model at spawn. Default Composer Fast for mechanical acceptance only. Remap to Grok Fast when the envelope needs judgment or the implementer was Composer-family.
+
+**Parent spot-check:** after verifier handoff, orchestrator (Grok High) contrasts **1–2 claims** — do **not** re-run full DoD. If doubt → cascade one verifier pass on Grok Fast.
 
 **Corrective chain:** Composer → verifier → if unsatisfied / ESCALATE → keep handoff+delta → enrich envelope → **one** `cursor-grok-4.5-high-fast` corrective pass (no blind Composer rerun, no overwrite without evidence). Full status: pack `docs/MODEL-ROUTING-POLICY.md`.
 

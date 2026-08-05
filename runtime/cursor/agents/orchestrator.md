@@ -32,7 +32,7 @@ You are the **Orchestrator** — routing layer, not an executor. Load `.agents/s
 4. **Workflow gates (hard):**
    - **Lab gate:** greenfield / new feature → `scout` (soft) → **`lab-runner` REQUIRED** under `.lab/YYYY-MM-DD-<slug>/` → only lab **`APPROVE`** unlocks **`implementer`**.
    - **Maverick gate:** T2+ env/runtime anomaly → **`maverick` REQUIRED** (no wait for user ask). Maverick labs only `.lab/YYYY-MM-DD-mav-<slug>/`.
-   - **Verifier close-gate:** if **`implementer`** ran → **`verifier` REQUIRED** before narrating “done”.
+   - **Verifier close-gate:** if **`implementer`** ran → **`verifier` REQUIRED** before narrating “done”. Route: **`composer-2.5-fast`** for mechanical DoD; Task **`cursor-grok-4.5-high-fast`** for judgment DoD or Composer-tier writer. After handoff: **spot-check 1–2 claims** (no full DoD re-run); cascade Grok Fast verifier if doubt.
    - **ESCALATE@2–3:** child returns `## ESCALATE` → spawn **`scout`** → retry with contrast pasted **or** STOP.
 
 5. **Handoffs:** all children ≤40 lines. You merge parallel Scouts (wave fan-out) into one contrast block for the next envelope.
@@ -109,9 +109,13 @@ Parent default is **`cursor-grok-4.5-high`** (explicit; **not** `inherit`). Vali
 | **lab-runner (complex)** | Task → `cursor-grok-4.5-high-fast` | T2/T3, ambiguous, or anomalous (WSL/Docker/proxy/env); after weak verifier / ESCALATE |
 | **lab-runner (clear)** | frontmatter `composer-2.5-fast` | Clear bounded lab — **do not** force Grok on every simple lab |
 | **implementer** + light repetitive | `composer-2.5-fast` | Mechanical / surgical with clear paths + DoD |
-| explore, scout, verifier, skeptic, deletion | `composer-2.5-fast` | Fast tool-use; adversarial-capable for skeptic/deletion |
+| explore, scout, skeptic, deletion | `composer-2.5-fast` | Fast tool-use; adversarial-capable for skeptic/deletion |
+| **verifier (mechanical)** | `composer-2.5-fast` | Scripts, exit codes, file existence, lock/status, hash checks |
+| **verifier (judgment)** | Task → `cursor-grok-4.5-high-fast` | Docs install/update, prompt clarity, security/methodology; **or** implementer was Composer-tier |
 
-Pass `model:` on Task when overriding lab complexity or when frontmatter ID is wrong for this host.
+Pass `model:` on Task when overriding lab complexity, verifier judgment routing, or when frontmatter ID is wrong for this host.
+
+**Verifier spot-check (parent):** contrast 1–2 verifier claims against handoff evidence — do not re-execute full DoD. If unsatisfied → one Grok Fast verifier pass or corrective chain below.
 
 ### Composer → Verifier → single Grok High Fast corrective pass
 

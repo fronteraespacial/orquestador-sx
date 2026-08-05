@@ -2,6 +2,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.1] - 2026-08-05
+
+### Changed
+
+- **Verifier model routing:** mechanical DoD → `composer-2.5-fast`; judgment DoD (docs install/update, prompt clarity, security/methodology) or Composer-tier writer → Task `cursor-grok-4.5-high-fast`. Parent orchestrator spot-checks 1–2 verifier claims (no full DoD re-run); cascade Grok Fast verifier on doubt.
+- Updated: `runtime/skills/orchestrator/SKILL.md`, `runtime/cursor/agents/{orchestrator,verifier}.md`, `runtime/project/AGENTS.md`, `docs/agent/MODEL-ROUTING-POLICY.md`.
+
+### Note
+
+- Maintainer may tag `v1.2.1` when ready; installs pick up skill/agent templates on next `update --apply`.
+
 ## [1.2.0] - 2026-08-05
 
 ### Added
