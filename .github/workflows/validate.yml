@@ -1,0 +1,28 @@
+name: Validate Pack
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate orchestrator pack (Strict)
+        shell: pwsh
+        run: .\tooling\scripts\Validate-OrchestratorPack.ps1 -Strict
+
+  validate-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate orchestrator pack (bash)
+        run: |
+          chmod +x tooling/scripts/validate-orchestrator-pack.sh
+          chmod +x tooling/scripts/orchestrator.sh
+          ./tooling/scripts/validate-orchestrator-pack.sh --strict

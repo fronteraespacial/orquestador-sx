@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spacex-orchestrator.local/bench/schema/result-record.schema.json",
+  "title": "BenchmarkResultRecord",
+  "description": "One JSONL line per benchmark case (routing orchestrator_delegate vs direct_role_control)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "wave",
+    "case_id",
+    "replica",
+    "timestamp_utc",
+    "dry_run"
+  ],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "run_id": { "type": "string" },
+    "wave": { "type": "string" },
+    "case_id": { "type": "string" },
+    "measurement_type": {
+      "type": ["string", "null"],
+      "enum": ["routing", "direct_role_control", "role", null]
+    },
+    "execution_mode": {
+      "type": ["string", "null"],
+      "enum": ["orchestrator_delegate", "direct_role_control", null]
+    },
+    "category": {
+      "type": ["string", "null"],
+      "enum": ["maverick-anomaly", "scout-contrast", "lab-greenfield", "writer-bounded", null]
+    },
+    "envelope_file": { "type": ["string", "null"] },
+    "replica": { "type": "integer", "minimum": 0 },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "dry_run": { "type": "boolean" },
+    "parent_model_requested": { "type": ["string", "null"] },
+    "parent_model_resolved": { "type": ["string", "null"] },
+    "parent_model_resolved_status": {
+      "type": ["string", "null"],
+      "enum": ["stream_proven", "unverified", null]
+    },
+    "role_model_requested": { "type": ["string", "null"] },
+    "role_model_resolved": { "type": ["string", "null"] },
+    "role_model_resolved_status": {
+      "type": ["string", "null"],
+      "enum": ["stream_proven", "unverified", null]
+    },
+    "model_requested": { "type": ["string", "null"] },
+    "model_resolved": { "type": ["string", "null"] },
+    "model_resolved_status": {
+      "type": ["string", "null"],
+      "enum": ["stream_proven", "unverified", null]
+    },
+    "agent_requested": { "type": ["string", "null"] },
+    "agent_resolved": { "type": ["string", "null"] },
+    "agent_resolved_status": {
+      "type": ["string", "null"],
+      "enum": ["stream_proven", "unverified", null]
+    },
+    "delegation_status": {
+      "type": ["string", "null"],
+      "enum": ["stream_proven", "unverified", "not_applicable", null]
+    },
+    "case_passed": {
+      "type": ["string", "null"],
+      "enum": ["passed", "failed", "inconclusive", null]
+    },
+    "subagent_events": { "type": "array", "items": { "type": "object" } },
+    "stream_json_line_count": { "type": ["integer", "null"], "minimum": 0 },
+    "duration_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "tests_passed": { "type": "integer", "minimum": 0 },
+    "tests_failed": { "type": "integer", "minimum": 0 },
+    "worktree_path": { "type": ["string", "null"] },
+    "routing_cases": { "type": ["integer", "null"] },
+    "direct_role_cases": { "type": ["integer", "null"] },
+    "default_replicas": { "type": ["integer", "null"] },
+    "cli_available": { "type": ["boolean", "null"] },
+    "auth_ok": { "type": ["boolean", "null"] },
+    "exit_code": { "type": ["integer", "null"] },
+    "stdout_preview": { "type": ["string", "null"] },
+    "heuristic_notes": { "type": "array", "items": { "type": "string" } },
+    "stream_limitation_note": { "type": ["string", "null"] },
+    "error": { "type": ["string", "null"] },
+    "trust_worktree": { "type": ["boolean", "null"] },
+    "workspace_trust_blocked": { "type": ["boolean", "null"] },
+    "run_status": {
+      "type": ["string", "null"],
+      "enum": ["passed", "failed", "aborted_trust", null]
+    },
+    "abort_reason": { "type": ["string", "null"] },
+    "executions_planned": { "type": ["integer", "null"], "minimum": 0 },
+    "executions_completed": { "type": ["integer", "null"], "minimum": 0 },
+    "cases_passed": { "type": ["integer", "null"], "minimum": 0 },
+    "cases_failed": { "type": ["integer", "null"], "minimum": 0 },
+    "exit_code_nonzero": { "type": ["integer", "null"], "minimum": 0 },
+    "routing_delegation_missing": { "type": ["integer", "null"], "minimum": 0 },
+    "direct_role_model_unverified": { "type": ["integer", "null"], "minimum": 0 },
+    "tests_failed_total": { "type": ["integer", "null"], "minimum": 0 }
+  },
+  "additionalProperties": true
+}

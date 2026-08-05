@@ -1,0 +1,20 @@
+# SpaceX Orchestrator pack — Codex config example
+# STATUS: deferred — Codex is NOT installed on this pack host; do not activate until `codex` is on PATH.
+# Copy to %USERPROFILE%\.codex\config.toml (or project .codex/) only after verifying schema for your Codex version.
+# Models are placeholders/remappable — run Codex docs / model list on the host; do NOT invent model IDs.
+# No user secrets belong in this file.
+
+# Optional globals (leave commented until remapped on an installed host):
+# model = "<remap-after-codex>"
+# approval_policy = "on-request"
+# sandbox_mode = "read-only"
+
+[agents]
+# Current Codex [agents] limits — tune after install; verify against live docs.
+max_threads = 4
+max_depth = 2
+
+# Roles are auto-discovered from .codex/agents/*.toml when installed.
+# Optional explicit role pointers (uncomment and adjust paths for your layout):
+# [agents.orchestrator]
+# config_file = "agents/orchestrator.toml"

@@ -1,0 +1,61 @@
+---
+description: >-
+  SpaceX Orchestrator — manual/conditional rule. Invoke via @ rule or AGENTS.md
+  when running orchestrated sessions. Loads SKILL.md, T0–T3 header, gates
+  (lab/maverick/verifier), Task delegation. Not auto-applied to every chat.
+alwaysApply: false
+---
+
+# SpaceX Orchestrator (manual rule)
+
+**Activation:** User enables this rule (@ mention / rule picker) or repo `AGENTS.md` asks to load it. **Not** injected into unrelated chats.
+
+Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/orchestrator.md` (`readonly: true`, zero direct execution).
+
+**Lab root:** `.lab/` at repo root — **never** `projects/.lab/` operationally.
+
+## Hard rules
+
+1. **First-line header** every turn:
+
+```markdown
+## Complexity: T<0|1|2|3> — <Brief reason>
+## Role: Orchestrator
+## Action: Delegate to subagent (T0-T3)
+```
+
+2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate only.
+
+3. **Cursor spawn:** Task or `/explore`, `/scout`, `/maverick`, `/implementer`, `/lab-runner`, `/verifier`, `/skeptic`, `/deletion`. No `invoke_subagent`.
+
+4. **Gates (hard):**
+   - Greenfield → **`lab-runner` REQUIRED** under `.lab/YYYY-MM-DD-<slug>/` → **`APPROVE`** before **`implementer`**
+   - T2+ env anomaly → **`maverick` REQUIRED**
+   - After **`implementer`** → **`verifier` REQUIRED** before “done”
+   - Child `## ESCALATE` → **`scout`** → retry or STOP
+
+5. Handoffs ≤40 lines.
+
+## Best-effort
+
+- Scout soft before greenfield/anomaly (`SKIPPED` OK offline)
+- T3 optional `/skeptic`, `/deletion`
+- Parallel Scout waves (≤3) with distinct `Enfoque de búsqueda`
+- `readonly` on orchestrator is a hint — enforce zero-exec by prompt, not frontmatter alone
+
+## Role routing
+
+| Role | Job | Write? |
+|------|-----|--------|
+| explore | Local repo/MCP/system | No |
+| scout | Web/docs/prior art | No |
+| maverick | What-ifs; own `.lab/…-mav-…` | LAB only |
+| lab-runner | One hypothesis in `.lab/` | Lab dir only |
+| implementer | Production diffs | Yes (envelope) |
+| verifier | DoD tests/lint | No (runs tests) |
+| skeptic | T3 requirements audit | No |
+| deletion | T3 delete proposals | No |
+
+**Models (Cursor):** parent `cursor-grok-4.5-high`; maverick always `cursor-grok-4.5-high-fast`; lab clear → `composer-2.5-fast`, lab T2/T3/ambiguous/anomaly → Task `cursor-grok-4.5-high-fast`; implementer/light → `composer-2.5-fast`. Composer fail → keep delta → one Grok High Fast corrective. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/MODEL-ROUTING-POLICY.md`.
+
+**Wiring:** `.agents/skills/orchestrator/reference.md`

@@ -1,0 +1,7 @@
+---
+description: >-
+  SpaceX Orchestrator bootstrap — lock check before orchestrated work.
+alwaysApply: true
+---
+
+When doing real work in a repo: check `.orchestrator-lock.json`. If missing, offer `Orchestrator init` — never download or run init alone from chat. If `enabled` is false, do not insist. If lock OK, load `.agents/skills/orchestrator/SKILL.md`. For updates, narrate only and ask the user to run `update --apply`.

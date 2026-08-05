@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.3.0",
+  "wave_default": "pilot-4cat-routing-direct-v1",
+  "default_replicas": 3,
+  "wrapper_file": "prompts/orchestrator-delegate-wrapper.md",
+  "direct_role_wrapper_file": "prompts/direct-role-wrapper.md",
+  "stream_limitation_note": "Nested Task subagent model telemetry unavailable in this CLI stream-json; direct_role_control uses root stream model only.",
+  "parent_models": {
+    "grok": "cursor-grok-4.5-high-fast",
+    "composer": "composer-2.5"
+  },
+  "role_model_variants": {
+    "grok": "cursor-grok-4.5-high-fast",
+    "composer": "composer-2.5"
+  },
+  "categories": [
+    {
+      "id": "maverick-anomaly",
+      "delegate_role": "maverick",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md"
+    },
+    {
+      "id": "scout-contrast",
+      "delegate_role": "scout",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md"
+    },
+    {
+      "id": "lab-greenfield",
+      "delegate_role": "lab-runner",
+      "envelope_file": "prompts/envelope-t2-greenfield-csv.md"
+    },
+    {
+      "id": "writer-bounded",
+      "delegate_role": "implementer",
+      "envelope_file": "prompts/envelope-t2-writer-bounded.md"
+    }
+  ],
+  "cases": [
+    {
+      "id": "routing-maverick-anomaly-grok",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "maverick-anomaly",
+      "delegate_role": "maverick",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "parent_model_requested": "cursor-grok-4.5-high-fast",
+      "parent_model_variant": "grok",
+      "tests": [
+        { "id": "orchestrator_routing", "type": "heuristic", "pattern": "Orchestrator routing|delegate|Task", "expect": "present" },
+        { "id": "maverick_mention", "type": "heuristic", "pattern": "maverick", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-maverick-anomaly-composer",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "maverick-anomaly",
+      "delegate_role": "maverick",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "parent_model_requested": "composer-2.5",
+      "parent_model_variant": "composer",
+      "tests": [
+        { "id": "orchestrator_routing", "type": "heuristic", "pattern": "Orchestrator routing|delegate|Task", "expect": "present" },
+        { "id": "maverick_mention", "type": "heuristic", "pattern": "maverick", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-scout-contrast-grok",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "scout-contrast",
+      "delegate_role": "scout",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "parent_model_requested": "cursor-grok-4.5-high-fast",
+      "parent_model_variant": "grok",
+      "tests": [
+        { "id": "orchestrator_routing", "type": "heuristic", "pattern": "Orchestrator routing|delegate|Task", "expect": "present" },
+        { "id": "scout_mention", "type": "heuristic", "pattern": "scout|External contrast", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-scout-contrast-composer",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "scout-contrast",
+      "delegate_role": "scout",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "parent_model_requested": "composer-2.5",
+      "parent_model_variant": "composer",
+      "tests": [
+        { "id": "orchestrator_routing", "type": "heuristic", "pattern": "Orchestrator routing|delegate|Task", "expect": "present" },
+        { "id": "scout_mention", "type": "heuristic", "pattern": "scout|External contrast", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-lab-greenfield-grok",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "lab-greenfield",
+      "delegate_role": "lab-runner",
+      "envelope_file": "prompts/envelope-t2-greenfield-csv.md",
+      "parent_model_requested": "cursor-grok-4.5-high-fast",
+      "parent_model_variant": "grok",
+      "tests": [
+        { "id": "lab_gate", "type": "heuristic", "pattern": "lab|APPROVE|greenfield", "expect": "present" },
+        { "id": "canonical_lab", "type": "heuristic", "pattern": "\\.lab/", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-lab-greenfield-composer",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "lab-greenfield",
+      "delegate_role": "lab-runner",
+      "envelope_file": "prompts/envelope-t2-greenfield-csv.md",
+      "parent_model_requested": "composer-2.5",
+      "parent_model_variant": "composer",
+      "tests": [
+        { "id": "lab_gate", "type": "heuristic", "pattern": "lab|APPROVE|greenfield", "expect": "present" },
+        { "id": "canonical_lab", "type": "heuristic", "pattern": "\\.lab/", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-writer-bounded-grok",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "writer-bounded",
+      "delegate_role": "implementer",
+      "envelope_file": "prompts/envelope-t2-writer-bounded.md",
+      "parent_model_requested": "cursor-grok-4.5-high-fast",
+      "parent_model_variant": "grok",
+      "tests": [
+        { "id": "bounded_path", "type": "heuristic", "pattern": "\\.bench-marker/|bench-marker", "expect": "present" },
+        { "id": "implementer_delegate", "type": "heuristic", "pattern": "implementer|Task", "expect": "present" }
+      ]
+    },
+    {
+      "id": "routing-writer-bounded-composer",
+      "measurement_type": "routing",
+      "execution_mode": "orchestrator_delegate",
+      "category": "writer-bounded",
+      "delegate_role": "implementer",
+      "envelope_file": "prompts/envelope-t2-writer-bounded.md",
+      "parent_model_requested": "composer-2.5",
+      "parent_model_variant": "composer",
+      "tests": [
+        { "id": "bounded_path", "type": "heuristic", "pattern": "\\.bench-marker/|bench-marker", "expect": "present" },
+        { "id": "implementer_delegate", "type": "heuristic", "pattern": "implementer|Task", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-maverick-anomaly-grok",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "maverick-anomaly",
+      "delegate_role": "maverick",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "role_model_requested": "cursor-grok-4.5-high-fast",
+      "role_model_variant": "grok",
+      "tests": [
+        { "id": "maverick_mention", "type": "heuristic", "pattern": "maverick|contrarian|unconventional", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-maverick-anomaly-composer",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "maverick-anomaly",
+      "delegate_role": "maverick",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "role_model_requested": "composer-2.5",
+      "role_model_variant": "composer",
+      "tests": [
+        { "id": "maverick_mention", "type": "heuristic", "pattern": "maverick|contrarian|unconventional", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-scout-contrast-grok",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "scout-contrast",
+      "delegate_role": "scout",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "role_model_requested": "cursor-grok-4.5-high-fast",
+      "role_model_variant": "grok",
+      "tests": [
+        { "id": "scout_mention", "type": "heuristic", "pattern": "scout|External contrast|contrast", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-scout-contrast-composer",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "scout-contrast",
+      "delegate_role": "scout",
+      "envelope_file": "prompts/envelope-t2-udp-anomaly.md",
+      "role_model_requested": "composer-2.5",
+      "role_model_variant": "composer",
+      "tests": [
+        { "id": "scout_mention", "type": "heuristic", "pattern": "scout|External contrast|contrast", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-lab-greenfield-grok",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "lab-greenfield",
+      "delegate_role": "lab-runner",
+      "envelope_file": "prompts/envelope-t2-greenfield-csv.md",
+      "role_model_requested": "cursor-grok-4.5-high-fast",
+      "role_model_variant": "grok",
+      "tests": [
+        { "id": "lab_gate", "type": "heuristic", "pattern": "lab|APPROVE|greenfield|spike", "expect": "present" },
+        { "id": "canonical_lab", "type": "heuristic", "pattern": "\\.lab/", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-lab-greenfield-composer",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "lab-greenfield",
+      "delegate_role": "lab-runner",
+      "envelope_file": "prompts/envelope-t2-greenfield-csv.md",
+      "role_model_requested": "composer-2.5",
+      "role_model_variant": "composer",
+      "tests": [
+        { "id": "lab_gate", "type": "heuristic", "pattern": "lab|APPROVE|greenfield|spike", "expect": "present" },
+        { "id": "canonical_lab", "type": "heuristic", "pattern": "\\.lab/", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-writer-bounded-grok",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "writer-bounded",
+      "delegate_role": "implementer",
+      "envelope_file": "prompts/envelope-t2-writer-bounded.md",
+      "role_model_requested": "cursor-grok-4.5-high-fast",
+      "role_model_variant": "grok",
+      "tests": [
+        { "id": "bounded_path", "type": "heuristic", "pattern": "\\.bench-marker/|bench-marker", "expect": "present" }
+      ]
+    },
+    {
+      "id": "direct-writer-bounded-composer",
+      "measurement_type": "direct_role_control",
+      "execution_mode": "direct_role_control",
+      "category": "writer-bounded",
+      "delegate_role": "implementer",
+      "envelope_file": "prompts/envelope-t2-writer-bounded.md",
+      "role_model_requested": "composer-2.5",
+      "role_model_variant": "composer",
+      "tests": [
+        { "id": "bounded_path", "type": "heuristic", "pattern": "\\.bench-marker/|bench-marker", "expect": "present" }
+      ]
+    }
+  ]
+}

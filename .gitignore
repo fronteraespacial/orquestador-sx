@@ -1,0 +1,43 @@
+# Local install / pilot artifacts
+tooling/sandbox/pilot/.cursor/
+tooling/sandbox/pilot/.agents/
+tooling/sandbox/pilot/.lab/
+tooling/sandbox/pilot/.codex/
+tooling/sandbox/pilot/opencode.json
+tooling/sandbox/pilot/opencode.jsonc
+tooling/sandbox/pilot/GEMINI.md
+tooling/sandbox/pilot/.install-manifest.json
+tooling/sandbox/pilot/.install-backup/
+tooling/sandbox/temp-wsl-test/
+
+# Legacy stub paths (if pilot recreated at old location)
+sandbox/pilot/.install-backup/
+
+# Benchmark outputs (regenerable); keep inconclusive evidence smokes
+tooling/bench/results/*
+!tooling/bench/results/20260805-164220-a1ac3e7f.jsonl
+!tooling/bench/results/20260805-164541-7fb5ab8a.jsonl
+!tooling/bench/results/20260805-165955-b686bd26.jsonl
+tooling/bench/worktrees/
+tooling/bench/.auth-cache.json
+tooling/bench/_tmp-*.ps1
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Secrets (never commit)
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
+MODELS.local.md
+
+# Install backups created outside sandbox
+.install-backup/
+.install-manifest.json
