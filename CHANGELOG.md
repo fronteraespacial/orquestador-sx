@@ -8,6 +8,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y 
 
 - **Verifier model routing:** mechanical DoD → `composer-2.5-fast`; judgment DoD (docs install/update, prompt clarity, security/methodology) or Composer-tier writer → Task `cursor-grok-4.5-high-fast`. Parent orchestrator spot-checks 1–2 verifier claims (no full DoD re-run); cascade Grok Fast verifier on doubt.
 - Updated: `runtime/skills/orchestrator/SKILL.md`, `runtime/cursor/agents/{orchestrator,verifier}.md`, `runtime/project/AGENTS.md`, `docs/agent/MODEL-ROUTING-POLICY.md`.
+- Doc coherence: split verifier routing in `canon/07-MODELS-MATRIX.md` §2, `runtime/cursor/rules/cj-orchestrator-mandatory.mdc`, root `AGENTS.md` (v1.2.1), sandbox pilot `AGENTS.md` Models table; links → `docs/agent/MODEL-ROUTING-POLICY.md`.
 
 ### Note
 

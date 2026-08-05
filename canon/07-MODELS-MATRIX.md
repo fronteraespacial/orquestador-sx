@@ -2,7 +2,7 @@
 
 Los IDs cambian. **Siempre** listar modelos vivos en el host antes de fijar frontmatter.
 
-**Política Cursor (decisión operativa del usuario):** parent = `cursor-grok-4.5-high`; complejidad/anomalía/maverick/correctiva = `cursor-grok-4.5-high-fast`; claro/repetitivo/ligero = `composer-2.5-fast`. **No** hay conclusión local de superioridad Grok-vs-Composer; ver [`docs/MODEL-ROUTING-POLICY.md`](docs/MODEL-ROUTING-POLICY.md).
+**Política Cursor (decisión operativa del usuario):** parent = `cursor-grok-4.5-high`; complejidad/anomalía/maverick/correctiva = `cursor-grok-4.5-high-fast`; claro/repetitivo/ligero = `composer-2.5-fast`; verifier mecánico = `composer-2.5-fast`, verifier juicio / mismo writer Composer = `cursor-grok-4.5-high-fast`. **No** hay conclusión local de superioridad Grok-vs-Composer; ver [`docs/agent/MODEL-ROUTING-POLICY.md`](docs/agent/MODEL-ROUTING-POLICY.md).
 
 ## 1. Principios
 
@@ -13,14 +13,14 @@ Los IDs cambian. **Siempre** listar modelos vivos en el host antes de fijar fron
 | maverick | Creativo + razonamiento; techo alto | Flash que solo parafrasea |
 | implementer / executor | Código fiable en paths+DoD claros | Flash free ya marcado unreliable |
 | lab-runner | Clear → fast; complex/anomaly → Grok Fast | Forzar Grok en todo lab simple |
-| verifier | Sigue DoD; no inventa PASS | El más barato del catálogo |
+| verifier | Sigue DoD; no inventa PASS; mecánico → Composer Fast, juicio / mismo writer → Grok Fast | El más barato del catálogo para todo |
 | skeptic | Adversarial | Mismo modelo que implementer (sesgo) |
 
 El Orquestador **no necesita** modelo “con tools de edición”; necesita disciplina de delegación. Skills **no** cambian el modelo — solo config nativa / Task `model:`.
 
 ## 2. Cursor
 
-`agent --list-models` o UI. Estado versionado: [`docs/MODEL-ROUTING-POLICY.md`](docs/MODEL-ROUTING-POLICY.md).
+`agent --list-models` o UI. Estado versionado: [`docs/agent/MODEL-ROUTING-POLICY.md`](docs/agent/MODEL-ROUTING-POLICY.md).
 
 | Rol | Default pack | Notas |
 |-----|--------------|-------|
@@ -29,7 +29,9 @@ El Orquestador **no necesita** modelo “con tools de edición”; necesita disc
 | lab-runner (claro) | **`composer-2.5-fast`** | Frontmatter default |
 | lab-runner (T2/T3, ambiguo, anomalía env) | Task **`cursor-grok-4.5-high-fast`** | WSL/Docker/proxy/entorno; también post-verifier débil / ESCALATE |
 | implementer / roles repetitivos | **`composer-2.5-fast`** | Refactors mecánicos, cambios quirúrgicos con paths+DoD |
-| explore / scout / verifier / skeptic / deletion | **`composer-2.5-fast`** | Nivel ligero |
+| explore / scout / skeptic / deletion | **`composer-2.5-fast`** | Nivel ligero |
+| verifier (DoD mecánico) | **`composer-2.5-fast`** | Scripts, exit codes, lock/hash, existencia de archivos |
+| verifier (DoD juicio / mismo writer Composer) | Task **`cursor-grok-4.5-high-fast`** | Docs install/update, claridad de prompt, security/methodology; evitar Composer-verifica-Composer en diseño |
 
 ID ausente → remapear y anotar en `MODELS.local.md` / handoff de instalación.
 
