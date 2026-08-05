@@ -2,6 +2,15 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.3] - 2026-08-05
+
+### Changed
+
+- **`## En criollo` en metodología canónica:** contrato SpaceX en `canon/01-METHODOLOGY-SPACEX.md` y `canon/02-ROLES-HANDOFFS-GATES.md` (handoff implementer + narrate final).
+- **`cj-criollo-changelog.mdc`:** `alwaysApply: true` (regla micro); viaja con init project/user a `.cursor/rules/`.
+- **`runtime/project/AGENTS.md`:** En criollo REQUIRED + rule presente en repo instalado.
+- **`docs/human/FIRST-RUN.md`**, **`TEAM-SHARE.md`**, **`canon/00-README-INSTALL-AGENT.md`:** pointer install de la rule.
+
 ## [1.2.2] - 2026-08-05
 
 ### Added

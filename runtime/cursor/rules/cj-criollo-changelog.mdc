@@ -3,7 +3,7 @@ description: >-
   Tras cambios técnicos: bloque ## En criollo (3–6 frases) — qué cambia en la
   práctica para humano/equipo/dispositivo (install, update, chats, modelos,
   links, fricción). Handoff, close-out y PR/changelog.
-alwaysApply: false
+alwaysApply: true
 ---
 
 Every **technical change** (implement, handoff, PR/changelog close-out) must include **`## En criollo`**: 3–6 plain sentences on what changes **in practice** for humans, team, or device — install, update, chats, models, links, friction. No jargon-only summaries; translate each technical term to its real effect.

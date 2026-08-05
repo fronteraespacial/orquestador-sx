@@ -33,7 +33,7 @@ El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, plan
 | Pack (`runtime/`) | Destino típico |
 |----------|----------------|
 | `runtime/cursor/agents/*.md` | `.cursor/agents/` |
-| `runtime/cursor/rules/*.mdc` | `.cursor/rules/` |
+| `runtime/cursor/rules/*.mdc` | `.cursor/rules/` (incl. `cj-criollo-changelog.mdc` — `## En criollo` obligatorio) |
 | `runtime/antigravity/agents/*/agent.md` | `.agents/agents/<role>/` |
 | `runtime/skills/orchestrator/SKILL.md` + `reference.md` | `.agents/skills/orchestrator/` |
 | `runtime/skills/orchestrator/reference.wsl.md` | Copiar si el host es WSL; opcional en Windows |
@@ -63,7 +63,8 @@ El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, plan
 3. Gates activos: Scout soft, Lab greenfield REQUIRED bajo **`.lab/`**, Maverick env-anomaly REQUIRED, Verifier close-gate, ESCALATE/ANOMALIA.
 4. Header `## Complexity` + `## Wave` en skill/rules.
 5. `AGENTS.md` mergeado desde template; checklist 09 reportada.
-6. Documentado: Cursor = best-effort audit; OpenCode/Codex = deny más fuerte si está cableado.
+6. Regla **`cj-criollo-changelog`** presente en `.cursor/rules/` (metodología `## En criollo`).
+7. Documentado: Cursor = best-effort audit; OpenCode/Codex = deny más fuerte si está cableado.
 
 ## Paths por SO (resumen)
 

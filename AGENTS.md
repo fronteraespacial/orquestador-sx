@@ -10,7 +10,7 @@
 4. Skill canónica (post-install): `.agents/skills/orchestrator/SKILL.md`
 5. Entrypoint Cursor (post-install): `.cursor/agents/orchestrator.md`
 
-## Árbol v1.2.1
+## Árbol v1.2.3
 
 | Ruta | Rol |
 |------|-----|

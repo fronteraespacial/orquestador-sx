@@ -43,7 +43,7 @@ Actualizá la metodología orquestadora desde GitHub
 
 ### Qué hace
 
-- Instala agents, rules y skill en tu repo (o sandbox de prueba).
+- Instala agents, rules y skill en tu repo (o sandbox de prueba), incluida **`.cursor/rules/cj-criollo-changelog.mdc`** (bloque `## En criollo` obligatorio en cierres técnicos).
 - Escribe `.orchestrator-lock.json`.
 - **No** pisa archivos existentes salvo update explícito.
 

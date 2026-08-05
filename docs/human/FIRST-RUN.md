@@ -118,6 +118,7 @@ Debe mostrar `.orchestrator-lock.json`, manifiesto y skill presente si `enabled:
 1. [`canon/01-METHODOLOGY-SPACEX.md`](../canon/01-METHODOLOGY-SPACEX.md)
 2. Regla bootstrap + skill `.agents/skills/orchestrator/SKILL.md`
 3. Sesiones profundas: `@cj-orchestrator-mandatory`
+4. **En criollo:** el init de proyecto copia `.cursor/rules/cj-criollo-changelog.mdc` (explicación práctica obligatoria en cada cierre técnico)
 
 **Agentes LLM (repo ya instalado):** [`AGENT-BOOTSTRAP-PROMPT.md`](../agent/AGENT-BOOTSTRAP-PROMPT.md)
 

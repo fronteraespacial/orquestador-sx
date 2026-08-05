@@ -33,7 +33,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 Children return ≤40 lines with the canonical section for their role (see pack `02-ROLES-HANDOFFS-GATES.md`). Orchestrator forwards **deltas** into the next envelope only.
 
-**En criollo:** todo cambio técnico cierra con bloque `## En criollo` (3–6 frases: qué cambia para humano/equipo/dispositivo — install, update, chats, modelos, links, fricción). Regla Cursor: `@cj-criollo-changelog`.
+**En criollo (REQUIRED):** la metodología exige bloque `## En criollo` (3–6 frases: qué cambia para humano/equipo/dispositivo — install, update, chats, modelos, links, fricción) en todo cierre de implementación / handoff al humano. El pack instala la regla en **`.cursor/rules/cj-criollo-changelog.mdc`** (`alwaysApply`); AGENTS + skill la marcan obligatoria. `@cj-criollo-changelog` para sesiones profundas.
 
 ## Lab
 

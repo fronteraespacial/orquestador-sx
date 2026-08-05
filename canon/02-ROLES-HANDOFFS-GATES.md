@@ -37,6 +37,8 @@ Wave 3  verifier + triage automation + narrate
 
 Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguiente sobre. Prohibido reenviar el transcript completo del hijo.
 
+**En criollo:** todo cierre al humano (implementer handoff, narrate final del Orquestador) incluye `## En criollo` — contrato metodológico, no tip opcional. Regla instalada: `.cursor/rules/cj-criollo-changelog.mdc`.
+
 ## 4. Handoffs canónicos (≤40 líneas)
 
 ### explore
@@ -87,6 +89,9 @@ Opcional `## MAV-ESCALATE` con theory / approaches / request.
 - Delete check:
 - Automation candidates:
 - Curiosity: (opcional)
+
+## En criollo
+(3–6 frases: qué cambia en la práctica — install, update, chats, modelos, links, fricción)
 ```
 
 O:
