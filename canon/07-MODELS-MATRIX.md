@@ -2,7 +2,7 @@
 
 Los IDs cambian. **Siempre** listar modelos vivos en el host antes de fijar frontmatter.
 
-**Política Cursor (decisión operativa del usuario):** parent = `cursor-grok-4.5-high`; Maverick / verifier / VLH / lab single-spawn = `cursor-grok-4.5-high-fast`; Lab Batch ≥2 parallel labs → each lab-runner `composer-2.5-fast`; demás hijos (implementer, explore, scout, skeptic, deletion) = `composer-2.5-fast`. Large Composer scope → más sobres acotados del **mismo rol**, no mega-pipeline. **No** hay conclusión local de superioridad Grok-vs-Composer; ver [`docs/agent/MODEL-ROUTING-POLICY.md`](docs/agent/MODEL-ROUTING-POLICY.md).
+**Política Cursor (decisión operativa del usuario):** parent / orchestrator = **humano** (model picker) o host **Auto** (más capaz disponible); templates del pack **omit** `model:` en orchestrator — gana el modelo de sesión; pin local opcional solo en `MODELS.local.md`. Hijos: Maverick / verifier / VLH / lab single-spawn = `cursor-grok-4.5-high-fast`; Lab Batch ≥2 parallel labs → each lab-runner `composer-2.5-fast`; demás hijos (implementer, explore, scout, skeptic, deletion) = `composer-2.5-fast`. Large Composer scope → más sobres acotados del **mismo rol**, no mega-pipeline. **No** hay conclusión local de superioridad Grok-vs-Composer; ver [`docs/agent/MODEL-ROUTING-POLICY.md`](docs/agent/MODEL-ROUTING-POLICY.md).
 
 **Maverick + VerifierLikeHuman + Verifier (cross-host):** use **Grok 4.5 High Fast** wherever the host exposes it. If the host has **no** Grok (e.g. Antigravity), apply an explicit **`Host remap`** to the best documented high-reasoning host model — **never** label that remap “Grok”. Roles stay enabled.
 
@@ -10,7 +10,7 @@ Los IDs cambian. **Siempre** listar modelos vivos en el host antes de fijar fron
 
 | Rol | Criterio | Evitar |
 |-----|----------|--------|
-| **Orchestrator** | Routing, gates, oleadas, freno; prefer heavy | Modelo que ignore REQUIRED o “codee T0”; `inherit` inestable en CLI |
+| **Orchestrator** | Routing, gates, oleadas, freno; sesión = humano / Auto | Modelo que ignore REQUIRED o “codee T0”; pin pack-forzado en template |
 | explore / scout | Rápido, tool-use, barato | Writer pesado |
 | maverick | Creativo + razonamiento; techo alto; Grok 4.5 High Fast when exposed; else **`Host remap`** high-reasoning | Flash; calling a non-Grok ID “Grok” |
 | implementer / executor | Código fiable en paths+DoD claros; scope grande → más sobres, mismo rol | Flash free ya marcado unreliable; mega-pipeline Composer |
@@ -29,7 +29,7 @@ El Orquestador **no necesita** modelo “con tools de edición”; necesita disc
 
 | Rol | Default pack | Notas |
 |-----|--------------|-------|
-| orchestrator (sesión) | **`cursor-grok-4.5-high`** | Verificado en template; **no** `inherit`. Fallback: nearest non-Fast Grok / frontier high |
+| orchestrator (sesión) | **Sin pin en template** — humano / Auto | Pack **omite** `model:`; sesión gana. Pin local opcional → `MODELS.local.md` only. Nested orch opcional → ver §2.2 / MODEL-ROUTING |
 | maverick | **`cursor-grok-4.5-high-fast`** | **Siempre** (early Discovery CONSULT + env-anomaly + post-Harvest) |
 | VerifierLikeHuman | **`cursor-grok-4.5-high-fast`** | **Siempre**; T2/T3 user-facing tras tech PASS; sin edit / sin auto O2 |
 | verifier (technical DoD) | **`cursor-grok-4.5-high-fast`** | **Siempre** — mechanical + judgment + cross-surface integration |
@@ -49,7 +49,13 @@ Si el resultado Composer **no** satisface al orchestrator/verifier (o hay `## ES
 3. **Una** corrección/revisión con `cursor-grok-4.5-high-fast`.
 4. No repetir Composer a ciegas ni sobrescribir sin evidencia.
 
-### 2.2 Evidencia vs decisión (honestidad)
+### 2.2 Nested orchestrator (opcional — NOT default)
+
+**Default:** sesión parent carga SKILL y spawnea hijos **directo** (sin nest).
+
+**Opcional depth-1** — solo si humano pide, sesión thin/cheap en T2/T3 multi-gate vago, o outer ya violó protocolo una vez: `Task(orchestrator, model: cursor-grok-4.5-high-fast)` (Task-resolvable; AGY **Host remap:** `gemini-3.1-pro-high`). Outer = thin launcher; nested owns classify/spawn/Ledger/Harvest; **no** re-nest; **no** monolito. Triggers: [`docs/agent/MODEL-ROUTING-POLICY.md`](docs/agent/MODEL-ROUTING-POLICY.md) · lab `.lab/2026-08-06-nested-orch-vs-direct/`.
+
+### 2.3 Evidencia vs decisión (honestidad)
 
 | Capa | Qué es |
 |------|--------|
@@ -98,7 +104,7 @@ IDs OpenAI de la cuenta. Same **roles** (incl. VerifierLikeHuman). Prefer Grok-e
 ```text
 [ ] Listé modelos en cada CLI del host
 [ ] Remapeé templates donde el ID no existía
-[ ] Orchestrator Cursor = cursor-grok-4.5-high (no inherit)
+[ ] Orchestrator Cursor: template **sin** `model:` — sesión humano/Auto gana; pin local opcional → MODELS.local.md
 [ ] Maverick/VLH/Verifier Cursor = cursor-grok-4.5-high-fast when exposed
 [ ] Lab single-spawn Cursor = cursor-grok-4.5-high-fast; Lab Batch ≥2 = composer-2.5-fast each
 [ ] Maverick/VLH/Verifier AGY = Host remap gemini-3.1-pro-high (never labeled Grok)

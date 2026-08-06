@@ -33,6 +33,6 @@ Usar antes de zippear, taggear o compartir el pack.
 - [ ] README + `docs/human/FIRST-RUN.md` + TEAM-ONBOARDING + SECURITY + NOTICE
 - [ ] `docs/agent/AGENT-BOOTSTRAP-PROMPT.md` incluido
 - [ ] `docs/maintainer/RELEASE.md` revisado
-- [ ] Orchestrator template `model: cursor-grok-4.5-high` (no `inherit`)
+- [ ] Orchestrator template **omits** `model:` — session human/Auto wins; optional local pin documented in MODELS.local.md only
 - [ ] `.gitignore` excluye `tooling/bench/results/`, sandbox instalado, secretos
 - [ ] Tag `vX.Y.Z` + SHA256SUMS en release GitHub (`fronteraespacial/orquestador-sx`)

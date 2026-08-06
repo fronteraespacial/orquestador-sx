@@ -14,7 +14,8 @@ While these model IDs remain available on the host (`agent --list-models`):
 
 | Actor | Model ID | When |
 |-------|----------|------|
-| **Parent / orchestrator** | `cursor-grok-4.5-high` | Always (session default; template frontmatter) |
+| **Parent / orchestrator (session)** | **None pinned** — human picker or host **Auto** | Pack templates **omit** `model:` on orchestrator; session model wins. Optional local CLI pin → `MODELS.local.md` only |
+| **Nested orchestrator (optional — NOT default)** | `cursor-grok-4.5-high-fast` (AGY **Host remap:** `gemini-3.1-pro-high`) | Task-resolvable on current Cursor catalog; session parent may still be any user/Auto model. Depth-1 only if human asks, thin/cheap session on vague T2/T3 multi-gate, or outer failed protocol once. Outer = thin launcher; nested owns classify/spawn/Ledger/Harvest; no re-nest. Lab: `.lab/2026-08-06-nested-orch-vs-direct/` |
 | **Maverick** | `cursor-grok-4.5-high-fast` | **Always** (early Discovery CONSULT + post-Harvest CONSULT; env anomaly) |
 | **Verifier (technical DoD)** | `cursor-grok-4.5-high-fast` | **Always** — scripts, exit codes, file existence, lock/status, hash checks, cross-surface consistency |
 | **VerifierLikeHuman** | `cursor-grok-4.5-high-fast` | **Always** — after technical verifier PASS; T2/T3 human-facing only |
@@ -22,6 +23,16 @@ While these model IDs remain available on the host (`agent --list-models`):
 | **Lab-runner (Lab Batch ≥2 parallel)** | `composer-2.5-fast` | Each parallel lab-runner when ≥2 labs spawn together |
 | **Implementer / repetitive roles** | `composer-2.5-fast` | Repetitive/fast work, mechanical refactors, surgical edits with clear paths + DoD |
 | **explore, scout, skeptic, deletion** | `composer-2.5-fast` | Light / tool-use defaults |
+| **Diagnostic drones** (Mode: diagnostic — 4 lanes) | `composer-2.5-fast` | **explore** RO: logs \| recent-changes \| structural \| similar-fragility; writes only `.debug/<id>/drone-*/` |
+| **Diagnostic synthesizer** (parent merge → `.debug/<id>/REPORT.md`) | `cursor-grok-4.5-high-fast` | Fan-in after drone Batch; tags + findings; **no prod patch**; integrates Maverick block |
+
+**Mode: diagnostic routing (HARD):**
+
+| Actor | Model | Notes |
+|-------|-------|-------|
+| **4 explore drones** | `composer-2.5-fast` | Parallel RO lanes; diagnostic Batch only |
+| **Synthesizer** (REPORT.md) | `cursor-grok-4.5-high-fast` | Parent-owned merge or dedicated Task after drone fan-in |
+| **Maverick CONSULT HARD** (pre-REPORT close) | `cursor-grok-4.5-high-fast` | **Always** — AGY/OpenCode/Codex → **Host remap** per §5.1; never Composer; never patch |
 
 **New role (1.3.0 oleada):** **VerifierLikeHuman** — dedicated agent; **not** folded into technical verifier. Parent picks models at spawn per table above. Cross-host remap: see §5 / §5.1 and [`../../canon/07-MODELS-MATRIX.md`](../../canon/07-MODELS-MATRIX.md).
 
@@ -34,16 +45,28 @@ While these model IDs remain available on the host (`agent --list-models`):
 
 **Verifier FAIL contract (1.3.1):** on **FAIL**, verifier returns a **complete gap inventory** (every blocking gap found) — not just the first FAIL. Verdict remains **FAIL** if any gap blocks. Parent opens **at most one O2** per verify fan-in, consolidating the full inventory into **one** corrective execute Batch — no whack-a-mole O2/O3/O4 per single gap. See [`../../canon/01-METHODOLOGY-SPACEX.md`](../../canon/01-METHODOLOGY-SPACEX.md) §6 verify loop.
 
-After technical verifier handoff, parent (`cursor-grok-4.5-high`) **spot-checks 1–2 claims** against evidence — **does not** re-run the full DoD. If doubt remains → cascade one verifier pass on Grok Fast. When VLH is gated, spawn it as a **separate Task** after tech PASS.
+After technical verifier handoff, **parent spot-checks 1–2 claims** against evidence — **does not** re-run the full DoD (parent model is session human/Auto, not pack-pinned). If doubt remains → cascade one verifier pass on Grok Fast. When VLH is gated, spawn it as a **separate Task** after tech PASS.
 
-### 1.0b Composer compensation (large / mechanical work)
+### 1.0b Implementer Batch (T≥2 default) — HARD
 
-When implementer (or other Composer role) faces **large or mechanical** scope:
+**Default for T≥2 execute writers** (`composer-2.5-fast` or host fast-Composer remap): parent spawns **2–3 implementers** in the **same execute Batch** — **disjoint path allow-lists**, shared DoD, **exactly one** `Release-owner` (VERSION/CHANGELOG/lock) or defer to **RELEASE CHECKLIST** fase. **T0/T1:** 1 implementer.
 
-1. Parent **splits** into **more iterations** — more **bounded envelopes of the same role** (same subagent type).
-2. **Do not** collapse into one mega-Composer pipeline.
-3. **Do not** collapse roles (lab + implement + verify in one worker).
-4. Prefer **several surgical Composer passes** over one overloaded pass.
+| Case | Routing |
+|------|---------|
+| **T∈{2,3} + Composer writers** | **Implementer Batch 2–3** (required unless Inseparable) |
+| **Inseparable** | Single file / atomic rename / coupled hunk → document `Inseparable` + **serial micro-passes** (same role), not forced parallel |
+| **O2 corrective** | Same 2–3 split when gap inventory is **path-partitionable**; single-path gap → Inseparable; **O2 via Task implementer(s)** — parent **never** Write/Shell |
+| **ops-diagnostic** | Serial only |
+| **Lab Batch** | ≠ Implementer Batch — labs stay in `research-lab`; prod split only after APPROVE (+ Build if Discovery) |
+
+**Hard bans (process FAIL, not warning):**
+
+- One mega-Composer for multi-surface T≥2 work
+- Composer as **verifier**, **VerifierLikeHuman**, **maverick**, or **single-lab** lab-runner
+- Parent Write/Shell/test after Build approved (including O2 gaps)
+- Role collapse (lab + implement + verify in one worker)
+
+**Fan-in:** parent waits for **all** implementer handoffs before verify. Overlapping path sets → re-split before spawn.
 
 ### 1.1 Composer → Verifier → single Grok High Fast corrective pass
 
@@ -110,25 +133,25 @@ Cursor states a **possible** Grok advantage from an accidental Cursor snapshot i
 
 ## 4. Operational decision (why this pack pins these defaults)
 
-The pack pins:
+The pack **does not** pin the session parent / orchestrator model — human picker or host Auto wins; templates omit `model:` on orchestrator. Optional local pin → `MODELS.local.md` only.
 
-- Orchestrator → `cursor-grok-4.5-high`
+The pack **does** pin **child** spawn IDs via Task `model:` / frontmatter:
+
 - Maverick / verifier / VLH / single lab → `cursor-grok-4.5-high-fast`
 - Lab Batch (≥2 parallel labs) → each lab-runner `composer-2.5-fast`
 - Clear / repetitive / light children → `composer-2.5-fast`
-- Large Composer work → **more bounded envelopes**, same role — not mega-pipeline
+- T≥2 Composer execute → **Implementer Batch 2–3** (§1.0b); Inseparable → serial micro-passes — not mega-pipeline
 
 …as a **user decision** supported by (a) CursorBench as a soft external prior and (b) operational guardrails (gates, single O2 per verify fan-in, full gap inventory, evidence retention, VLH evidence classes, release checklist fase). It is **not** justified by a completed local superiority grid.
 
 ## 5. Fallback / remap
 
 1. Run `agent --list-models` (or UI equivalent).
-2. If `cursor-grok-4.5-high` is missing → nearest non-Fast Grok / frontier **high** reasoning ID; document in `MODELS.local.md` and install handoff.
-3. If `cursor-grok-4.5-high-fast` is missing on a host that still has Grok → nearest Grok Fast / high-reasoning creativo ≥ implementer tier.
-4. If `composer-2.5-fast` is missing → nearest **fast** tool-use Composer ID on the host; **never** fall back to non-Fast `composer-2.5`.
-5. Prefer Task `model:` override when frontmatter ID is wrong for the host; do not invent roles beyond the matrix (orchestrator, explore, scout, maverick, lab-runner, implementer, verifier, **verifier-like-human**, skeptic, deletion).
-
-`model: inherit` is **not** the orchestrator default (CLI instability). Explicit `cursor-grok-4.5-high` is the verified template pin.
+2. **Session parent:** no pack-required ID. Optional local pin → `MODELS.local.md` only — not template frontmatter.
+3. **Optional nested orchestrator:** if triggers met (§1 table), Task `model: cursor-grok-4.5-high-fast` (AGY **Host remap:** `gemini-3.1-pro-high`); if ID missing → nearest Grok Fast / high-reasoning; document in `MODELS.local.md`.
+4. If `cursor-grok-4.5-high-fast` is missing on a host that still has Grok → nearest Grok Fast / high-reasoning creativo ≥ implementer tier.
+5. If `composer-2.5-fast` is missing → nearest **fast** tool-use Composer ID on the host; **never** fall back to non-Fast `composer-2.5`.
+6. Prefer Task `model:` override when frontmatter ID is wrong for the host; do not invent roles beyond the matrix (orchestrator, explore, scout, maverick, lab-runner, implementer, verifier, **verifier-like-human**, skeptic, deletion).
 
 ### 5.1 Maverick + VerifierLikeHuman + Verifier judgment — Grok when exposed; else **`Host remap`**
 

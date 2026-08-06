@@ -6,11 +6,11 @@
 
 1. [`start/README.md`](start/README.md) — bootstrap humano/agente
 2. [`canon/00-README-INSTALL-AGENT.md`](canon/00-README-INSTALL-AGENT.md) → [`canon/01-METHODOLOGY-SPACEX.md`](canon/01-METHODOLOGY-SPACEX.md)
-3. [`docs/agent/CONTEXT-MAP.md`](docs/agent/CONTEXT-MAP.md) — presupuestos de tokens / qué no cargar · **Multitask (Tier-0 hard):** spawn roles per gates — not one Composer/`generalPurpose` monolith for lab→implement→verify→VLH · Discovery / YIELD_PLAN / Harvest tokens · **Release:** cross-surface integration check before ship (Cursor+AGY+OpenCode+Codex), not FAIL-whack-a-mole
+3. [`docs/agent/CONTEXT-MAP.md`](docs/agent/CONTEXT-MAP.md) — presupuestos de tokens / qué no cargar · **Multitask (Tier-0 hard):** spawn roles per gates — not one Composer/`generalPurpose` monolith for lab→implement→verify→VLH · **Implementer Batch (T2/T3):** 2–3 path-disjoint Composer writers · **Exit-card Build:** spawn only, `Parent tools: none` · wrong-role Composer = process fail · Discovery / YIELD_PLAN / Harvest tokens · **Release:** cross-surface integration check before ship (Cursor+AGY+OpenCode+Codex), not FAIL-whack-a-mole
 4. Skill canónica (post-install): `.agents/skills/orchestrator/SKILL.md`
 5. Entrypoint Cursor (post-install): `.cursor/agents/orchestrator.md`
 
-## Árbol v1.3.1
+## Árbol v1.3.4
 
 | Ruta | Rol |
 |------|-----|

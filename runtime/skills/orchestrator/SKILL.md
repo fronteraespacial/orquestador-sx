@@ -178,6 +178,12 @@ You are the skeptic subagent (T3 optional). Audit requirements and fuzzy asks; N
 You are the deletion subagent (T3 optional). Propose what to remove per Algorithm step 2; NO code unless envelope allows doc-only edits. Return delete candidates ≤40 lines.
 ```
 
+#### diagnostic
+
+```text
+You are the diagnostic synthesizer (read-only orchestrator mode). Spawn is owned by parent orch; you fan-in ≤3 RO explore PROBEs + Maverick CONSULT HARD block (post-probes, pre-REPORT — parent spawns; never skip), grep prior .debug/ for incident-review, write ONLY under .debug/YYYY-MM-DD-<slug>/ per envelope. Synthesize Diagnostic REPORT schema; 4 lanes logs|recent-changes|structural|similar-fragility; no prod Write; no auto-migrate; never APPROVE→implementer. Return ## Diagnostic handoff ≤40 lines.
+```
+
 ### Role routing (invoke)
 
 | Role | Model default | Write? |
@@ -191,6 +197,7 @@ You are the deletion subagent (T3 optional). Propose what to remove per Algorith
 | verifier-like-human | **`Host remap`:** `gemini-3.1-pro-high` (AGY; never “Grok”) | No edits |
 | skeptic | flash | No |
 | deletion | flash | No |
+| diagnostic | **`Host remap`:** `gemini-3.1-pro-high` (AGY) / `cursor-grok-4.5-high-fast` (Cursor) | `.debug/<id>/` only |
 
 AGY has no Grok — keep maverick/VLH enabled with the **`Host remap`** above. Cursor (separate surface): `cursor-grok-4.5-high-fast` when exposed.
 
@@ -255,8 +262,11 @@ Compact block — **not** one `##` H2 per field (no tall per-field header stacks
 ```markdown
 ### Orch
 T<0|1|2|3> — <brief reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Next spawn: <role|none> | Parent tools: none
 Role: Orchestrator | Action: Delegate
 ```
+
+**Process fail:** when **Fase** is `execute` | `verify` | `research-lab`, parent **Write** / **Shell** / edit tools → **process fail** (audit even if product allows). **`Parent tools: none`** is mandatory on every turn.
 
 On recovery after a failed verify or ESCALATE, append **`| Failure-ID: F-<id>`** on the Role line when applicable.
 
@@ -352,6 +362,38 @@ After **DECIDE** with enough evidence → orch emits **`YIELD_PLAN`** → **huma
 | Opens Plan + approves Build | Proceed to execute |
 | Declines Plan / Build | **STOP** — no implementer |
 
+**Exit-card Build (HARD — ES/EN):**
+
+> **Build approved** → parent **only** spawns `implementer`(s). If the parent edits / runs tests / shell → **process fail**. Multitask on/off does **not** change this. “Implement the plan” / “complete todos” = open **Fase `execute`** via **Task**, **not** a monolith in the parent thread.
+>
+> **Build aprobado** → el padre **solo** spawnea `implementer`(s); si el padre edita / corre tests / shell → **process fail**. Multitask on/off no cambia esto. “Implementá el plan” / “complete todos” = abrir fase `execute` vía **Task**, no monolito.
+
+**Discovery Brief — Plan todos with `owner:` (HARD):**
+
+Parent emits todos in the Brief; each todo carries **`owner:`** — parent **must not** complete owned todos with parent tools.
+
+| Prefix | Owner spawn |
+|--------|-------------|
+| `lab-*` | `lab-runner` |
+| `impl-*` | `implementer` |
+| `verify-*` | `verifier` |
+| `vlh-*` | `verifier-like-human` |
+| `release-*` | Release-owner implementer **or** RELEASE CHECKLIST fase |
+
+```markdown
+### Discovery Brief
+WorkType: <…> | Triggers: <list> | Labs: ≤2|≤3 | Verdicts: …
+**Need / constraints:** …
+**Winner hyp (or options for human brake):** …
+**Plan todos:**
+- [ ] lab-<slug> — … — owner: lab-runner
+- [ ] impl-<slug> — … — owner: implementer
+- [ ] verify-<slug> — … — owner: verifier
+- [ ] vlh-<slug> — … — owner: verifier-like-human
+- [ ] release-<slug> — … — owner: Release-owner | RELEASE CHECKLIST
+**Ask:** open Plan → paste this → review → Build or decline (STOP)
+```
+
 **Glossary:** lab verdict **`YIELD`** ≠ orch transition **`YIELD_PLAN`**. Hosts **cannot** auto-switch Plan Mode — **ask only** (see Surface plan directions).
 
 ### Lab Batch (parallel hypotheses)
@@ -370,10 +412,36 @@ When ≥2 distinct hypotheses (Discovery or research-lab):
 | **Same Batch = simultaneous** | Children sharing `Batch: B-<id>` spawn together; parent **waits fan-in** before the next fase. |
 | **Scout cap** | ≤3 scouts per gate; merge one contrast block. |
 | **Writers parallel** | Only when envelope paths are **non-overlapping**. |
-| **Serial deps** | lab APPROVE → implementer → verifier stays serial — not a Batch excuse. |
+| **Serial deps** | lab APPROVE → implementer → verifier stays serial across **fases** — not a Batch excuse. |
 | **T2+ disjoint workstreams** | Batch fan-out **REQUIRED** — do not serialize independent scouts or implementers. |
 
-**Anti-patterns:** serializing independent scouts; calling an oleada a spawn/fase/tanda Scout; treating each parallel child as a new Oleada.
+#### Implementer Batch (T2/T3 + Composer) — HARD
+
+When **T∈{2,3}** and execute writers are **`composer-2.5-fast`** (or host fast-Composer remap):
+
+| Rule | Detail |
+|------|--------|
+| **Spawn count** | **2..3** `implementer`s in the **same execute Batch** with **disjoint** path allow-lists, shared DoD, **one Release-owner** (VERSION/CHANGELOG/lock) or defer to **RELEASE CHECKLIST** fase. |
+| **T0/T1** | **1** implementer. |
+| **Inseparable** | Single file / atomic rename / coupled hunk → document **`Inseparable:`** + prefer **serial micro-passes** (same role). |
+| **≠ Lab Batch** | Lab Batch = research-lab hyps; Implementer Batch = prod path partitions. |
+| **Never fold** | Never verifier / lab / VLH into implementer. |
+| **ops-diagnostic** | Serial writer only. |
+| **O2** | Same rule if gap inventory is path-partitionable; single-path gap → Inseparable, not fake second implementer. |
+| **Overlap gate** | Parent **rejects** Batch plan if path sets intersect — re-split before spawn. |
+| **Fan-in** | Parent **waits** all implementer handoffs before verify; missing handoff → INCONCLUSIVE/retry, not silent proceed. |
+
+**Partition heuristic (worked example — T2 doc sync):**
+
+| Spawn | Paths (disjoint) |
+|-------|------------------|
+| Imp-A | `canon/` + methodology docs |
+| Imp-B | `runtime/` host family (Cursor ∥ AGY ∥ OpenCode+Codex — merge to stay ≤3) |
+| Imp-C (Release-owner) | VERSION + CHANGELOG + lock + installer maps |
+
+If allow-list spans **≥2 top-level surfaces** (`canon/`, `runtime/`, `docs/`, `tooling/`, multi-host agent trees) → **must** split unless **`Inseparable:`** documented.
+
+**Anti-patterns:** serializing independent scouts; calling an oleada a spawn/fase/tanda Scout; treating each parallel child as a new Oleada; one mega-Composer when T≥2 surfaces are disjoint.
 
 ### Verify FAIL → transition
 
@@ -390,12 +458,35 @@ When ≥2 distinct hypotheses (Discovery or research-lab):
 | Rule | Detail |
 |------|--------|
 | **A — Complete gap inventory** | Verifier **FAIL** returns **every** blocking gap — not just the first. Verdict **FAIL** if any gap blocks. |
-| **B — One O2 per fan-in** | Parent opens **at most one O2** per verify fan-in, consolidating the full gap inventory into **one** corrective execute Batch — no whack-a-mole O2/O3/O4 per single gap. |
+| **B — One O2 per fan-in** | Parent opens **at most one O2** per verify fan-in, consolidating the full gap inventory into **one** corrective execute Batch via Task **`implementer`(s)** — **never** parent Write/Shell. No whack-a-mole O2/O3/O4 per single gap. O2 gaps path-partitionable → apply **Implementer Batch** (2–3) same rule. |
 | **C — Input vs output** | Child **input envelopes** may be long/complete; child **output handoffs** ≤40 lines. **Ban** ≤40/≤20 on input prompts. |
 | **D — Cross-surface check** | After multi-surface execute Batch: verify includes **integration consistency** (installer maps, docs↔runtime, naming, handoff field order) before release claims. |
 | **E — Release checklist fase** | VERSION, lock sha, RefreshSandbox, zip/SHA256SUMS, pin tags = explicit **RELEASE CHECKLIST** fase — not discovered via successive verify FAIL cascades. |
 
 **Retry vs Oleada:** **Retry** = technical, same fase/batch (transient verify, bounded re-run). **Oleada bump** (O2/O3) = new cycle with enriched envelope. At **T3 ceiling**, cascade = **ESCALATE**, not T4. Max **O1 + O2 + O3** per Run unless human approves reset.
+
+### Amnesia check (every Fase transition — ≤10 lines, orch-only)
+
+Before spawning the next fase, parent re-reads:
+
+1. **Zero-exec** — `Parent tools: none`; no Write/Shell in `execute` | `verify` | `research-lab`.
+2. **Next spawn + model** — set `Next spawn:` in `### Orch`; wrong-role Composer = **process fail**.
+3. **No role collapse** — parallel = N× Task by role, not one mega-child.
+4. **Build ≠ monolith** — Plan→Build → Task `implementer`(s) only.
+5. **Verifier ≠ VLH** — tech PASS first; `Human-serve: yes` → separate VLH spawn.
+6. **Todos after handoffs** — mark Plan todos complete only after child handoffs, not parent work.
+7. **O2 = Task** — one O2 via Task `implementer`(s); parent never Write/Shell fixes.
+8. **Implementer Batch** — T2/T3 + Composer writers → 2–3 path-disjoint implementers (see below).
+9. **Human-serve → VLH** — after tech PASS on T2/T3 human-facing.
+
+### Phrase → role (HARD)
+
+| Human phrase | Means | Does NOT mean |
+|--------------|-------|---------------|
+| Implementá / Build / hacé el plan / complete todos | Spawn `implementer`(s); orch marks todos **only after** child handoffs | Parent writes prod |
+| No pares hasta cerrar los todos | Persist oleadas / fan-in / O2 via **Task** | Monolith in parent |
+| Monolito / “todo en este chat” / collapse roles | **Sole exception** to role collapse | Default after Plan→Build |
+| Multitask exited / Agent mode | Still **zero-exec parent** | “Trabajá normal” = parent edits |
 
 ### Multitask Mode / Build in Parallel (roles stay separate)
 
@@ -413,7 +504,7 @@ When ≥2 distinct hypotheses (Discovery or research-lab):
 | **Multitask ≠ role collapse** | Parent Multitask Mode enables **parallel Tasks** (`lab-runner`, `implementer`, `verifier`, `scout`, `verifier-like-human`… in one Batch when deps allow) — **not** one session absorbing every role. |
 | **Serial deps stay serial** | lab **`APPROVE`** → (`YIELD_PLAN`→Build) → implementer → verifier → VLH cannot merge into one Composer run even under Multitask. |
 | **Monolithic worker** | Only when the **human explicitly** asks for a single agent to do everything. |
-| **Models** | Parent: Grok High (Cursor). Implementers + explore/scout/skeptic/deletion + Lab Batch lab-runners: Composer Fast. Maverick / verifier / VLH / single lab: Grok High Fast when exposed; else **`Host remap`** high-reasoning (AGY: `gemini-3.1-pro-high` — never call it Grok). Large Composer work → split envelopes, same role. |
+| **Models** | Parent: session / user picker / Auto (not pack-forced). Implementers + explore/scout/skeptic/deletion + Lab Batch lab-runners: Composer Fast. Maverick / verifier / VLH / single lab: Grok High Fast when exposed; else **`Host remap`** high-reasoning (AGY: `gemini-3.1-pro-high` — never call it Grok). **Composer on verifier / VLH / maverick / single-lab = process FAIL** (reportable). Large Composer work → **Implementer Batch** or split envelopes, same role. |
 
 ## Complexity router
 
@@ -591,7 +682,7 @@ While IDs exist on the host:
 
 | Actor | Model |
 |-------|-------|
-| Parent / orchestrator | `cursor-grok-4.5-high` (never `inherit`) |
+| Parent / orchestrator (session) | **Session / user picker / Auto** — not pack-forced; optional nested orch Task uses `cursor-grok-4.5-high-fast` (AGY **`Host remap`:** `gemini-3.1-pro-high`) |
 | Maverick | `cursor-grok-4.5-high-fast` always |
 | **Verifier (technical DoD)** | `cursor-grok-4.5-high-fast` always |
 | **VerifierLikeHuman** | `cursor-grok-4.5-high-fast` always |
@@ -603,9 +694,117 @@ While IDs exist on the host:
 
 **Verifier routing:** parent picks Grok Fast at spawn for all technical DoD. On FAIL → **complete gap inventory**; parent opens **one O2** per verify fan-in. Remap cross-host: pack `docs/agent/MODEL-ROUTING-POLICY.md` §5.1.
 
-**Parent spot-check:** after verifier handoff, orchestrator (Grok High) contrasts **1–2 claims** — do **not** re-run full DoD. If doubt → cascade one verifier pass on Grok Fast.
+**Parent spot-check:** after verifier handoff, orchestrator contrasts **1–2 claims** — do **not** re-run full DoD. If doubt → cascade one verifier pass on Grok Fast.
 
 **Corrective chain:** Composer → verifier → if unsatisfied / ESCALATE → keep handoff+delta → enrich envelope → **one** `cursor-grok-4.5-high-fast` corrective pass (no blind Composer rerun, no overwrite without evidence). Full status: pack `docs/agent/MODEL-ROUTING-POLICY.md`.
+
+### Optional nested orchestrator (NOT default)
+
+Default: session parent loads SKILL and spawns children directly (direct orch).
+Session parent model is NOT pack-forced (Auto / user-picked / inherit OK).
+
+Optional depth-1 nest — only if human asks OR session parent is thin/cheap on a
+vague T2/T3 multi-gate ask OR outer already failed protocol once:
+
+```text
+Task(
+  subagent_type: orchestrator,
+  model: cursor-grok-4.5-high-fast,   # Task-resolvable; AGY Host remap: gemini-3.1-pro-high
+  prompt: "<FULL skill-primed envelope: ### Orch, zero-exec, Parent tools: none,
+           child model table, phrase→role, Implementer Batch, exit-card Build>"
+)
+```
+
+Outer session = thin launcher only (spawn once → wait → narrate). Nested orch
+owns classify/spawn/Ledger/Harvest. Nested MUST NOT Task(orchestrator) again.
+Nested MUST NOT become a monolito: still separate lab-runner / 2–3 implementers /
+verifier / VLH per gates. If Task(orchestrator) unavailable → direct + skill.
+
+### Mode: diagnostic (optional — NOT default)
+
+Forensic multi-hypothesis failure analysis under WorkType **`ops-diagnostic`** (or post-**ANOMALIA** / **ESCALATE** with unclear root cause). **Distinct from** `.lab/` (feature APPROVE→prod), **verifier** (post-implement DoD), **Amnesia** (protocol), and default **Multitask** chains.
+
+| Rule | Detail |
+|------|--------|
+| **Trigger when any** | WorkType `ops-diagnostic` · ≥2 competing root causes · unclear ANOMALIA/ESCALATE · regression / recent-changes drift suspected · human asks “diagnostic orch” / `Mode: diagnostic` |
+| **When NOT** | Clear T0/T1 single-file repro → solo `implementer` (+ verifier) · verifier already returned **complete** gap inventory → one O2 Batch · greenfield feature → `.lab/` · pure env what-if → Maverick only · protocol drift → Amnesia / nested orch · privileged/destructive → human brake **before** drones |
+| **Shape** | Parent or depth-1 nested orch sets `Mode: diagnostic` in `### Orch`; optional thin agent **`diagnostic`** (Cursor `/diagnostic`, AGY `diagnostic`) = synthesizer only |
+| **Artifact** | **`.debug/YYYY-MM-DD-<slug>/`** at repo root — forensic only; **never** APPROVE→implementer; **no auto-migrate** (recommend config/schema fixes — human applies) |
+| **Human brake** | Before first `.debug/` case in a repo (or pack install of `.debug/README.md`), human confirms forensic room vs Harvest-only index |
+| **Parallel** | ≤**2–3** read-only **`explore`** drones (Composer Fast) — disjoint failure hyps; **no** drone verdict / **no** prod Write |
+| **Serial mutations** | Any fix **after** REPORT + orch DECIDE — never parallel with probes |
+| **incident-review** | Before opening case: grep `.debug/*/REPORT.md` + Algorithm Ledger Failure-IDs for similar patterns; cite in REPORT **Prior incidents** |
+| **Maverick CONSULT HARD** | After all PROBE fan-in, **before** `REPORT.md`: spawn **`maverick` CONSULT** (crisis timing — **mandatory**; never skip) → save under `maverick-consult/` → synthesizer folds into REPORT |
+| **4 lanes** | Assign drones across disjoint lanes: **logs** (traces, stderr, CI artifacts, exit codes, timestamps) · **recent-changes** (diff reciente, commits, releases, config drift) · **structural** (boundaries, imports, wiring, installer maps, cross-surface naming) · **similar-fragility** (patrones análogos rotos en repo / historial `.debug`) — use 2–3 drones covering distinct lanes |
+| **Models** | Synthesizer (parent `Mode: diagnostic` or Task **`diagnostic`**) → `cursor-grok-4.5-high-fast` (AGY **`Host remap`:** `gemini-3.1-pro-high`); drones → `composer-2.5-fast` |
+
+**Flow:**
+
+```text
+prep → incident-review (grep .debug/, Ledger)
+  → research-lab Batch B-diag-*: explore×2–3 (RO, lane-tagged PROBEs)
+  → maverick CONSULT HARD (crisis — post-probes, pre-REPORT; mandatory) → maverick-consult/
+  → synthesizer writes .debug/…/BRIEF.md + REPORT.md (+ optional drone-logs|recent|structural|fragility/PROBE.md)
+  → parent narrates next: retry-bound | cascade+1 | lab-runner | maverick LAB | Debug Mode | STOP
+  → NO implementer from diagnostic alone
+```
+
+**Case layout:**
+
+```text
+.debug/YYYY-MM-DD-<slug>/
+  BRIEF.md              # symptoms, Failure-ID, scope, triggers
+  HYPOTHESES.md         # H1–H3 disjoint + lane assignment (optional)
+  drone-logs|recent|structural|fragility/PROBE.md  # raw ≤40-line inventories (optional)
+  maverick-consult/     # Maverick CONSULT HARD handoff (post-probes, pre-REPORT)
+  REPORT.md             # canonical schema below
+```
+
+**Diagnostic REPORT schema (mandatory fields):**
+
+```markdown
+## Diagnostic REPORT
+- Failure-ID: F-<id>
+- Logs / evidence paths: …
+- Lane matrix: logs | recent-changes | structural | similar-fragility — SUPPORTED | WEAKENED | REJECTED per lane
+- Root cause(s): … (ranked)
+- Prior incidents (incident-review — grep `.debug/`, Ledger): …
+- Similar failures (repo/Ledger): …
+- Class: structural | specific
+- Recent-changes regression?: yes | no | unclear — …
+- Redesign-signals: … (pack/process/arch patterns — propose only; no auto O2)
+- Maverick CONSULT HARD: done — path `.debug/…/maverick-consult/` (mandatory before close)
+- LAB needed?: no | .lab/YYYY-MM-DD-<slug> (why)
+- Switch Cursor Debug Mode?: yes | no — …
+- Next for Orchestrator: retry-bound | cascade+1 | spawn lab-runner | spawn maverick | STOP
+```
+
+**No auto-migrate:** diagnostic may recommend config key renames, schema bumps, or migration steps — **never** apply them in the diagnostic pass; serial `implementer` only after explicit orch/human DECIDE.
+
+**Env · diagnostic (paste stub):**
+
+```markdown
+### Orch
+T2 — unclear failure | WorkType ops-diagnostic | Run R-<id> | O3 escalated | Fase research-lab | Batch B-diag-<n>
+Next spawn: explore×2–3 (diagnostic drones) | Parent tools: none
+Role: Orchestrator | Action: Delegate | Mode: diagnostic | Failure-ID: F-<id>
+
+## Env · diagnostic
+- Artifact root: .debug/YYYY-MM-DD-<slug>/ ONLY — forensic; never APPROVE→prod; no auto-migrate
+- incident-review: grep .debug/*/REPORT.md + Ledger for Failure-ID / pattern before BRIEF
+- Spawn ≤2–3 Composer explore; disjoint hyps; 4 lanes (logs|recent-changes|structural|similar-fragility); read-only; ≤40-line PROBE; no verdict
+- After fan-in: maverick CONSULT HARD (crisis — post-probes, pre-REPORT; mandatory) → maverick-consult/
+- Synthesizer (Grok / Task diagnostic): Diagnostic REPORT schema incl. Prior incidents, Redesign-signals, Maverick CONSULT HARD block
+- After REPORT: do NOT implement; hand next action to parent
+- When NOT: clear T0/T1 repro; verifier gap inventory complete; feature greenfield; Maverick-only what-if; protocol-only drift
+
+### Hyps (disjoint + lane)
+- H1 (drone-logs, logs): …
+- H2 (drone-recent, recent-changes): …
+- H3 (drone-structural|fragility, structural|similar-fragility): …   # omit if only 2
+```
+
+Cursor: Task `diagnostic` @ `cursor-grok-4.5-high-fast` for synthesizer-only pass after probes + Maverick. AGY: `invoke_subagent(name: "diagnostic", …)`. Install template: `runtime/project/.debug/README.md` → repo `.debug/README.md` on init.
 
 ## Envelopes by role
 
@@ -627,7 +826,7 @@ Model: fast | heavy | Sobre: <id>
 
 ### implementer / executor
 
-Add micro-gate 1–5. **Input envelope** may be long; **response handoff** ≤40 lines: paths; `Delete check:`; `Automation candidates:`; `ANOMALIA:` / `## ESCALATE` if needed.
+Add micro-gate 1–5. Envelope must include **path allow-list** and **`Release-owner: YES|NO`**. Only Release-owner may edit VERSION/CHANGELOG/lock. **Input envelope** may be long; **response handoff** ≤40 lines: paths; `Delete check:`; `Automation candidates:`; `ANOMALIA:` / `## ESCALATE` if needed.
 
 ### lab-runner
 
@@ -643,11 +842,17 @@ Mode CONSULT|LAB. LAB path `.lab/YYYY-MM-DD-mav-<slug>/` only. Entrega: `## Mave
 
 ### verifier
 
-DoD commands only. `Verdict: PASS|FAIL|INCONCLUSIVE`. On FAIL: **Gap inventory:** all blocking gaps. Cross-surface integration check when multi-surface execute Batch. Not VLH.
+**DoD técnico only** — scripts, exit codes, file checks, cross-surface integration. **Forbidden:** UI/VLH/browser-feel judgment, human-serve scoring, visual claims.
+
+DoD commands only. `Verdict: PASS|FAIL|INCONCLUSIVE`. On FAIL: **Gap inventory:** all blocking gaps (COMPLETE list). Cross-surface integration check when multi-surface execute Batch. **Not VLH.**
+
+Last line of every verifier handoff: **`VLH: NOT_THIS_ROLE — parent must spawn verifier-like-human if Human-serve=yes`**
 
 ### verifier-like-human
 
-After tech PASS; T2/T3 human-facing. Entrega exacta:
+After tech PASS; T2/T3 human-facing. **`Evidence-class` required** on every handoff. **Never Task `composer-2.5-fast`** — **process FAIL** if spawned on Composer.
+
+Entrega exacta:
 ```markdown
 ## VerifierLikeHuman handoff
 - Verdict: PASS | FAIL | INCONCLUSIVE
@@ -660,7 +865,11 @@ After tech PASS; T2/T3 human-facing. Entrega exacta:
 
 ### explore
 
-Readonly local. Entrega: `## Explore handoff`.
+Readonly local. Entrega: `## Explore handoff`. In **Mode diagnostic**, return `## Explore handoff` or `PROBE.md` inventory with **Lane:** logs|recent-changes|structural|similar-fragility; no verdict.
+
+### diagnostic
+
+Synthesizer only — see SKILL § Mode: diagnostic. Entrega: `## Diagnostic handoff` + `.debug/…/REPORT.md` on disk.
 
 ## LIGHTWEIGHT MODE (frontier child)
 
@@ -695,6 +904,8 @@ Readonly local. Entrega: `## Explore handoff`.
 - Children writing the Algorithm Ledger
 - Parallel labs sharing ports/services/DB → false APPROVE
 - ops-diagnostic running feature Lab Batch or parallel mutations
+- Treating `.debug/` REPORT as lab APPROVE or auto-migrating config/schema from diagnostic
+- Diagnostic drones with Write / verdict / skipping incident-review or Crisis CONSULT pre-REPORT
 - VLH as a verifier “mode”; VLH before tech PASS; VLH visual claims without evidence; VLH opening O2
 - Forwarding full child transcripts instead of deltas
 - Greenfield → implementer without lab APPROVE under **`.lab/`**

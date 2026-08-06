@@ -65,12 +65,18 @@ Bloque compacto — **no** un `##` H2 por campo:
 ```markdown
 ### Orch
 T<0|1|2|3> — <brief reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
-Role: Orchestrator | Action: Delegate
+Role: Orchestrator | Action: Delegate | Next spawn: <role(s)> | Parent tools: none
 ```
 
 Recovery: append `| Failure-ID: F-<id>` on the Role line when applicable.
 
+**`Next spawn` / `Parent tools: none`:** cada turno declara el **próximo rol** (o Batch) y confirma que el padre **no** usa Write/Shell/test/deploy. Si el padre edita, corre tests o shell tras Build aprobado → **process fail** (Multitask on/off no cambia la regla).
+
 No existe `Action: Direct Execution`. T0 también delega.
+
+**Modelo parent:** elegido por el **humano** (model picker) o host **Auto** — el pack **no** fuerza ID de orchestrator en templates. Pin local opcional → `MODELS.local.md` only. Hijos mantienen IDs vía Task `model:` (matriz).
+
+**Nested orch (opcional — NOT default):** default = parent directo con SKILL. Nest depth-1 solo si humano pide, sesión thin/cheap en T2/T3 multi-gate vago, o outer violó protocolo una vez → `Task(orchestrator)` con modelo nested pinneado (ver [`07-MODELS-MATRIX.md`](07-MODELS-MATRIX.md) §2.2). Outer = thin launcher; **no** nueva Fase ni oleada.
 
 **Anti-patrón:** nunca numerar una oleada por `invoke_subagent` / Task / Scout / fase — la oleada es ciclo completo; un spawn o batch es un paso dentro de una fase.
 
@@ -140,6 +146,7 @@ DISCOVERY → DECIDE → YIELD_PLAN → native Plan/Artifact → human approval 
 | **Budget** | **Un** research Batch; máx **2** labs normal, **3** solo T3; **una** REVISE; luego orch-only **`DECIDE` \| `YIELD_PLAN` \| `STOP`** |
 | **Labs en Discovery** | **Sin** writes a prod; **sin** Implementation Plan formal en el lab |
 | **YIELD_PLAN** | Orch emite → humano abre Plan UI nativo → aprueba **Build** → recién entonces O1 `execute`. Declinar Build = **STOP**. ≠ veredicto lab **`YIELD`** |
+| **Exit-card Build** | **Build aprobado → padre solo spawnea implementer(s)** vía Task/`invoke_subagent`; padre que edita/tests/shell = **process fail**. Multitask on/off no cambia. “Implement the plan / complete todos” = fase **execute** con hijos, **no** monolito Composer. |
 | **Trabajo acotado directo** | Puede omitir Discovery solo bajo skip T0/T1 arriba |
 
 ### 6.2 WorkType router
@@ -161,6 +168,40 @@ El Orquestador **narra / pide** al humano; **no** afirma que agentes auto-cambia
 | **Antigravity** | **Planning Mode** + **Artifact Review** → aprueba Build |
 | **OpenCode** | **Plan → Build** (humano) |
 | **Codex** | `/plan` → ejecución explícita (humano) |
+
+### 6.4 Mode: diagnostic (≠ WorkType nuevo)
+
+**Mode: diagnostic** activa bajo WorkType **`ops-diagnostic`**, post-**`ANOMALIA`** bloqueante, o **regression** — **no** es un quinto WorkType; el gate sigue declarando `ops-diagnostic` (u otro WorkType base si el ask mezcla producto + incidente).
+
+| | Regla |
+|--|-------|
+| **Enter** | Incidente / regresión / fingerprint env / post-ANOMALIA sin hipótesis dominante · evidencia forense > patch rápido |
+| **Skip** | T0/T1 **trivial** (typo, 1 hunk, repro mecánico claro) · runtime no-diagnostic → **Cursor Debug Mode primero** (humano o agente en Debug Mode) antes de abrir Batch diagnostic |
+| **Incident-review** | Si el humano pide revisar un incidente pasado → orch escanea **`.debug/*/REPORT.md`** y narra deltas relevantes (no re-ejecutar drones salvo gap explícito) |
+| **Prior scan** | Cada **nuevo** diagnostic Batch: parent **lee** `.debug/*/REPORT.md` existentes (títulos, tags, verdict) antes de spawn — evita duplicar forensics |
+| **Topología** | **4 drone lanes** RO en paralelo (Batch) → fan-in **synthesizer** (parent-owned merge + `REPORT.md`) → **Maverick CONSULT HARD** → narrate |
+| **Sin prod writes** | Drones + synthesizer **no** parchean prod; implementer solo si humano aprueba un fix **fuera** del modo diagnostic |
+
+**4 drone lanes** (`explore`, readonly, `composer-2.5-fast` cada una):
+
+| Lane | Foco |
+|------|------|
+| **logs** | Traces, stderr, CI artifacts, exit codes, timestamps |
+| **recent-changes** | Diff reciente, commits, releases, config drift |
+| **structural** | Boundaries, imports, wiring, installer maps, cross-surface naming |
+| **similar-fragility** | Patrones análogos rotos en el repo / historial `.debug` |
+
+Artefacto: **`.debug/YYYY-MM-DD-<slug>/`** — forense, **≠** `.lab/`. Sin veredicto **`APPROVE`** → import; **nunca** desbloquea implementer por APPROVE. Tags en `REPORT.md` / `BRIEF.md` para **humanos y agentes futuros** (p. ej. `#regression`, `#env-wsl`, `#installer-drift`).
+
+```text
+.debug/
+  YYYY-MM-DD-<slug>/
+    BRIEF.md | HYPOTHESIS.md (opcional)
+    drone-logs/ | drone-recent/ | drone-structural/ | drone-fragility/  (handoffs pegados o PROBE.md)
+    REPORT.md   ← synthesizer (Grok Fast); tags + findings + Maverick block
+```
+
+**Maverick CONSULT HARD** (mandatory antes del `REPORT.md` final): crisis framing · **Best Part is No Part** · propuesta solo **`NO_CHANGE`** \| **`YIELD_OPT`** · **`Redesign-signals`** (cuándo el fix correcto ≠ patch) · **never patch** en CONSULT. El synthesizer integra el bloque Maverick; no cierra sin él.
 
 ### verify FAIL → transición
 
@@ -192,13 +233,31 @@ El Orquestador **narra / pide** al humano; **no** afirma que agentes auto-cambia
 | Dep **real** | Serial (p. ej. lab APPROVE → implementer → verifier) |
 | **ops-diagnostic** | **Serial only** — no parallel mutations |
 
+### Implementer Batch (T2/T3 + Composer) — HARD
+
+Tras lab **APPROVE** (y Build si hubo YIELD_PLAN). **Lab Batch ≠ Implementer Batch** (research-lab vs execute).
+
+| Trigger | Regla |
+|---------|-------|
+| **T∈{2,3}** + writers `composer-2.5-fast` (o host fast-Composer remap) | Spawn **2–3** implementers en el **mismo** execute Batch: allow-lists **disjuntas**, DoD compartido, **exactamente un** `Release-owner` (VERSION/CHANGELOG/lock) o defer a fase **RELEASE CHECKLIST** |
+| **T0/T1** | **1** implementer |
+| **Inseparable** | Archivo único / rename atómico / hunk acoplado → documentar `Inseparable` + **serial micro-passes** (read→patch→follow-up), no split forzado |
+| **O2** | Misma regla si el gap inventory es **path-partitionable**; gap de un solo path → Inseparable |
+| **ops-diagnostic** | Serial only |
+| **Anti-overlap** | Padre rechaza Batch si path sets se intersectan; re-split antes de spawn |
+| **Fan-in** | Padre espera **todos** los handoffs implementer antes de verify |
+
+**Nunca** fold verifier / lab / VLH / maverick / single-lab en implementer. Composer en rol incorrecto (verifier, VLH, maverick, single-lab) = **process FAIL**, no warning.
+
+**Phrase→role (resumen):** tabla completa en skill § Envelopes — ejemplos: “implement/fix/write prod” → `implementer`; “verify/test/DoD” → `verifier`; “lab/hypothesis/MVP” → `lab-runner`; “docs afuera/prior art” → `scout`; “what-if/env” → `maverick`; “implement the plan end-to-end” → **execute Batch** de implementer(s), **no** monolito.
+
 ### Multitask Mode / Composer — reglas duras
 
 **Multitask Mode / Build in Parallel NO colapsa roles.** Paralelismo = varios **spawns de rol** en el mismo Batch — **nunca** un solo agente con lab + implement + verify.
 
 | Regla | Detalle |
 |-------|---------|
-| **Composer ≠ pipeline** | `composer-2.5-fast` / `generalPurpose` **nunca** posee lab → implement → verify → release en un hilo. Solo tareas acotadas con DoD claro. Scope grande → **más sobres acotados del mismo rol**, no mega-pipeline. |
+| **Composer ≠ pipeline** | `composer-2.5-fast` / `generalPurpose` **nunca** posee lab → implement → verify → release en un hilo. Solo tareas acotadas con DoD claro. T≥2 → **Implementer Batch 2–3** (§ Implementer Batch HARD); Inseparable → serial micro-passes. |
 | **Cadena obligatoria** | Metodología / docs / features: `lab-runner` (greenfield / regla nueva) → `implementer`(s) por sobre → `verifier` → `VerifierLikeHuman` si gate → Harvest. Padre **solo** clasifica / spawnea / fusiona. |
 | **Multitask ≠ colapso** | Parent Multitask Mode autoriza Tasks **paralelos por rol** — **no** un worker monolítico que absorba todos los roles. |
 | **Anti-patrón explícito** | **Prohibido** Task un `generalPurpose` con “implementá el plan end-to-end” cubriendo lab + implement + verify + commit. |
@@ -233,8 +292,9 @@ Path canónico: **`.lab/YYYY-MM-DD-<slug>/`** en la raíz del repo (**no** `proj
 | Env-anomaly T2+ | **REQUIRED** (LAB o CONSULT) |
 | Zero-to-one / architecture trade-off en Discovery | **CONSULT early** |
 | Tras T2/T3 **PASS** técnico (+ VLH si gated) y Harvest | **CONSULT mandatory** — propone solo `NO_CHANGE` \| `YIELD_OPT`; **nunca** auto O2; `YIELD_OPT` necesita humano |
+| **Mode: diagnostic** — antes de `REPORT.md` final en `.debug/` | **CONSULT HARD** — crisis · Best Part is No Part · `NO_CHANGE` \| `YIELD_OPT` · Redesign-signals · **never patch** |
 
-Síntomas de entorno/runtime → maverick sin que el usuario lo pida. Lab: `.lab/YYYY-MM-DD-mav-<slug>/`. Propone; no decide.
+Síntomas de entorno/runtime → maverick sin que el usuario lo pida. Lab: `.lab/YYYY-MM-DD-mav-<slug>/`. Diagnostic: CONSULT integrado en `.debug/<id>/REPORT.md` (no lab mav). Propone; no decide.
 
 ### 8.4 Verifier (REQUIRED tras implementer)
 
@@ -275,6 +335,19 @@ Parent actualiza Algorithm Ledger (Automate) → Maverick CONSULT mandatory → 
 ```
 
 Nunca importar a prod. Solo APPROVE desbloquea archivos reales. Maverick: prefijo `mav-` + fecha ISO. En Discovery/Batch: sin writes a prod ni Implementation Plan formal dentro del lab.
+
+### 9.1 Sala `.debug` (Mode: diagnostic)
+
+Forense **≠** lab. Path: **`.debug/YYYY-MM-DD-<slug>/`** en repo root.
+
+| | `.lab/` | `.debug/` |
+|--|---------|-----------|
+| Propósito | Hipótesis / MVP aislado | Incidente / regresión / post-ANOMALIA |
+| Veredicto | APPROVE desbloquea prod | **Sin APPROVE→import** — findings + tags only |
+| Writes hijos | lab-runner en `.lab/<id>/` | drones RO + synthesizer `REPORT.md` |
+| Maverick | `.lab/…-mav-…` opcional | **CONSULT HARD** obligatorio pre-REPORT |
+
+Tags en `REPORT.md` / `BRIEF.md` para humanos **y** agentes futuros. Nuevo diagnostic Batch → prior scan `.debug/*/REPORT.md`. Incident-review on user ask.
 
 ## 10. Presupuestos
 

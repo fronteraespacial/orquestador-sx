@@ -40,7 +40,7 @@ function Get-ProjectTemplateMap {
 
     $cursorAgents = @(
         'explore', 'scout', 'maverick', 'implementer', 'lab-runner', 'verifier',
-        'verifier-like-human', 'orchestrator', 'skeptic', 'deletion'
+        'verifier-like-human', 'diagnostic', 'orchestrator', 'skeptic', 'deletion'
     )
     foreach ($a in $cursorAgents) {
         $map.Add(@{ Src = "cursor\agents\$a.md"; Dst = ".cursor\agents\$a.md" })
@@ -52,7 +52,7 @@ function Get-ProjectTemplateMap {
 
     $agyAgents = @(
         'explore', 'scout', 'maverick', 'implementer', 'lab-runner', 'verifier',
-        'verifier-like-human', 'skeptic', 'deletion'
+        'verifier-like-human', 'diagnostic', 'skeptic', 'deletion'
     )
     foreach ($a in $agyAgents) {
         $map.Add(@{ Src = "antigravity\agents\$a\agent.md"; Dst = ".agents\agents\$a\agent.md" })
@@ -82,7 +82,7 @@ function Get-UserTemplateMap {
 
     $cursorAgents = @(
         'explore', 'scout', 'maverick', 'implementer', 'lab-runner', 'verifier',
-        'verifier-like-human', 'orchestrator', 'skeptic', 'deletion'
+        'verifier-like-human', 'diagnostic', 'orchestrator', 'skeptic', 'deletion'
     )
     foreach ($a in $cursorAgents) {
         $map.Add(@{ Src = "cursor\agents\$a.md"; Dst = ".cursor\agents\$a.md" })

@@ -30,8 +30,11 @@ Every orchestrator turn — **not** one `##` H2 per field:
 ```markdown
 ### Orch
 T<0|1|2|3> — <brief reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Next spawn: <role|none> | Parent tools: none
 Role: Orchestrator | Action: Delegate
 ```
+
+**Process fail:** Fase `execute` | `verify` | `research-lab` + parent Write/Shell/edit. See [SKILL.md](SKILL.md) Amnesia check + Phrase → role table.
 
 Child envelopes (optional prefix):
 
@@ -76,13 +79,14 @@ After T2/T3 tech PASS (+ VLH if gated): parent Ledger → Maverick CONSULT manda
 
 | Role | ID | Notes |
 |------|-----|-------|
-| orchestrator | `cursor-grok-4.5-high` | Explicit; not `inherit` |
+| orchestrator (session parent) | **session / user picker / Auto** | Not pack-forced; optional nested orch Task → `cursor-grok-4.5-high-fast` (see below) |
 | maverick | `cursor-grok-4.5-high-fast` | Always; early + Harvest CONSULT |
 | **verifier** | `cursor-grok-4.5-high-fast` | Always; complete gap inventory on FAIL |
 | **verifier-like-human** | `cursor-grok-4.5-high-fast` | Always; after tech PASS; T2/T3 human-facing |
 | lab-runner (single spawn) | `cursor-grok-4.5-high-fast` | One lab in fase/Batch |
 | lab-runner (Lab Batch ≥2) | `composer-2.5-fast` each | Parallel labs |
 | implementer, explore, scout, skeptic, deletion | `composer-2.5-fast` | Large scope → more envelopes, same role |
+| **diagnostic** (Mode diagnostic synthesizer) | `cursor-grok-4.5-high-fast` | After RO probes + Maverick CONSULT HARD; `.debug/` only |
 
 Verify loop (1.3.1): FAIL → full gap inventory; **one O2** per fan-in; input envelopes long OK, output handoffs ≤40 lines; RELEASE CHECKLIST fase for publish steps.
 
@@ -94,6 +98,39 @@ Policy + evidence tiers: pack `docs/agent/MODEL-ROUTING-POLICY.md`. Matrix: `07-
 - Classical: `YYYY-MM-DD-<slug>/`
 - Maverick: `YYYY-MM-DD-mav-<slug>/`
 - Prod write only after **APPROVE** (and Build after `YIELD_PLAN` when Discovery ran)
+
+## Mode: diagnostic (optional)
+
+Forensic failures under **`.debug/YYYY-MM-DD-<slug>/`** — ≠ `.lab/`. Flow: incident-review → explore×2–3 (4 lanes: logs|recent-changes|structural|similar-fragility) → Maverick CONSULT HARD (post-probes, pre-REPORT) → Task **`diagnostic`** @ `cursor-grok-4.5-high-fast` → REPORT. No APPROVE→implementer; no auto-migrate. Install: `runtime/project/.debug/README.md` → repo `.debug/README.md`. Full contract: [SKILL.md](SKILL.md) § Mode: diagnostic.
+
+## Implementer Batch — Cursor Task example (T2/T3, same execute Batch)
+
+When T≥2 and writers are `composer-2.5-fast`, spawn **2–3** implementers **in one parent turn** (same `Batch: B-<id>`), disjoint allow-lists, one Release-owner. Parent **waits fan-in** → one `verifier`.
+
+```text
+# Same turn — Batch B-impl-1, Fase execute
+Task(subagent_type: implementer, model: composer-2.5-fast, prompt: "### Env · implementer (Imp-A)\n… allow-list: canon/, docs/ … Release-owner: NO")
+Task(subagent_type: implementer, model: composer-2.5-fast, prompt: "### Env · implementer (Imp-B)\n… allow-list: runtime/cursor/ … Release-owner: NO")
+Task(subagent_type: implementer, model: composer-2.5-fast, prompt: "### Env · implementer (Imp-C)\n… allow-list: VERSION, CHANGELOG … Release-owner: YES")
+# After all handoffs → Task verifier (cursor-grok-4.5-high-fast)
+```
+
+**O2 corrective:** same pattern — parent consolidates gap inventory → **one O2** → Task implementer(s); **never** parent Write/Shell. Full contract: [SKILL.md](SKILL.md) § Implementer Batch + verify loop B.
+
+## Optional nested orchestrator — Cursor Task example (NOT default)
+
+Default = direct orch (session parent unpinned). Use depth-1 nest only when human asks, session parent is thin/cheap on vague T2/T3 multi-gate work, or outer already failed protocol once. Full contract: [SKILL.md](SKILL.md) § Optional nested orchestrator.
+
+```text
+# Outer session = thin launcher only — one spawn, then wait/narrate
+Task(
+  subagent_type: orchestrator,
+  model: cursor-grok-4.5-high-fast,
+  prompt: "### Orch\nT2 — … | WorkType … | Run R-… | O1 initial | Fase prep | Batch none\nNext spawn: scout | Parent tools: none\nRole: Orchestrator | Action: Delegate\n\nOuter role: thin-launcher\nLoad SKILL; zero-exec; child model table; phrase→role; Implementer Batch; exit-card Build.\n…"
+)
+# Nested owns classify/spawn/Ledger/Harvest — MUST NOT Task(orchestrator) again
+# If Task(orchestrator) unavailable → direct + skill
+```
 
 ## Shared handoff (optional)
 

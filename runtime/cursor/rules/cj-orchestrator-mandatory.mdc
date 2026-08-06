@@ -22,25 +22,32 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
 ```markdown
 ### Orch
 T<0|1|2|3> — <brief reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Next spawn: <role|none> | Parent tools: none
 Role: Orchestrator | Action: Delegate
 ```
 
-2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate, Harvest only.
+**Process fail:** Fase `execute` | `verify` | `research-lab` + parent Write/Shell/edit.
 
-3. **Cursor spawn:** Task or `/explore`, `/scout`, `/maverick`, `/implementer`, `/lab-runner`, `/verifier`, `/verifier-like-human`, `/skeptic`, `/deletion`. No `invoke_subagent`.
+2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate, Harvest only. **`Parent tools: none`** every turn.
+
+3. **Cursor spawn:** Task or `/explore`, `/scout`, `/maverick`, `/implementer`, `/lab-runner`, `/verifier`, `/verifier-like-human`, `/skeptic`, `/deletion`, `/diagnostic`. No `invoke_subagent`.
 
 4. **Gates (hard):**
    - **WorkType** + **Discovery** ⊂ `research-lab` when triggers hit (z2o · no dominant hyp · legacy hot path · ≥2 approaches · post-ESCALATE · arch trade-off · irreversible). Budget: 1 research Batch; ≤2 labs (≤3 T3); 1 REVISE → `DECIDE` | `YIELD_PLAN` | `STOP`. Skip T0/T1 clear path.
-   - **YIELD_PLAN:** Cursor **cannot** auto Plan Mode — ask user selector / **Shift+Tab**, paste Discovery Brief, review, **Build** (decline → STOP). ≠ lab `YIELD`.
+   - **YIELD_PLAN:** Cursor **cannot** auto Plan Mode — ask user selector / **Shift+Tab**, paste Discovery Brief (todos with **`owner:`**), review, **Build** (decline → STOP). ≠ lab `YIELD`. **Exit-card Build:** parent only spawns implementer(s) after Build — parent edit/shell = process fail.
+   - **Phrase → role (pointer):** full table in SKILL — “Implementá/Build/complete todos” → spawn implementer(s), todos after handoffs; monolith only on explicit human ask; Agent mode still zero-exec.
    - Greenfield → **`lab-runner` REQUIRED** under `.lab/YYYY-MM-DD-<slug>/` → **`APPROVE`** before **`implementer`**. Lab Batch: isolate dirs+ports/services/data; ≥2 APPROVE → human brake; one prod path. `ops-diagnostic`: no feature lab; no parallel mutations.
    - T2+ env anomaly → **`maverick` REQUIRED**. Early CONSULT soft on z2o/arch. After T2/T3 PASS (+ VLH if gated): Harvest → Maverick CONSULT mandatory → `NO_CHANGE` | `YIELD_OPT` (human; no auto O2). Maverick always `cursor-grok-4.5-high-fast`.
    - After **`implementer`** → **`verifier` REQUIRED** before “done”
    - After tech **PASS** + T2/T3 human-facing → **`verifier-like-human` REQUIRED** (evidence CAPTURED|BROWSER|COMPUTER|PROXY|UNAVAILABLE; serves-ask; UNAVAILABLE→INCONCLUSIVE; no edit/web/O2)
    - Child `## ESCALATE` → **`scout`** → retry or STOP
+   - **Mode diagnostic (optional):** `ops-diagnostic` / post-ANOMALIA multi-lane failure → `Mode: diagnostic`; RO explore×2–3 (4 lanes: logs|recent-changes|structural|similar-fragility) → Maverick CONSULT HARD (post-probes, pre-REPORT; mandatory) → Task **`diagnostic`** @ Grok Fast → `.debug/…/REPORT.md`. ≠ `.lab/`; no auto-migrate. SKILL § Mode: diagnostic.
 
-5. Handoffs ≤40 lines on **output**; input envelopes may be long. Verifier gap-inventory audits → COMPLETE list; parent **one O2** implementing pass. Compact `### Env` envelopes.
+5. Handoffs ≤40 lines on **output**; input envelopes may be long. Verifier gap-inventory audits → COMPLETE list; parent **one O2** via Task **`implementer`(s)** — never parent Write/Shell. Compact `### Env` envelopes.
 
-6. **Multitask Mode / Build in Parallel (hard — no role collapse):**
+6. **Implementer Batch (T2/T3 HARD):** T≥2 + Composer writers → 2–3 Task implementers same execute Batch, disjoint paths, one Release-owner. See SKILL § Implementer Batch + `reference.md` Task example.
+
+7. **Multitask Mode / Build in Parallel (hard — no role collapse):**
    - **Multitask Mode does NOT authorize** one `generalPurpose` / Composer for lab + implement + verify + VLH + release.
    - **Parallel** = same **Batch**: multiple **Task** spawns **by role** in one parent turn — not one monolith child.
    - **Serial gates = separate children:** `scout`/`maverick` → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** → **`verifier-like-human`** (if gated) — never one spawn for the chain; VLH ≠ lab/implement/verify.
@@ -71,6 +78,8 @@ Role: Orchestrator | Action: Delegate
 | skeptic | T3 requirements audit | No |
 | deletion | T3 delete proposals | No |
 
-**Models (Cursor):** parent `cursor-grok-4.5-high`; maverick + verifier + VLH always `cursor-grok-4.5-high-fast`; **single lab** → Task `cursor-grok-4.5-high-fast` (mandatory); **Lab Batch (≥2)** → `composer-2.5-fast`; implementer/light → `composer-2.5-fast`. Verifier returns **COMPLETE gap inventory** on routing audits; parent one O2 pass; handoffs ≤40 on output only. **Never** `composer-2.5` without `-fast`. Composer compensation = same-role iterations, not mega-pipeline. Release: cross-surface integration check (Cursor+AGY+OpenCode+Codex), not FAIL-whack-a-mole. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/agent/MODEL-ROUTING-POLICY.md`.
+**Mode diagnostic (optional):** `.debug/` forensic — SKILL § Mode: diagnostic; `/diagnostic` synthesizer @ Grok Fast.
+
+**Models (Cursor):** session parent = **user picker / Auto** (not pack-forced); optional depth-1 nested orch → Task `orchestrator` @ `cursor-grok-4.5-high-fast` (NOT default — see SKILL § Optional nested orchestrator); maverick + verifier + VLH always `cursor-grok-4.5-high-fast`; **single lab** → Task `cursor-grok-4.5-high-fast` (mandatory); **Lab Batch (≥2)** → `composer-2.5-fast`; implementer/light → `composer-2.5-fast`. Verifier returns **COMPLETE gap inventory** on routing audits; parent one O2 pass; handoffs ≤40 on output only. **Never** `composer-2.5` without `-fast`. Composer compensation = same-role iterations, not mega-pipeline. Release: cross-surface integration check (Cursor+AGY+OpenCode+Codex), not FAIL-whack-a-mole. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/agent/MODEL-ROUTING-POLICY.md`.
 
 **Wiring:** `.agents/skills/orchestrator/reference.md`

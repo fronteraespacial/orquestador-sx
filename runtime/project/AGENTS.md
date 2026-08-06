@@ -12,7 +12,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 - The **Orchestrator** receives the raw user prompt, classifies (T0–T3 + **WorkType**), writes a short internal gate, plans **Run → Oleada O1–O3 → Fase → Batch**, delegates via the surface spawn API, and merges **compact handoffs (deltas only)**.
 - **Zero direct execution:** the Orchestrator does **not** edit, run tests, deploy, web-research, or explore the system — **including T0**. Children execute (`explore`, `scout`, `maverick`, `lab-runner`, `implementer`/`executor`, `verifier`, `verifier-like-human`).
-- **Multitask Mode / Build in Parallel (hard):** **does NOT authorize** one `generalPurpose`/Composer monolith for lab + implement + verify + VLH + release. **Parallel** = same **Batch**: multiple role spawns (Task / `invoke_subagent`) in one parent turn — **not** one child for the whole chain. Parent **must** spawn **separate children:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** → **`verifier-like-human`** (if T2/T3 human-facing). **Composer compensation** = more bounded iterations of the **same role** — **not** role collapse / mega-pipeline. **Composer = basic/bounded/surgical only** (scoped implementer, light reads, Lab Batch ≥2 labs) — never single-lab (Grok override), never VLH, never full pipeline, never parent. Monolithic worker **only** if the human explicitly asks.
+- **Multitask Mode / Build in Parallel (hard):** **does NOT authorize** one `generalPurpose`/Composer monolith for lab + implement + verify + VLH + release. **Parallel** = same **Batch**: multiple role spawns (Task / `invoke_subagent`) in one parent turn — **not** one child for the whole chain. Parent **must** spawn **separate children:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`(s)** → **`verifier`** → **`verifier-like-human`** (if T2/T3 human-facing). **Implementer Batch (HARD):** T2/T3 + Composer writers → **2–3** path-disjoint implementers same execute Batch; one **Release-owner**; **Lab Batch ≠ Implementer Batch**. **Exit-card Build:** Build approved → parent **only** spawns implementer(s); **`Parent tools: none`** every turn; parent Write/Shell = **process fail**. **Wrong-role Composer** (verifier / VLH / maverick / single-lab) = **process FAIL**. **Composer compensation** = more bounded iterations of the **same role** — **not** role collapse / mega-pipeline. **Composer = basic/bounded/surgical only** (scoped implementer, light reads, Lab Batch ≥2 labs) — never single-lab (Grok override), never VLH, never full pipeline, never parent. Monolithic worker **only** if the human explicitly asks.
 - **Enforcement:** Cursor can **audit** this policy (best-effort); it cannot fully force the parent. Prefer stronger edit/bash deny on OpenCode/Codex when available. Antigravity: follow `GEMINI.md` + role agents.
 - Canonical skill: `.agents/skills/orchestrator/SKILL.md` (+ `reference.md`; WSL: `reference.wsl.md`). Do **not** treat `reference.cj-linux.md` as active wiring.
 
@@ -27,6 +27,9 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 | Scout | Soft-mandatory on greenfield / anomaly / post-ESCALATE |
 | Lab | Greenfield → **`.lab/YYYY-MM-DD-<slug>/`** APPROVE before prod implementer (**not** `projects/.lab/`) |
 | Lab Batch | 2–3 isolated hyps (dirs+ports/services/data); ≥2 APPROVE → human brake; one prod path; ops-diagnostic: no feature lab / no parallel mutate |
+| Implementer Batch | T2/T3 + Composer writers → **2–3** path-disjoint implementers same execute Batch; one **Release-owner**; **Lab Batch ≠ Implementer Batch**; Inseparable → serial micro-passes |
+| Exit-card / Parent tools | Build approved → spawn implementer(s) only; **`Parent tools: none`** + **`Next spawn:`** every turn; parent Write/Shell = **process fail** |
+| Wrong-role Composer | Composer on verifier / VLH / maverick / single-lab = **process FAIL** |
 | Maverick | Env-anomaly T2+ REQUIRED; early CONSULT soft on z2o/arch; post-Harvest CONSULT mandatory → `NO_CHANGE` \| `YIELD_OPT` (human) |
 | Verifier | REQUIRED after any implementer/executor |
 | VerifierLikeHuman | After tech PASS only; T2/T3 human-facing; evidence classes; UNAVAILABLE→INCONCLUSIVE; no edit/web/O2 |
@@ -35,6 +38,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 | ANOMALIA | Child reports → orch classifies → bounded retry / cascade +1 / lab |
 | Human brake | Fuzzy/high-stakes trade-offs → ask before expensive oleadas |
 | Cascade | Acceptance fail or blocking ANOMALIA → +1 tier |
+| Diagnostic | Mode (not default) under `ops-diagnostic` / post-`ANOMALIA` / regression; prior scan `.debug/*/REPORT.md`; **4 RO explore lanes** → synthesizer `REPORT.md` in `.debug/<id>/`; **Maverick CONSULT HARD** pre-close (Redesign-signals); **incident-review** on ask; never APPROVE→implementer |
 
 ## Handoffs
 
@@ -54,7 +58,7 @@ Skills do not switch models. Remap IDs per host (`07-MODELS-MATRIX.md` / optiona
 
 | Role | Default | When remap |
 |------|---------|------------|
-| Parent orchestrator | `cursor-grok-4.5-high` | — |
+| Parent orchestrator | session / user picker / host Auto | — |
 | Implementer / explore / scout / skeptic / deletion | `composer-2.5-fast` | — |
 | Maverick (always) | `cursor-grok-4.5-high-fast` | — |
 | Verifier (always) | `cursor-grok-4.5-high-fast` | Mechanical + judgment + cross-surface — never Composer |

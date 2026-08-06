@@ -26,6 +26,7 @@ Compañero contraintuitivo. **No definís el camino principal.**
 | **Early** | Zero-to-one / architecture trade-off inside Discovery (research-lab sub-phase) |
 | **Post-Harvest** | After T2/T3 technical verifier PASS (+ VLH if gated) → parent Harvest → **Maverick CONSULT mandatory** |
 | **Env anomaly** | T2+ runtime anomaly → **REQUIRED** (CONSULT min; LAB if testable) |
+| **Crisis (Mode diagnostic)** | After diagnostic PROBE fan-in, **before** `.debug/…/REPORT.md` → CONSULT → `maverick-consult/` |
 
 **YIELD_OPT** after Harvest CONSULT needs **human** — Maverick **never** auto-opens O2.
 

@@ -30,7 +30,7 @@ Docs producto: [Subagents](https://cursor.com/docs/subagents.md), [Skills](https
 
 ## 3. Entrypoint `orchestrator.md`
 
-- Frontmatter: `readonly: true`, `model: cursor-grok-4.5-high` (explícito; **no** `inherit`).
+- Frontmatter: `readonly: true`; pack **omite** `model:` — gana el modelo de sesión (humano / Auto). Pin local opcional → `MODELS.local.md` only.
 - **Zero direct execution:** clasificar T0–T3 + **WorkType**, sobres, Task, fusionar handoffs, narrar — **ni T0 escribe** en el hilo padre (edits → `implementer`, reads → `explore`).
 - **`readonly` no es sandbox absoluto:** es hint de producto; puede no bloquear lecturas ni Task. La política zero-exec es **contrato de prompt** — documentado en el template.
 - Modelos: ver `07-MODELS-MATRIX.md` y `docs/agent/MODEL-ROUTING-POLICY.md` (lab condicional, cadena Composer→Verifier→Grok corrective). Remap IDs con `agent --list-models` si faltan en el host.
@@ -63,8 +63,9 @@ Docs producto: [Subagents](https://cursor.com/docs/subagents.md), [Skills](https
 - Agents: .cursor/agents/*.md (base + verifier-like-human; skeptic/deletion optional)
 - Rule: .cursor/rules/cj-orchestrator-mandatory.mdc (manual, alwaysApply: false)
 - Lab root: `.lab/` (repo root). **Do not** use `projects/.lab/` operationally.
-- Models: run `agent --list-models`; defaults in templates may need remap
-  - orchestrator: cursor-grok-4.5-high (not inherit)
+- Models: run `agent --list-models`; child IDs in templates may need remap
+  - orchestrator (session): **no template pin** — human/Auto; optional local pin → MODELS.local.md
+  - optional nested orch (NOT default): Task orchestrator @ cursor-grok-4.5-high — see MODEL-ROUTING
   - maverick / verifier / verifier-like-human: cursor-grok-4.5-high-fast (**always** — no Composer verifier)
   - lab-runner: single lab → Task cursor-grok-4.5-high-fast (mandatory); Lab Batch (≥2) → composer-2.5-fast
   - implementer + light roles: composer-2.5-fast
@@ -97,7 +98,7 @@ Harvest→Maverick CONSULT (human on YIELD_OPT).
 ## 7. Caveats conocidos
 
 - CLI a veces no lista `~\.cursor\agents\` — preferir project `.cursor\agents\`.
-- Orchestrator usa `model: cursor-grok-4.5-high` (evitar `inherit` — inestable en CLI). Si el ID falta, remapear al nearest frontier high y anotar en `MODELS.local.md`.
+- Orchestrator template **sin** `model:` — sesión humano/Auto gana. Pin local opcional en `MODELS.local.md` (gitignored). Hijos: remapear IDs si faltan en el host.
 - Skills **no** cambian modelo; el modelo va en frontmatter del subagente o Task `model:`.
 - Parent `readonly` ≠ zero-exec garantizado — seguir prompt del orchestrator.
 - Regla **no** es always-on: sin activarla, el IDE no fuerza gates.

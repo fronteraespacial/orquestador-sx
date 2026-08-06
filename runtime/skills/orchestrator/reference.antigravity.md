@@ -28,8 +28,11 @@ CLI `Orchestrator.ps1 init -Scope project` remains valid **alternative** (Window
 ```markdown
 ### Orch
 T<0|1|2|3> — <reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<slug> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Next spawn: <role|none> | Parent tools: none
 Role: Orchestrator | Action: Delegate
 ```
+
+**Process fail:** Fase `execute` | `verify` | `research-lab` + parent Write/Shell/edit.
 
 **Taxonomy (do not use Wave 0–3 or “next wave”):**
 
@@ -45,7 +48,7 @@ Role: Orchestrator | Action: Delegate
 
 - **Zero direct execution** — classify, WorkType, gate, Discovery/DECIDE/YIELD_PLAN, Ledger/Harvest, envelopes, spawn, merge deltas, narrate.
 - **T0 included** — reads → `explore`; any edit → `implementer`.
-- **Parallel Batch (hard):** independent work → emit **multiple `invoke_subagent` in the SAME parent turn**; do **not** wait for A before launching B when A∥B. Lab Batch: isolate dirs **and** ports/services/data; ≥2 APPROVE → human brake; one prod path.
+- **Parallel Batch (hard):** independent work → emit **multiple `invoke_subagent` in the SAME parent turn**; do **not** wait for A before launching B when A∥B. **Implementer Batch (T2/T3):** 2–3 `invoke_subagent(name: "implementer", …)` same execute Batch — disjoint paths, one Release-owner; fan-in → `verifier`. Lab Batch: isolate dirs **and** ports/services/data; ≥2 APPROVE → human brake; one prod path.
 - **Serial deps (same Oleada):** lab **APPROVE** → (`YIELD_PLAN`→Build) → `implementer` → `verifier` → VLH if gated — sequential fases, **not** a new Oleada per child.
 - **Example T3:** `O1 / research-lab / B1` = Discovery Batch (scouts + explore + optional maverick CONSULT + ≤2–3 isolated labs) → fan-in → `DECIDE` / `YIELD_PLAN`.
 - **verify FAIL → transition:** transient → **Retry** (same fase); localized reproducible → **one O2** (consolidated gap inventory → corrective execute→verify); design/env/hypothesis → **O3** + fase `research-lab`; after **O3** budget → **ESCALATE/STOP** (no O4, no T4). Cross-surface integration check after multi-surface execute Batch. RELEASE CHECKLIST fase for publish steps. VLH never opens O2.
@@ -122,6 +125,7 @@ Delete proposals — what to remove instead of add. No code. Pair with Algorithm
 | **Harvest** | Ledger parent-only → Maverick → `NO_CHANGE`\|`YIELD_OPT` human |
 | **ESCALATE** | Child `## ESCALATE` (≥2 fails) → **scout** → retry with contrast or STOP |
 | **`.lab` root** | Repo root `.lab/` only |
+| **Mode diagnostic** | Optional; `.debug/` forensic ≠ `.lab/`; Maverick CONSULT HARD post-probes pre-REPORT (mandatory); see [SKILL.md](SKILL.md) § Mode: diagnostic |
 
 ## Model aliases (**Host remap** on AGY — no Grok)
 
@@ -135,10 +139,24 @@ AGY does **not** expose Grok. Maverick + VerifierLikeHuman stay **enabled** via 
 | **verifier** | `pro` | **`Host remap`:** `gemini-3.1-pro-high` |
 | **verifier-like-human** | `pro` | **`Host remap`:** `gemini-3.1-pro-high` |
 | implementer | `pro` | `gemini-3.1-pro-high` |
-| orchestrator (parent) | heavy reasoning model on host | not `inherit` |
+| **diagnostic** (Mode diagnostic synthesizer) | `pro` | **`Host remap`:** `gemini-3.1-pro-high` |
+| orchestrator (session parent) | **host UI default** — not pack-forced | Auto / user-picked OK |
+| orchestrator (optional nested, depth-1) | **`Host remap`:** `gemini-3.1-pro-high` | Only when optional nest pattern used; never call it Grok; never re-nest |
 
-Validate with `agy models` / UI. Cursor (other surface): Mav/Ver/VLH/single-lab → `cursor-grok-4.5-high-fast`; Lab Batch ≥2 → `composer-2.5-fast` each — see [SKILL.md](SKILL.md) + pack `docs/agent/MODEL-ROUTING-POLICY.md` §5.1. OpenCode/Codex: Grok when exposed for Mav/Ver/VLH; else **Host remap**.
+Validate with `agy models` / UI. **Optional nested orch:** outer = thin launcher; one `invoke_subagent` / defined nested orch @ **`Host remap` `gemini-3.1-pro-high`** with full skill-primed envelope; nested owns classify/spawn/Ledger/Harvest; depth-1 only — see [SKILL.md](SKILL.md) § Optional nested orchestrator. Cursor (other surface): session parent unpinned; optional nested Task → `cursor-grok-4.5-high-fast`; Mav/Ver/VLH/single-lab → `cursor-grok-4.5-high-fast`; Lab Batch ≥2 → `composer-2.5-fast` each — see [SKILL.md](SKILL.md) + pack `docs/agent/MODEL-ROUTING-POLICY.md` §5.1. OpenCode/Codex: Grok when exposed for Mav/Ver/VLH; else **Host remap**.
 
 ## Handoffs
 
 Child **output** handoffs ≤40 lines. Child **input envelopes** may be long/complete. Orchestrator forwards **deltas only** into next envelope — not full transcripts.
+
+### Implementer Batch — invoke ×2–3 (T2/T3, same execute Batch)
+
+```text
+# Same turn — Batch B-impl-1, Fase execute (T2/T3 Implementer Batch)
+invoke_subagent(name: "implementer", prompt: "### Env · implementer (Imp-A)\n… allow-list: canon/ …")
+invoke_subagent(name: "implementer", prompt: "### Env · implementer (Imp-B)\n… allow-list: runtime/antigravity/ …")
+invoke_subagent(name: "implementer", prompt: "### Env · implementer (Imp-C)\n… Release-owner: YES — VERSION, CHANGELOG …")
+# fan-in → invoke_subagent(name: "verifier", …)
+```
+
+**Composer on verifier / VLH / maverick / single-lab = process FAIL.** Policy identical to [SKILL.md](SKILL.md) + [reference.md](reference.md).

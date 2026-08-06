@@ -23,6 +23,7 @@ Compact `### Orch` block — **not** one `##` H2 per field:
 ```markdown
 ### Orch
 T<0|1|2|3> — <brief reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<slug> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Next spawn: <role|none> | Parent tools: none
 Role: Orchestrator | Action: Delegate
 ```
 
@@ -39,7 +40,7 @@ The session Orchestrator **MUST NOT** execute commands, read files, or edit code
 | Step | API |
 |------|-----|
 | Register / repair role | **`define_subagent`** (SKILL § Antigravity 2.0 Desktop templates) — include **`VerifierLikeHuman`** |
-| Delegate work | **`invoke_subagent`** → `.agents/agents/{explore,scout,maverick,lab-runner,implementer,verifier,verifier-like-human,skeptic,deletion}/agent.md` |
+| Delegate work | **`invoke_subagent`** → `.agents/agents/{explore,scout,maverick,lab-runner,implementer,verifier,verifier-like-human,diagnostic,skeptic,deletion}/agent.md` |
 
 **Never** use Cursor `Task` on this surface.
 
@@ -47,12 +48,17 @@ The session Orchestrator **MUST NOT** execute commands, read files, or edit code
 
 | Gate | Rule |
 |------|------|
+| **Exit-card Build** | Build approved → parent **only** spawns `implementer`(s); parent Write/Shell/test = **process fail** — Multitask on/off unchanged |
+| **Parent tools** | **`Parent tools: none`** + **`Next spawn:`** mandatory every turn in `### Orch` |
+| **Implementer Batch** | T2/T3 + Composer writers → **2–3** path-disjoint `implementer`s same execute Batch; one **Release-owner**; **Lab Batch ≠ Implementer Batch**; Inseparable → serial micro-passes |
+| **Wrong-role Composer** | Composer on verifier / VLH / maverick / single-lab = **process FAIL** |
 | **WorkType** | Classify `greenfield` \| `evolving-product` \| `legacy-app` \| `ops-diagnostic` in `### Orch` |
 | **Discovery** | Sub-phase of `research-lab` (**not** a 5th Fase) — **before** native Plan / formal Implementation Plan. Enter: z2o · large debug w/o dominant hyp · legacy hot path · ≥2 approaches · post-ESCALATE · arch trade-off · irreversible. Skip: T0/T1 clear / mechanical. Budget: **one** research Batch; ≤**2** labs normal, ≤**3** only T3; **one** REVISE; then orch-only **`DECIDE` \| `YIELD_PLAN` \| `STOP`**. Labs: **no** prod writes; **no** formal Implementation Plan text |
 | **YIELD_PLAN** | After DECIDE with enough evidence → emit **`YIELD_PLAN`** → human opens **AGY Planning Mode** + **Artifact Review** → human **Request Review** / **Proceed** (Build) → only then O1 `execute`. Decline → **STOP**. ≠ lab verdict **`YIELD`**. **Do not claim silent auto Plan Mode** — ask/narrate only |
 | **Lab Batch** | 2–3 distinct hyps; isolate `.lab/<id>/` **and** services/ports/data. Fan-in: `APPROVE` > `REVISE` > `REJECT` > `YIELD`. ≥2 APPROVE → **human brake**. One winner → one prod path |
 | **Lab** | Greenfield → `scout` (soft) → **`lab-runner` REQUIRED** under `.lab/YYYY-MM-DD-<slug>/` → only **`APPROVE`** unlocks **`implementer`** |
 | **ops-diagnostic** | Evidence gather only — **no** feature lab/pipeline; **no** parallel mutations |
+| **Diagnostic** | **Mode** (not default) under ops-diagnostic / post-ANOMALIA / regression — 4 RO explore lanes → `.debug/<id>/REPORT.md`; Maverick CONSULT HARD pre-close; incident-review; never APPROVE→prod |
 | **Maverick** | **`Host remap`** `gemini-3.1-pro-high` (AGY has no Grok — never label remap “Grok”). Early CONSULT on z2o/trade-off (Discovery). T2+ env anomaly → **REQUIRED**. Post-T2/T3 PASS (+ VLH if gated) → Harvest → **CONSULT mandatory** — proposes only; **no auto O2** (`YIELD_OPT` needs human). Labs only `.lab/YYYY-MM-DD-mav-<slug>/` |
 | **Verifier** | If **`implementer`** ran → **`verifier` REQUIRED** before final user narration |
 | **VerifierLikeHuman** | After technical verifier **PASS**; only T2/T3 human-facing. Evidence: `CAPTURED\|BROWSER\|COMPUTER\|PROXY\|UNAVAILABLE`. No evidence → **INCONCLUSIVE**. Never edits; never opens O2 |
@@ -67,7 +73,9 @@ All subagents ≤40 lines **on output**; input envelopes may be long. Verifier g
 
 - **Multitask Mode does NOT authorize** one subagent / Composer monolith for lab + implement + verify + release — parallel UI ≠ permission to collapse roles.
 - **Parallel** = **Batch B-…**: **multiple `invoke_subagent` by role in the SAME parent turn** when workstreams are independent — **never** one child wearing every hat.
-- **Serial gates = separate children** in the same **Oleada:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** → **`verifier-like-human`** (if T2/T3 human-facing) — each a **distinct `invoke_subagent`**; parent never folds the chain into one spawn.
+- **Serial gates = separate children** in the same **Oleada:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`(s)** (T2/T3 → **Implementer Batch 2–3** path-disjoint) → **`verifier`** → **`verifier-like-human`** (if T2/T3 human-facing) — each a **distinct `invoke_subagent`**; parent never folds the chain into one spawn.
+- **Exit-card Build (HARD):** Build approved → parent **only** spawns implementer(s); **`Parent tools: none`** every turn; parent Write/Shell = **process fail**.
+- **Wrong-role Composer = process FAIL** — never Composer on verifier / VLH / maverick / single-lab.
 - **Composer-tier (`flash` / scoped `pro`) = basic / bounded / surgical only** — not single-lab (high-reasoning remap), not full pipeline, not parent orchestrator, not VLH/Maverick (**`Host remap`** high-reasoning on AGY).
 - **Composer compensation:** more bounded iterations of the **same role** — **not** role collapse / mega-pipeline.
 - Monolithic worker **only** if the human **explicitly** requests it.
@@ -117,8 +125,13 @@ When the loop completes: **kill idle subagents** (UI / `manage_subagents` / equi
 
 ## Role routing
 
+**Parent orchestrator:** host model picker or Auto — **never** force Grok (or any fixed ID) on the parent session. Omit orchestrator frontmatter model; child rows below unchanged.
+
+**Optional (not default):** after lab **APPROVE**, depth-1 skill-primed nested `invoke_subagent` to a child orchestrator pass — only when envelope explicitly requests it.
+
 | Role | Model alias (remap via `agy models`) | Write? |
 |------|--------------------------------------|--------|
+| orchestrator (parent) | host picker / Auto — never force Grok | No |
 | explore | `flash` → prefer `gemini-3.6-flash-high` | No |
 | scout | `flash` | No |
 | maverick | **`Host remap`:** `gemini-3.1-pro-high` (never “Grok”) | LAB dir only |
@@ -129,7 +142,7 @@ When the loop completes: **kill idle subagents** (UI / `manage_subagents` / equi
 | skeptic | `flash` | No |
 | deletion | `flash` | No |
 
-AGY has **no** Grok. Keep maverick/VLH **enabled** with **`Host remap`** above — never `grok-*` frontmatter, never silent-downgrade to flash. Cursor (other surface) uses `cursor-grok-4.5-high-fast` when Grok is exposed.
+AGY has **no** Grok. Keep maverick/VLH **enabled** with **`Host remap`** above — never `grok-*` frontmatter, never silent-downgrade to flash. Parent orchestrator = host picker/Auto (never force Grok). Cursor (other surface): child roles use `cursor-grok-4.5-high-fast` when Grok is exposed.
 
 ---
 

@@ -80,7 +80,7 @@ Comprueba árbol canónico v1.3.1 (`canon/`, `runtime/`, `tooling/`), frontmatte
 
 ## Política de modelos
 
-- Parent/orchestrator → `cursor-grok-4.5-high`
+- Parent/orchestrator (session) → **session / user picker / Auto** (optional nested orch → `cursor-grok-4.5-high`)
 - Maverick / lab complejo → `cursor-grok-4.5-high-fast`
 - Lab claro + implementer → `composer-2.5-fast`
 

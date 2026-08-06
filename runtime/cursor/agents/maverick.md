@@ -30,6 +30,7 @@ Fuente espejo: `.agents/agents/maverick/agent.md` (Antigravity).
 | T2+ env/runtime anomaly | CONSULT or LAB | **REQUIRED** |
 | Zero-to-one / architecture trade-off (Discovery) | CONSULT early | Soft-mandatory |
 | After T2/T3 technical PASS (+ VLH if gated) → parent Harvest | CONSULT | **REQUIRED** — return only `NO_CHANGE` \| `YIELD_OPT` |
+| **Mode diagnostic — crisis timing** | CONSULT | **After** diagnostic explore PROBE fan-in, **before** `.debug/…/REPORT.md` — save under `maverick-consult/`; proposes only |
 
 Post-Harvest: **propose only**. `YIELD_OPT` needs **human** approval — parent **never** auto-opens O2 from your take.
 
@@ -50,7 +51,7 @@ Post-Harvest: **propose only**. `YIELD_OPT` needs **human** approval — parent 
 
 ## Model (fixed — remappable only if missing)
 
-Default **`cursor-grok-4.5-high-fast`** (**always** for this role). Validar con `agent --list-models`; fallback: nearest Grok Fast / high-reasoning creativo ≥ implementer tier. Policy: `docs/agent/MODEL-ROUTING-POLICY.md`.
+Default **`cursor-grok-4.5-high-fast`** (**always** for this role). **Never Task `composer-2.5-fast` for maverick — process FAIL.** Validar con `agent --list-models`; fallback: nearest Grok Fast / high-reasoning creativo ≥ implementer tier. Policy: `docs/agent/MODEL-ROUTING-POLICY.md`.
 
 ## Handoff (≤40 líneas)
 
@@ -59,6 +60,7 @@ Default **`cursor-grok-4.5-high-fast`** (**always** for this role). Validar con 
 ```markdown
 ## Maverick take
 - Mode: CONSULT | LAB
+- Timing: early-Discovery | post-Harvest | env-anomaly | crisis-diagnostic | other
 - What-if ideas: ≤3 (contraintuitiva primero)
 - Best-part-is-no-part: …
 - Unconventional reuse: …

@@ -36,7 +36,27 @@
 
 **No** inventar `invoke_subagent` en Cursor. **No** asumir que Cursor carga `.agents/agents/`.
 
+**Parent model:** humano / Auto — pack templates **omit** `model:` en orchestrator; sesión gana. **Nested orch (opcional — NOT default):** default direct; depth-1 nest solo con triggers en [`07-MODELS-MATRIX.md`](07-MODELS-MATRIX.md) §2.2 — outer thin launcher, nested owns classify/spawn; no nueva Fase.
+
 **Plan nativo (ask-only):** Cursor → humano a Plan Mode; Antigravity → Planning Mode + Artifact Review; OpenCode → Plan→Build; Codex → `/plan`→ejecución explícita. Agentes **no** auto-cambian de modo.
+
+### Header compacto (cada turno Orquestador)
+
+```markdown
+### Orch
+T<0|1|2|3> — <brief> | WorkType <…> | Run R-<id> | O<1|2|3> <…> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate | Next spawn: <role(s)> | Parent tools: none
+```
+
+| Campo | Regla |
+|-------|-------|
+| **`Next spawn:`** | Próximo rol o Batch planificado (p. ej. `implementer×3`, `verifier`, `lab-runner`) |
+| **`Parent tools: none`** | Padre **no** Write/Shell/test/deploy este turno; violación = **process fail** |
+| **Recovery** | Append `| Failure-ID: F-<id>` en la línea Role cuando aplique |
+
+**Exit-card Build:** Build aprobado → padre **solo** spawnea implementer(s); padre que edita/tests/shell = **process fail**. Multitask on/off no cambia. “Implement the plan / complete todos” = fase **execute** vía Task, no monolito.
+
+**Phrase→role (canon resumen):** tabla completa en skill — “implement/fix/write prod” → `implementer`; “verify/DoD” → `verifier`; “lab/MVP” → `lab-runner`; “prior art afuera” → `scout`; “what-if/env” → `maverick`; “end-to-end plan” → execute Batch implementer(s), **no** monolito.
 
 ## 3. Run, oleadas, fases y deltas
 
@@ -58,18 +78,34 @@ Ejemplo feliz (con Discovery):
 O1 · prep           Orch: WorkType + gate + Ledger (Need/Delete/Simplify seeds) + sobres
 O1 · research-lab   Discovery Batch → labs ≤2 (≤3 T3) → DECIDE → YIELD_PLAN
                     → humano Plan/Artifact → Build
-O1 · execute        implementer Batch fan-out → handoffs
+O1 · execute        Implementer Batch fan-out (2–3 si T≥2+Composer) → handoffs
 O1 · verify         verifier → [VerifierLikeHuman si T2/T3 user-facing]
                     → Harvest (Automate) → Maverick CONSULT → narrate
 ```
 
 Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguiente sobre. Prohibido reenviar el transcript completo del hijo.
 
-**Paralelismo:** Batch **REQUIRED** si workstreams independientes; serial solo con deps reales (p. ej. lab APPROVE antes de execute). **ops-diagnostic:** sin mutaciones paralelas.
+**Paralelismo:** Batch **REQUIRED** si workstreams independientes; serial solo con deps reales (p. ej. lab APPROVE antes de execute). **ops-diagnostic:** sin mutaciones paralelas en **execute**; **Mode: diagnostic** permite Batch paralelo de **4 drones RO** (lanes disjuntas) antes del synthesizer.
+
+### Mode: diagnostic (compact)
+
+**Mode: diagnostic** ⊂ WorkType **`ops-diagnostic`** / post-**`ANOMALIA`** / regression — **no** WorkType nuevo. Skip si T0/T1 trivial; runtime no-diagnostic → **Cursor Debug Mode first**.
+
+| Paso | Rol | Notas |
+|------|-----|-------|
+| Prior scan | Orquestador | Lee `.debug/*/REPORT.md` antes de spawn |
+| Batch drones | **explore** ×4 RO | Lanes: **logs** \| **recent-changes** \| **structural** \| **similar-fragility** · `composer-2.5-fast` · writes solo en `.debug/<id>/drone-*/` |
+| Fan-in | **Synthesizer** (parent merge → `REPORT.md`) | Grok Fast · tags human+agent · **sin patch prod** |
+| Pre-close | **maverick CONSULT HARD** | Crisis · Best Part is No Part · `NO_CHANGE` \| `YIELD_OPT` · Redesign-signals · **never patch** |
+| Post-REPORT | humano | Fix aprobado → **sale** del modo diagnostic → implementer normal |
+
+**Incident-review:** humano pide → orch escanea `.debug/*/REPORT.md`, narra; no re-spawn salvo gap.
 
 **Lab Batch fan-in:** evidence matrix; `APPROVE` > `REVISE` > `REJECT` > `YIELD`. **≥2 APPROVE** → human brake → un path prod.
 
-**Multitask Mode / Build in Parallel (HARD):** parent Multitask Mode **does NOT** authorize collapsing roles. Parallelism = **multiple role spawns** (`lab-runner`, `implementer`, `verifier`, `VerifierLikeHuman`, `scout`…) possibly in the **same Batch** — **never** one `generalPurpose` / Composer doing lab + implement + verify + release. **Composer (`composer-2.5-fast`) = bounded mechanical tasks only** (surgical edits, repetitive, clear DoD; Lab Batch lab-runners ≥2 parallel). **Not** verifier, not single lab, not VLH. Large scope → **more bounded envelopes**, same role. Required chain for methodology / docs / features: `lab-runner` (if greenfield) → `implementer`(s) by envelope → `verifier` → `VerifierLikeHuman` (if gated) → Harvest; orchestrator only classifies / spawns / merges. **Anti-pattern:** Task one `generalPurpose` with “implement the plan end-to-end” covering lab + implement + verify + commit.
+**Multitask Mode / Build in Parallel (HARD):** parent Multitask Mode **does NOT** authorize collapsing roles. Parallelism = **multiple role spawns** (`lab-runner`, `implementer`, `verifier`, `VerifierLikeHuman`, `scout`…) possibly in the **same Batch** — **never** one `generalPurpose` / Composer doing lab + implement + verify + release. **Composer (`composer-2.5-fast`) = bounded mechanical tasks only** (surgical edits, repetitive, clear DoD; Lab Batch lab-runners ≥2 parallel). **Not** verifier, not single lab, not VLH — wrong-role Composer = **process FAIL**. Required chain: `lab-runner` (if greenfield) → `implementer`(s) → `verifier` → `VerifierLikeHuman` (if gated) → Harvest; orchestrator only classifies / spawns / merges. **Anti-pattern:** Task one `generalPurpose` with “implement the plan end-to-end” covering lab + implement + verify + commit.
+
+**Implementer Batch (T2/T3 + Composer) — HARD:** cuando T∈{2,3} y writers son `composer-2.5-fast` (o host fast-Composer remap), spawn **2–3** implementers en el **mismo** execute Batch con allow-lists **disjuntas**, DoD compartido, **exactamente un** `Release-owner` (VERSION/CHANGELOG/lock) o defer a **RELEASE CHECKLIST**. T0/T1: **1**. **Inseparable** (archivo único / hunk acoplado): documentar + **serial micro-passes**. **Lab Batch ≠ Implementer Batch.** ops-diagnostic: serial. O2: misma regla si gaps path-partitionable. Padre rechaza overlap de paths; espera fan-in completo antes de verify. **Nunca** fold verifier/lab/VLH en implementer.
 
 **Input vs output budgets (HARD):** child **input envelopes** may be long/complete; child **output handoffs** ≤40 lines. **Ban** applying ≤40/≤20 to input prompts.
 
@@ -86,6 +122,27 @@ Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguie
 - Recommendations for Orchestrator: …
 - Curiosity: (opcional)
 - ANOMALIA: (si aplica)
+```
+
+**Diagnostic drone** (Mode: diagnostic — append lane):
+
+```markdown
+## Explore handoff · drone-<logs|recent-changes|structural|similar-fragility>
+- Lane: logs | recent-changes | structural | similar-fragility
+- Path: .debug/<id>/drone-<lane>/
+- Evidence: ≤5 bullets
+- Tags for REPORT: …
+- Recommendations for synthesizer: …
+```
+
+### diagnostic synthesizer (parent-owned)
+
+```markdown
+## Diagnostic REPORT · .debug/<id>/REPORT.md
+- Tags: … (human + future agents)
+- Findings: ≤8 bullets (fan-in from 4 lanes)
+- Maverick block: NO_CHANGE | YIELD_OPT · Redesign-signals · never patch
+- Next: narrate | human fix approval → exit diagnostic mode
 ```
 
 ### scout
@@ -119,7 +176,7 @@ Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguie
 
 Opcional `## MAV-ESCALATE` con theory / approaches / request.
 
-**CONSULT timings:** (1) early en Discovery zero-to-one / architecture trade-off; (2) env-anomaly T2+ REQUIRED; (3) **mandatory** tras cada T2/T3 PASS (+ VLH si gated) y Harvest — solo `NO_CHANGE` \| `YIELD_OPT`, nunca auto O2.
+**CONSULT timings:** (1) early en Discovery zero-to-one / architecture trade-off; (2) env-anomaly T2+ REQUIRED; (3) **mandatory** tras cada T2/T3 PASS (+ VLH si gated) y Harvest — solo `NO_CHANGE` \| `YIELD_OPT`, nunca auto O2; (4) **Mode: diagnostic — CONSULT HARD** antes de `REPORT.md` final en `.debug/<id>/` — crisis · Best Part is No Part · Redesign-signals · **never patch**.
 
 ### implementer / executor
 
@@ -187,13 +244,14 @@ Todos: compact `### Env · <role>` line (T|WorkType|Run|O|Fase|Batch), Model/Sob
 
 | Rol | Extra |
 |-----|--------|
-| implementer | Micro-gate 1–5; sin web; Build aprobado si hubo YIELD_PLAN |
+| implementer | Micro-gate 1–5; sin web; Build aprobado si hubo YIELD_PLAN; honor path allow-list; `Release-owner: yes\|no`; T≥2+Composer → Implementer Batch 2–3 (disjoint paths) |
 | lab-runner | Solo `.lab/<id>/**`; REPORT + veredicto; isolation checklist |
 | scout | Enfoque de búsqueda; no escribir |
 | maverick | CONSULT\|LAB; timing; path mav fechado |
 | verifier | Lista DoD / comandos; on FAIL → **complete gap inventory**; cross-surface integration check when multi-surface execute Batch |
 | VerifierLikeHuman | `## VerifierLikeHuman handoff`; Evidence-class; Serves-ask; Evidence paths; sin edit/web/auto O2 |
-| explore | Readonly local |
+| explore | Readonly local; **diagnostic drones** RO → `.debug/<id>/drone-*/` only |
+| **diagnostic synthesizer** | Parent-owned merge → `.debug/<id>/REPORT.md`; Grok Fast; integra Maverick CONSULT HARD; tags; no prod patch |
 | skeptic/deletion | Sin código; entregables de auditoría |
 | **release-checklist** | VERSION, lock sha, RefreshSandbox, zip/SHA256SUMS, pin tags — **fase explícita**, not discovered via verify FAIL cascades |
 

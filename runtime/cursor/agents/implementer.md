@@ -16,12 +16,13 @@ Fuente espejo: `.agents/agents/implementer/agent.md` (Antigravity).
 
 ## Hard rules
 
-1. Sigue el brief del Orquestador: objetivo, archivos permitidos, DoD, `## External contrast` si viene pegado.
-2. **Greenfield:** no corras sin lab **`APPROVE`** de `.lab/<id>/` en el envelope.
-3. **NO** crees prototipos en `.lab/` (eso es `lab-runner`).
-4. **Prohibido** WebSearch / soft-web → `## ESCALATE` → **`scout`**.
-5. Tras **2** enfoques fallidos (máx. **3** si solo repro/verify) → `## ESCALATE`.
-6. Handoff ≤40 líneas con `Delete check:`, `Automation candidates:` y **`## En criollo` al final** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada.
+1. Sigue el brief del Orquestador: objetivo, **path allow-list** del envelope, DoD, `## External contrast` si viene pegado. **Honor allow-list** — no edits outside listed trees/files.
+2. **Release-owner:** only the envelope marked **`Release-owner: YES`** may touch VERSION, CHANGELOG, `.orchestrator-lock.json` sha fields. If **`Release-owner: NO`** — **do not** edit VERSION/CHANGELOG/lock even if paths are adjacent.
+3. **Greenfield:** no corras sin lab **`APPROVE`** de `.lab/<id>/` en el envelope.
+4. **NO** crees prototipos en `.lab/` (eso es `lab-runner`).
+5. **Prohibido** WebSearch / soft-web → `## ESCALATE` → **`scout`**.
+6. Tras **2** enfoques fallidos (máx. **3** si solo repro/verify) → `## ESCALATE`.
+7. Handoff ≤40 líneas con `Delete check:`, `Automation candidates:` y **`## En criollo` al final** (3–6 frases prácticas). Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada.
 
 ## Best-effort
 

@@ -2,6 +2,44 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.3.4] - 2026-08-06
+
+### Added
+
+- **Mode diagnostic:** optional under `ops-diagnostic` / post-`ANOMALIA` / regression — **4 Composer RO explore lanes** (logs · recent-changes · structural · similar-fragility) → parent synthesizer **`REPORT.md`** in **`.debug/YYYY-MM-DD-<slug>/`** (forensic ≠ `.lab/`; never APPROVE→implementer).
+- **Maverick CONSULT HARD** pre-REPORT: crisis framing · Best Part is No Part · `NO_CHANGE` \| `YIELD_OPT` · **Redesign-signals** (when fix ≠ patch) · never patch in CONSULT.
+- **`.debug/` archive:** tags for humans + future agents; **incident-review** — orch scans `.debug/*/REPORT.md` on human ask (no re-spawn unless gap).
+- **Optional `diagnostic` agent** (Cursor / AGY manifest); thin spawn alias — mode-on-orch remains default.
+
+### Changed
+
+- **Pin hygiene:** `SCAFFOLD-FETCH.md`, `GEMINI.user.md`, `scaffold-manifest.json` → tag `v1.3.4`.
+- **Cross-host mirrors:** AGY `spacex-orchestrator.md`, Codex `orchestrator.toml`, OpenCode examples, AGENTS×3 Diagnostic gate row, installer/validate maps.
+
+## [1.3.3] - 2026-08-06
+
+### Changed
+
+- **Parent orchestrator model:** session/user picker or host Auto — omit fixed frontmatter model ID; never force Grok on parent. Child role routing unchanged.
+- **Optional nested orchestrator:** depth-1 skill-primed nested `Task(orchestrator)` after lab APPROVE — not default.
+- **Optional nested `Task(orchestrator)` model:** `cursor-grok-4.5-high-fast` (Task-resolvable on current Cursor catalog; `cursor-grok-4.5-high` rejected by Task spawn even when listed in `list-models`). Session parent remains user/Auto.
+- **Pin hygiene:** `SCAFFOLD-FETCH.md`, `GEMINI.user.md`, `scaffold-manifest.json` → tag `v1.3.3`.
+- **Cross-host mirrors:** AGY `spacex-orchestrator.md`, Codex `orchestrator.toml`, OpenCode examples, AGENTS×3 Models table aligned.
+
+## [1.3.2] - 2026-08-06
+
+### Added
+
+- **Build friction / zero-exec:** **Exit-card Build** (Build aprobado → padre solo spawnea implementer(s)); **Phrase→role** table; Plan todos con **`owner:`**; **`Next spawn:`** + **`Parent tools: none`** en header `### Orch`; **Amnesia check** en cada transición de Fase; **O2 via Task** implementer(s) — padre nunca Write/Shell en `execute` | `verify` | `research-lab`.
+- **Implementer Batch (HARD):** T2/T3 + Composer writers → spawn **2–3** implementers path-disjoint en el mismo execute Batch; un **Release-owner** (VERSION/CHANGELOG/lock); **Inseparable** → serial micro-passes; **Lab Batch ≠ Implementer Batch**; ops-diagnostic serial; O2 reparte si gaps path-partitionable.
+
+### Changed
+
+- **Verifier envelope:** technical-only — **forbids VLH/UI** judgment; human-serve → spawn separado `verifier-like-human` tras PASS.
+- **Wrong-role Composer = process FAIL:** Composer en verifier / VLH / maverick / single-lab → fallo de proceso (auditable).
+- **Cross-host mirrors:** canon 01/02, SKILL + references, MODEL-ROUTING §1.0b, CONTEXT-MAP, Cursor orch/implementer/verifier, AGY/OpenCode/Codex templates, AGENTS×3 alineados.
+- **`scaffold-manifest.json`:** `rawBase` / lock template pinned to `v1.3.2`.
+
 ## [1.3.1] - 2026-08-06
 
 ### Changed
