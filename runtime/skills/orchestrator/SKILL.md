@@ -65,7 +65,7 @@ On Antigravity Desktop, register roles with **`define_subagent`** and delegate w
 When global `~/.gemini/GEMINI.md` (user block) or bootstrap rule triggers ask-first:
 
 1. Human **yes** → agent **writes** `.orchestrator-lock.json` + **FETCH/COPY** minimum tree (see `runtime/antigravity/scaffold-manifest.json`, [SCAFFOLD-FETCH.md](../../antigravity/SCAFFOLD-FETCH.md), [reference.antigravity.md](reference.antigravity.md)). **Never generate or invent** SKILL/rules/agents.
-2. Source order: pack `runtime/` in workspace → GitHub raw (`rawBase` in manifest; `main` until tag `v1.2.8`) → ask local clone/zip. Run **integrity check** on SKILL (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`); on fail delete fake files and re-fetch or STOP.
+2. Source order: pack `runtime/` in workspace → GitHub raw (`rawBase` in manifest; tag `v1.2.9`, fallback `main`) → ask local clone/zip. Run **integrity check** on SKILL (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`); on fail delete fake files and re-fetch or STOP.
 3. **`Orchestrator.ps1 init`** is **optional** (canonical-frase / advanced / SHA256 release path) — **not** required for AGY Desktop bootstrap.
 
 Lock example after agent scaffold:

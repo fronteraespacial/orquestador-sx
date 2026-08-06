@@ -13,6 +13,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y 
 - **`runtime/skills/orchestrator/reference.md`**, **`runtime/cursor/agents/orchestrator.md`**, **`runtime/cursor/rules/cj-orchestrator-mandatory.mdc`**, **`docs/agent/CONTEXT-MAP.md`:** aligned with canon 01/02 + SKILL (already migrated in lab APPROVE).
 - **`scaffold-manifest.json`:** `rawBase` / lock template pinned to `v1.2.9`; fallback `main`.
 
+### Fixed
+
+- **AGY Desktop pin residuals:** `GEMINI.user.md`, `SCAFFOLD-FETCH.md`, and `SKILL.md` bootstrap line aligned to tag `v1.2.9` (was `v1.2.8`).
+
 ## [1.2.8] - 2026-08-05
 
 ### Added
