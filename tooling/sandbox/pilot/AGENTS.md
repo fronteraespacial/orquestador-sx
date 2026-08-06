@@ -12,7 +12,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 - The **Orchestrator** receives the raw user prompt, classifies (T0–T3), writes a short internal gate, plans **Run → Oleada O1–O3 → Fase → Batch**, delegates via the surface spawn API, and merges **compact handoffs (deltas only)**.
 - **Zero direct execution:** the Orchestrator does **not** edit, run tests, deploy, web-research, or explore the system — **including T0**. Children execute (`explore`, `scout`, `maverick`, `lab-runner`, `implementer`/`executor`, `verifier`).
-- **Multitask Mode / Build in Parallel:** does **not** collapse roles — no single `generalPurpose`/Composer doing lab + implement + verify + release. Parent **always** spawns by role: `lab-runner` (`APPROVE`) → `implementer` → `verifier` (scout/maverick per gates). Monolithic worker **only** if the human explicitly asks.
+- **Multitask Mode / Build in Parallel (hard):** **does NOT authorize** one `generalPurpose`/Composer monolith for lab + implement + verify + release. **Parallel** = same **Batch**: multiple role spawns (Task / `invoke_subagent`) in one parent turn — **not** one child for the whole chain. Parent **must** spawn **separate children:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`**. **Composer = basic/bounded/surgical only** (scoped implementer, mechanical verifier, light reads) — never lab-runner, never full pipeline, never parent. Monolithic worker **only** if the human explicitly asks.
 - **Enforcement:** Cursor can **audit** this policy (best-effort); it cannot fully force the parent. Prefer stronger edit/bash deny on OpenCode/Codex when available. Antigravity: follow `GEMINI.md` + role agents.
 - Canonical skill: `.agents/skills/orchestrator/SKILL.md` (+ `reference.md`; WSL: `reference.wsl.md`). Do **not** treat `reference.cj-linux.md` as active wiring.
 
@@ -20,7 +20,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 | Gate | Rule |
 |------|------|
-| Header | Every orch turn: `## Complexity`, `## Role: Orchestrator`, `## Action: Delegate…`, `## Run`, `## Oleada`, `## Fase`, `## Batch` |
+| Header | Every orch turn: compact `### Orch` block (T|Run|O|Fase|Batch + Role|Action) — no per-field `##` H2s |
 | Scout | Soft-mandatory on greenfield / anomaly / post-ESCALATE |
 | Lab | Greenfield → **`.lab/YYYY-MM-DD-<slug>/`** APPROVE before prod implementer (**not** `projects/.lab/`) |
 | Maverick | Env-anomaly T2+ REQUIRED |

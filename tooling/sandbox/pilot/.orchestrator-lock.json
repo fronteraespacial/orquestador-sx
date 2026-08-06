@@ -3,7 +3,7 @@
   "enabled": true,
   "source": "local",
   "policy": "track-stable",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "sha256": "c8d83c2672c5e397ce16a2ee275ac45917002b9b36765f77d99f31bdf81ee828",
   "installed_at": "2026-08-06T00:48:37.7461604Z",
   "last_check_at": "2026-08-06T00:48:37.7461604Z"

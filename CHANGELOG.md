@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.10] - 2026-08-05
+
+### Changed
+
+- **Compact orchestrator header:** mandatory turn header is now a 3-line `### Orch` block (pipe-separated T|Run|O|Fase|Batch + Role|Action) instead of 6–7 separate `##` H2 lines. Child envelopes use `### Env · <role>` with the same compact taxonomy line.
+- **Templates aligned:** canon 00/01/02, SKILL, Cursor orchestrator + mandatory rule, AGY `GEMINI.md` + `spacex-orchestrator.md`, `reference.antigravity.md`, `AGENTS.md`, bootstrap prompt, bench envelopes, OpenCode orchestrator prompt.
+- **Failure-ID:** recovery only — append `| Failure-ID: F-<id>` on the Role line (not a standalone H2).
+- **`scaffold-manifest.json`:** `rawBase` / lock template pinned to `v1.2.10`; fallback `main`.
+- **Multitask / Composer hardening:** explicit HARD rules — Composer / `generalPurpose` never owns a full pipeline; Multitask Mode does not collapse roles; required chain lab-runner → implementer → verifier for methodology/docs/features; anti-pattern “implement end-to-end” in one Task. Canon 01/02 + SKILL aligned.
+
 ## [1.2.9] - 2026-08-05
 
 ### Changed

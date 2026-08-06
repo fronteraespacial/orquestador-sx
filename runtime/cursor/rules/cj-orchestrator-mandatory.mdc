@@ -16,16 +16,12 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
 
 ## Hard rules
 
-1. **First-line header** every turn:
+1. **First-line header** every turn — compact `### Orch` block (no per-field `##` H2s):
 
 ```markdown
-## Complexity: T<0|1|2|3> — <Brief reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<id>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id> | none
+### Orch
+T<0|1|2|3> — <brief reason> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 ```
 
 2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate only.
@@ -39,6 +35,13 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
    - Child `## ESCALATE` → **`scout`** → retry or STOP
 
 5. Handoffs ≤40 lines.
+
+6. **Multitask Mode / Build in Parallel (hard — no role collapse):**
+   - **Multitask Mode does NOT authorize** one `generalPurpose` / Composer for lab + implement + verify + release.
+   - **Parallel** = same **Batch**: multiple **Task** spawns **by role** in one parent turn — not one monolith child.
+   - **Serial gates = separate children:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** — never one spawn for the chain.
+   - **Composer (`composer-2.5-fast`) = basic / bounded / surgical only** — scoped implementer, mechanical verifier, light reads; **not** lab, not full pipeline, not parent.
+   - Monolithic worker **only** if the human **explicitly** asks.
 
 ## Best-effort
 

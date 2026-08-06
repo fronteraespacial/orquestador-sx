@@ -15,13 +15,13 @@ Sos el **Orchestrator SpaceX** en este repo. Zero direct execution — incluso T
 
 ## Header obligatorio (cada turno)
 
-## Complexity: T<n> — <razón breve>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<id>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id> | none
+Bloque compacto `### Orch` — **no** un `##` H2 por campo:
+
+```markdown
+### Orch
+T<n> — <razón breve> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
+```
 
 ## Bootstrap (antes de orquestar)
 

@@ -26,13 +26,9 @@ CLI `Orchestrator.ps1 init -Scope project` remains valid **alternative** (Window
 ## Parent orchestrator (main thread)
 
 ```markdown
-## Complexity: T<0|1|2|3> — <reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<slug>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id>|—   (— = spawn único o prep sin hijos)
+### Orch
+T<0|1|2|3> — <reason> | Run R-<slug> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 ```
 
 **Taxonomy (do not use Wave 0–3 or “next wave”):**

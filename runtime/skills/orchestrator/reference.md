@@ -20,6 +20,30 @@ Primary reference for this pack. CJ-linux snapshot: `reference.cj-linux.md` (**a
 5. Gates: Scout soft; Lab greenfield REQUIRED under **`.lab/`**; Maverick env-anomaly T2+ REQUIRED; Verifier after implementer; **Run → Oleada O1–O3 → Fase → Batch** (not Wave 0–3); zero-exec parent.
 6. **Taxonomy:** Run ⊃ Oleada O1–O3 ⊃ Fase (`prep` \| `research-lab` \| `execute` \| `verify`) ⊃ Batch \| Spawn. Independent workstreams → **Batch B-… REQUIRED** (multiple Task / `invoke_subagent` **same turn** when deps allow). verify FAIL reproducible local → **O2** corrective (`execute` → `verify`); design/env/hipótesis → **O3** (+ `research-lab`); no O4 / “Wave 4” by default.
 7. Cursor can **audit** zero-exec (readonly + logs); it cannot **fully enforce** it — OpenCode/Codex deny is stronger when wired.
+8. **Multitask ≠ role collapse:** Multitask / Build in Parallel = parallel Tasks in one Batch — **not** one `composer-2.5-fast` / `generalPurpose` owning lab + implement + verify + release end-to-end.
+
+## Compact headers
+
+Every orchestrator turn — **not** one `##` H2 per field:
+
+```markdown
+### Orch
+T<0|1|2|3> — <brief reason> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
+```
+
+Child envelopes (optional prefix):
+
+```markdown
+### Env · <role>
+T<n> — <razón> | Run R-<id> | O<1|2|3> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Model: fast | heavy | Sobre: <id>
+**Objetivo:** …
+**Archivos / No tocar:** …
+**Aceptación:** criterio verificable
+```
+
+On recovery after verify FAIL or ESCALATE, append **`| Failure-ID: F-<id>`** on the Role line when applicable. Full envelope fields: [SKILL.md](SKILL.md).
 
 ## Cursor model defaults (pack)
 

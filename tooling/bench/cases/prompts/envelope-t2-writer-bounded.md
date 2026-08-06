@@ -1,5 +1,5 @@
-## Complexity: T2 — bounded writer (benchmark sandbox)
-## Role: orchestrator (classify and delegate only)
+### Env · orchestrator
+T2 — bounded writer (benchmark sandbox) | Run R-bench-writer | O1 initial | Fase execute | Batch none
 
 **Context:** LAB APPROVE received. Integration smoke test needs exactly one marker file in this worktree.
 

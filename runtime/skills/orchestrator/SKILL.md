@@ -65,7 +65,7 @@ On Antigravity Desktop, register roles with **`define_subagent`** and delegate w
 When global `~/.gemini/GEMINI.md` (user block) or bootstrap rule triggers ask-first:
 
 1. Human **yes** → agent **writes** `.orchestrator-lock.json` + **FETCH/COPY** minimum tree (see `runtime/antigravity/scaffold-manifest.json`, [SCAFFOLD-FETCH.md](../../antigravity/SCAFFOLD-FETCH.md), [reference.antigravity.md](reference.antigravity.md)). **Never generate or invent** SKILL/rules/agents.
-2. Source order: pack `runtime/` in workspace → GitHub raw (`rawBase` in manifest; tag `v1.2.9`, fallback `main`) → ask local clone/zip. Run **integrity check** on SKILL (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`); on fail delete fake files and re-fetch or STOP.
+2. Source order: pack `runtime/` in workspace → GitHub raw (`rawBase` in manifest; tag `v1.2.10`, fallback `main`) → ask local clone/zip. Run **integrity check** on SKILL (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`); on fail delete fake files and re-fetch or STOP.
 3. **`Orchestrator.ps1 init`** is **optional** (canonical-frase / advanced / SHA256 release path) — **not** required for AGY Desktop bootstrap.
 
 Lock example after agent scaffold:
@@ -215,17 +215,15 @@ The **orchestrator** receives the **raw user prompt**, classifies it, translates
 
 ### Mandatory first-line header (every orchestrator turn)
 
+Compact block — **not** one `##` H2 per field:
+
 ```markdown
-## Complexity: T<0|1|2|3> — <Brief reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<id>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id> | none
+### Orch
+T<0|1|2|3> — <brief reason> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 ```
 
-On recovery after a failed verify or ESCALATE, add **`## Failure-ID: F-<id>`** when applicable.
+On recovery after a failed verify or ESCALATE, append **`| Failure-ID: F-<id>`** on the Role line when applicable.
 
 Return fields from children (orchestrator merges): `Delete check:` + `Automation candidates:` + `External contrast:` (REQUIRED/SKIPPED/COMPLEMENTARY per thresholds) + optional `Curiosity:` + `ANOMALIA:` / `## ESCALATE` if any.
 
@@ -306,12 +304,19 @@ Skip empty fases (e.g. T0: prep → explore/implementer in execute → verifier 
 
 ### Multitask Mode / Build in Parallel (roles stay separate)
 
-**Multitask Mode does not collapse roles.** Parallelism = **multiple spawns in the same Batch** (same fase), **not** a new Oleada per child.
+**Multitask Mode / Build in Parallel does NOT authorize collapsing roles.** Parallelism = **multiple role spawns in the same Batch** (same fase) — **never** one agent doing all roles. A Batch is fan-out + fan-in; **not** a new Oleada per child.
+
+#### Composer / generalPurpose scope (HARD)
+
+**Composer (`composer-2.5-fast`) / `generalPurpose` NEVER owns a full pipeline.**
 
 | Rule | Detail |
 |------|--------|
-| **No monolith** | Multitask / Build in Parallel **does not** authorize one `generalPurpose` / Composer session to run lab + implement + verify + release in one thread. |
-| **Parent always spawns** | Orchestrator **always** delegates by role: `scout`/`maverick` per gates → **`lab-runner`** (greenfield; **`APPROVE`**) → **`implementer`** → **`verifier`**. Parallel = fan-out **across roles/envelopes in one Batch**, not merged duties or extra oleadas. |
+| **Bounded only** | Composer = surgical edits, repetitive mechanical work, clear DoD. **Not** lab design + multi-file methodology rewrite + verify + release in one worker. |
+| **No end-to-end Task** | **Do not** Task one `generalPurpose` / Composer with “implement the plan end-to-end” covering lab + implement + verify + commit. |
+| **Required chain (methodology / docs / features)** | `lab-runner` (if greenfield / new rule) → **`implementer`(s)** by envelope → **`verifier`**. Parent orchestrator **only** classifies / spawns / merges — **never** substitutes a monolith worker. |
+| **Multitask ≠ role collapse** | Parent Multitask Mode enables **parallel Tasks** (`lab-runner`, `implementer`, `verifier`, `scout`… in one Batch when deps allow) — **not** one session absorbing every role. |
+| **Serial deps stay serial** | lab **`APPROVE`** → implementer → verifier cannot merge into one Composer run even under Multitask. |
 | **Monolithic worker** | Only when the **human explicitly** asks for a single agent to do everything. |
 | **Models** | Parent: Grok High. Implementers: scoped Composer. Maverick / ambiguous lab / post-verifier-fail recovery: Grok High Fast. Verifier: Composer Fast (mechanical DoD) or Grok Fast (judgment / Composer-writer). |
 
@@ -461,14 +466,9 @@ While IDs exist on the host:
 ### Common header
 
 ```markdown
-## Complexity: T<n> — <razón>
-## Role: <role>
-## Model hint: fast | heavy
-## Sobre: <id>
-## Run: R-<id>
-## Oleada: O<1|2|3>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id> | none
+### Env · <role>
+T<n> — <razón> | Run R-<id> | O<1|2|3> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Model: fast | heavy | Sobre: <id>
 **Objetivo:** …
 **Archivos / No tocar:** …
 **Aceptación:** criterio verificable
@@ -524,7 +524,8 @@ Readonly local. Entrega: `## Explore handoff`.
 ## Anti-patterns
 
 - Parent edits/tests/deploys/researches/explores (including T0)
-- Fan-out without classify / missing header or Oleada/Fase/Batch
+- Fan-out without classify / missing compact header or Oleada/Fase/Batch
+- Tall per-field `## Complexity` / `## Role` / `## Run` / `## Oleada` / `## Fase` header stacks (use `### Orch` compact block)
 - Forwarding full child transcripts instead of deltas
 - Greenfield → implementer without lab APPROVE under **`.lab/`**
 - Using `projects/.lab/` as operational path
@@ -534,6 +535,8 @@ Readonly local. Entrega: `## Explore handoff`.
 - Research theater; inventing `scout-deep` or `Action: Direct Execution`
 - Treating Cursor `readonly` as hard enforcement
 - Assuming the skill switched the model
-- Multitask / Build in Parallel → one agent doing lab + implement + verify + release
+- **Composer / `generalPurpose` owns a full pipeline** (lab + implement + verify + release in one worker)
+- Task one `generalPurpose` / Composer with “implement the plan end-to-end” covering lab + implement + verify + commit
+- Multitask / Build in Parallel used to **collapse roles** instead of parallel **role spawns** in one Batch
 - Collapsing execute+verify into parent or a single `generalPurpose` “do it all” Task
 - New Oleada per parallel child instead of same Batch

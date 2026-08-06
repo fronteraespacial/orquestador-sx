@@ -6,9 +6,9 @@
 
 1. **Pack local:** si el workspace contiene `runtime/` del pack → copiá cada `source` del [scaffold-manifest.json](scaffold-manifest.json).
 2. **GitHub raw:** si no hay pack local → fetch por `rawPath` usando `rawBase` del manifest:
-   - `rawBase`: `https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.9`
+   - `rawBase`: `https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.10`
    - `rawBaseFallback`: `.../main` si el tag falla o aún no está publicado
-   - URL por archivo: `{rawBase}/{rawPath}` (ej. `.../v1.2.9/runtime/skills/orchestrator/SKILL.md`)
+   - URL por archivo: `{rawBase}/{rawPath}` (ej. `.../v1.2.10/runtime/skills/orchestrator/SKILL.md`)
 3. **Sin red:** pedí path a clone local o zip verificado (`SHA256SUMS`).
 
 ## Checklist tras materializar
@@ -23,14 +23,14 @@
 | Register | `define_subagent` por rol (plantillas en [reference.antigravity.md](../skills/orchestrator/reference.antigravity.md)) |
 | Human | Recordar Always On: `cj-orchestrator-bootstrap` + `spacex-orchestrator` |
 
-## Raw URL examples (v1.2.9 pin)
+## Raw URL examples (v1.2.10 pin)
 
 ```
-https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.9/runtime/skills/orchestrator/SKILL.md
-https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.9/runtime/antigravity/agents/explore/agent.md
-https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.9/runtime/antigravity/rules/spacex-orchestrator.md
+https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.10/runtime/skills/orchestrator/SKILL.md
+https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.10/runtime/antigravity/agents/explore/agent.md
+https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.10/runtime/antigravity/rules/spacex-orchestrator.md
 ```
 
-Fallback si tag no responde: reemplazá `v1.2.9` por `main` (`rawBaseFallback` en manifest).
+Fallback si tag no responde: reemplazá `v1.2.10` por `main` (`rawBaseFallback` en manifest).
 
 CLI `Orchestrator.ps1 init -Scope project` sigue siendo Path B (opcional).

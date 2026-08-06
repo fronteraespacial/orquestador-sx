@@ -14,19 +14,18 @@
 
 ### First-line header (T0–T3)
 
+Compact block — **not** one `##` H2 per field:
+
 ```markdown
-## Complexity: T<0|1|2|3> — <Brief reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<slug>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id>|—   (— = spawn único o prep sin hijos)
+### Orch
+T<0|1|2|3> — <brief reason> | Run R-<slug> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 ```
 
 - Never omit. Treating `orchestrator/SKILL.md` as optional is an anti-pattern.
 - **Action is always** `Delegate to subagent (T0-T3)`. No `Direct Execution` on Antigravity — **T0 included**.
 - **Taxonomy:** Run ⊃ Oleada O1–O3 ⊃ Fase ⊃ Batch (parallel) or Spawn (one child). No `Wave 0–3`. Independent work → multiple `invoke_subagent` **same turn** (Batch). lab APPROVE → implementer → verifier stays serial in one Oleada. verify FAIL local → **O2**; design/env → **O3**; then ESCALATE/STOP (no O4).
+- **Multitask / Build in Parallel (hard):** does **NOT** authorize one monolith for lab + implement + verify + release. **Parallel** = Batch with multiple role `invoke_subagent` in one turn; **serial gates** = separate children (`lab-runner` → `implementer` → `verifier`). Composer/flash = basic/bounded/surgical only — detail in `.agents/rules/spacex-orchestrator.md` §5b.
 
 ### Zero direct execution (hard)
 

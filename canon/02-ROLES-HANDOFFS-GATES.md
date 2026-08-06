@@ -51,6 +51,8 @@ Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguie
 
 **Paralelismo:** Batch **REQUIRED** si workstreams independientes; serial solo con deps reales (p. ej. lab APPROVE antes de execute).
 
+**Multitask Mode / Build in Parallel (HARD):** parent Multitask Mode **does NOT** authorize collapsing roles. Parallelism = **multiple role spawns** (`lab-runner`, `implementer`, `verifier`, `scout`…) possibly in the **same Batch** — **never** one `generalPurpose` / Composer doing lab + implement + verify + release. **Composer (`composer-2.5-fast`) = bounded mechanical tasks only** (surgical edits, repetitive, clear DoD). Required chain for methodology / docs / features: `lab-runner` (if greenfield) → `implementer`(s) by envelope → `verifier`; orchestrator only classifies / spawns / merges. **Anti-pattern:** Task one `generalPurpose` with “implement the plan end-to-end” covering lab + implement + verify + commit.
+
 **En criollo:** todo cierre al humano (implementer handoff, narrate final del Orquestador) incluye `## En criollo` **al final del mensaje entregado** — contrato metodológico, no tip opcional. Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. Regla instalada: `.cursor/rules/cj-criollo-changelog.mdc`.
 
 ## 4. Handoffs canónicos (≤40 líneas)
@@ -140,7 +142,7 @@ Verdict: PASS | FAIL | INCONCLUSIVE
 
 ## 5. Envelopes por rol (mínimos)
 
-Todos: Complexity, Role, Sobre, Run, Oleada, Fase, Batch, Objetivo, Archivos/No tocar, Aceptación, Lab previo, Deltas previos, External contrast.
+Todos: compact `### Env · <role>` line (T|Run|O|Fase|Batch), Model/Sobre, Objetivo, Archivos/No tocar, Aceptación, Lab previo, Deltas previos, External contrast.
 
 | Rol | Extra |
 |-----|--------|

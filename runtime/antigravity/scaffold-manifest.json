@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1.1",
   "description": "Minimum paths agent materializes after human approves AGY native init — FETCH/COPY only, never invent",
-  "rawBase": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.9",
+  "rawBase": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.10",
   "rawBaseFallback": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/main",
-  "rawBaseNote": "Primary pin: tag v1.2.9. Fallback: main if tag fetch fails. Each file: rawUrl = rawBase + '/' + rawPath.",
+  "rawBaseNote": "Primary pin: tag v1.2.10. Fallback: main if tag fetch fails. Each file: rawUrl = rawBase + '/' + rawPath.",
   "lock": {
     "path": ".orchestrator-lock.json",
     "template": {
@@ -11,7 +11,7 @@
       "enabled": true,
       "source": "agent-native",
       "policy": "track-stable",
-      "version": "1.2.9",
+      "version": "1.2.10",
       "sha256": "",
       "installed_at": "<ISO8601>",
       "last_check_at": ""

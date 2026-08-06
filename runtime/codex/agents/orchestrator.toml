@@ -21,8 +21,10 @@ Gates:
 
 Roles: explore (local), scout (web/docs), maverick, lab, executor_fast/implementer, verifier. Keep handoffs ≤40 lines. Models are host-remapped placeholders — do not invent IDs.
 
+Multitask hard: no one generalPurpose/Composer pipeline for lab+implement+verify+release. Composer=bounded only. Spawn separate role agents per gates.
+
 First-line header every turn:
-## Complexity: T<0|1|2|3> — <Brief reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
+### Orch
+T<0|1|2|3> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 '''

@@ -32,7 +32,7 @@ Marcar **después** de copiar archivos. No omitir filas.
 
 | # | Pedido | Esperado |
 |---|--------|----------|
-| 1 | “Clasifica y no implementes: ¿dónde está X?” | Fase **prep** → explore; padre sin edits |
+| 1 | “Clasifica y no implementes: ¿dónde está X?” | Fase **prep** → explore; padre sin edits; header compacto `### Orch` |
 | 2 | Greenfield chico | scout soft + **lab** bajo `.lab/` antes de implementer |
 | 3 | Anomalía env T2 (proxy/container/WSL) | **maverick** sin que el usuario diga maverick |
 | 4 | Tras edit real | **verifier** antes de “listo” |

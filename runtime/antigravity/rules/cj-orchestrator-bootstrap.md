@@ -1,29 +1,18 @@
 # SpaceX Orchestrator — bootstrap (Antigravity, agent-native)
 
-**Install path:** `<repo>/.agents/rules/cj-orchestrator-bootstrap.md`  
-**Activation:** Customizations → Rules → **Always On** (+ `spacex-orchestrator.md`).
-
----
+**Install:** `<repo>/.agents/rules/cj-orchestrator-bootstrap.md` · **Always On** (Customizations → Rules) + `spacex-orchestrator.md`.
 
 ## Before orchestrated work
 
-1. Check **`.orchestrator-lock.json`** at repo root (`enabled`, `version`, `sha256`).
-2. If **missing** and the user did **not** paste a canonical install link/frase → **ask** if they want agent-native scaffold (see global `~/.gemini/GEMINI.md` block). **Do not** download or init alone.
-3. If user **accepts** scaffold → **write lock + FETCH/COPY** canonical paths from manifest (`runtime/antigravity/scaffold-manifest.json` / `SCAFFOLD-FETCH.md`) — **never generate or invent** SKILL (no `Orchestrator.ps1` required).
-4. If user pasted canonical install frase → you **may** run documented pack scripts instead (optional advanced path).
-5. If `enabled` is **false**, do not insist.
-6. If lock OK → load **`.agents/skills/orchestrator/SKILL.md`**; register roles via **`define_subagent`** if needed; delegate via **`invoke_subagent`**.
+1. Check **`.orchestrator-lock.json`** (`enabled`, `version`, `sha256`).
+2. **Missing** + no canonical install frase → **ask** scaffold (`~/.gemini/GEMINI.md`); **never** download/init alone.
+3. **Accepts** → **write lock + FETCH/COPY** from manifest (`runtime/antigravity/scaffold-manifest.json` / `SCAFFOLD-FETCH.md`); **never invent** SKILL.
+4. Pasted install frase → may run pack scripts (optional). `enabled: false` → don't insist.
+5. Lock OK → load **`.agents/skills/orchestrator/SKILL.md`**; roles via **`define_subagent`**; delegate **`invoke_subagent`**.
 
-## Updates
+## Updates · Antigravity 2.0 · Multitask (hard)
 
-Frase `Actualizá la metodología orquestadora desde GitHub`: `update --check`, short yes before `update --apply`. Else narrate only.
-
-## Antigravity 2.0
-
-- Spawn: **`invoke_subagent`** only — **never** Cursor `Task`.
-- Register/repair roles: **`define_subagent`** using SKILL templates.
-- **En criollo (REQUIRED):** close-outs include `## En criollo` at the end (3–6 frases).
-
-## Multitask Mode
-
-Build in Parallel does **not** authorize one agent for lab + implement + verify. Parent spawns roles per gates.
+Updates: frase `Actualizá la metodología orquestadora desde GitHub` → `update --check`, yes before `update --apply`; else narrate only.
+Spawn **`invoke_subagent`** only (never Cursor `Task`); repair roles **`define_subagent`**. Close-outs: **`## En criollo`** (3–6 frases).
+- **Multitask ≠ monolith:** parallel UI does **not** authorize one `generalPurpose`/Composer for lab+implement+verify+release — spawn **`scout`/`maverick` → `lab-runner` (APPROVE) → `implementer` → `verifier`** as distinct **`invoke_subagent`**.
+- **Composer = bounded/surgical only** — light reads/scoped implementer; **not** lab-runner, pipeline, or parent Orchestrator.

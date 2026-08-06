@@ -76,7 +76,7 @@ En `.agents/rules/cj-orchestrator-bootstrap.md`, `.agents/rules/spacex-orchestra
 
 - **Lock/bootstrap (agent-native):** chequear `.orchestrator-lock.json`; ask → materialize; load skill when OK
 - **En criollo REQUIRED** en handoffs/close-out (3–6 frases prácticas)
-- Header `## Complexity` / Role / Action Delegate (T0 incluido)
+- Header compacto `### Orch` (T|Run|O|Fase|Batch + Role|Action; T0 incluido)
 - **Zero direct execution** en hilo principal
 - **`define_subagent` + `invoke_subagent`** (no Cursor `Task`)
 - Routing table (6 base + skeptic/deletion opcionales)
@@ -109,7 +109,7 @@ Handoffs ≤40 líneas (igual que 02).
 2. Tras «sí» → lock `source: agent-native` + `.agents/skills/orchestrator/SKILL.md` existen y pasan integrity (`T0–T3`, `Zero direct execution`, `lab-runner`, `invoke_subagent`; SKILL >> 20 líneas).
 3. Pedido greenfield → lab-runner en `.lab/` (raíz) antes de implementer.
 4. Pedido con anomalía de entorno T2 → maverick sin que el usuario lo pida.
-5. Trabajo real → header T0–T3 + `invoke_subagent` (no Task).
+5. Trabajo real → header compacto `### Orch` + `invoke_subagent` (no Task).
 6. Tras edit de implementer → verifier antes de “listo”.
 7. Cierre → `## En criollo` presente.
 8. Fin de sesión → subagentes idle terminados.

@@ -1,6 +1,6 @@
 # SpaceX Orchestrator — Brief para el agente instalador (multi-OS)
 
-**Versión:** 2026-08-05 (pack 1.2.9)  
+**Versión:** 2026-08-05 (pack 1.2.10)  
 **Origen:** metodología SpaceX multi-CLI (contrato transversal portable)  
 **Destino:** Windows, Linux, macOS — Cursor IDE/CLI, Antigravity, OpenCode, Codex  
 **Idioma:** español (instalación) + prompts de roles ES/EN mixtos
@@ -46,12 +46,8 @@ El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, plan
 ## Envelope del instalador
 
 ```markdown
-## Complexity: T2 — Install SpaceX orchestrator multi-OS multi-CLI
-## Role: implementer
-## Run: R-install
-## Oleada: O1 — initial
-## Fase: execute
-## Batch: none
+### Env · implementer
+T2 — Install SpaceX orchestrator multi-OS multi-CLI | Run R-install | O1 initial | Fase execute | Batch none
 **Objetivo:** Instalar Orquestador zero-exec + 6 roles (+ OpenCode skeptic/expert) en Cursor, Antigravity, OpenCode y Codex (stubs).
 **Fuente:** esta carpeta; NO omitir 01–09 ni templates listados.
 **Archivos / No tocar:** secrets; preguntar antes de sobrescribir (merge preferido).
@@ -64,7 +60,7 @@ El Orquestador **recibe el prompt crudo**, clasifica, traduce a gate corto, plan
 1. Skill orquestadora cargable; contrato = zero-exec + Run/Oleada O1–O3/Fase/Batch.
 2. Subagentes `explore`, `scout`, `maverick`, `implementer`/`executor`, `lab-runner`/`lab`, `verifier`.
 3. Gates activos: Scout soft, Lab greenfield REQUIRED bajo **`.lab/`**, Maverick env-anomaly REQUIRED, Verifier close-gate, ESCALATE/ANOMALIA.
-4. Header `## Complexity` + `## Run` + `## Oleada` + `## Fase` + `## Batch` en skill/rules.
+4. Header compacto `### Orch` (T|Run|O|Fase|Batch + Role|Action) en skill/rules — sin H2 por campo.
 5. `AGENTS.md` mergeado desde template; checklist 09 reportada.
 6. Regla **`cj-criollo-changelog`** presente en `.cursor/rules/` (metodología `## En criollo`).
 7. Documentado: Cursor = best-effort audit; OpenCode/Codex = deny más fuerte si está cableado.

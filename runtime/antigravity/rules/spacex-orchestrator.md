@@ -18,14 +18,12 @@ Load `.agents/skills/orchestrator/SKILL.md` for full Algorithm, envelopes, and a
 
 ### 1. Mandatory first-line header (every turn)
 
+Compact `### Orch` block — **not** one `##` H2 per field:
+
 ```markdown
-## Complexity: T<0|1|2|3> — <Brief reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<slug>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id>|—   (— = spawn único o prep sin hijos)
+### Orch
+T<0|1|2|3> — <brief reason> | Run R-<slug> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 ```
 
 Never invent `Action: Direct Execution`. **T0 still delegates** — reads → `explore`, any edit → `implementer`.
@@ -58,7 +56,13 @@ The session Orchestrator **MUST NOT** execute commands, read files, or edit code
 
 All subagents ≤40 lines. Orchestrator merges parallel Scout **Batch** fan-in into one contrast block.
 
-### 5b. Parallelism vs serial (hard)
+### 5b. Multitask / Build in Parallel — no role collapse (hard)
+
+- **Multitask Mode does NOT authorize** one subagent / Composer monolith for lab + implement + verify + release — parallel UI ≠ permission to collapse roles.
+- **Parallel** = **Batch B-…**: **multiple `invoke_subagent` by role in the SAME parent turn** when workstreams are independent — **never** one child wearing every hat.
+- **Serial gates = separate children** in the same **Oleada:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** — each a **distinct `invoke_subagent`**; parent never folds the chain into one spawn.
+- **Composer-tier (`flash` / scoped `pro`) = basic / bounded / surgical only** — not lab-runner, not full pipeline, not parent orchestrator.
+- Monolithic worker **only** if the human **explicitly** requests it.
 
 | Condition | Mode |
 |-----------|------|

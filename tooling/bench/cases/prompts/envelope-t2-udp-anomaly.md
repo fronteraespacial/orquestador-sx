@@ -1,5 +1,5 @@
-## Complexity: T2 — UDP/proxy/container anomaly
-## Role: orchestrator (classify and delegate only)
+### Env · orchestrator
+T2 — UDP/proxy/container anomaly | Run R-udp-anomaly | O1 initial | Fase research-lab | Batch none
 
 **Context:** Implementer failed 2× with UDP timeouts behind a corporate proxy. User did not name a subagent.
 

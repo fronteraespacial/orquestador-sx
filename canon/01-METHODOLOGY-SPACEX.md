@@ -42,15 +42,15 @@ Violación = fallo de proceso, no “el producto lo permitió”.
 
 ## 4. Header obligatorio (cada turno del Orquestador)
 
+Bloque compacto — **no** un `##` H2 por campo:
+
 ```markdown
-## Complexity: T<0|1|2|3> — <Brief reason>
-## Role: Orchestrator
-## Action: Delegate to subagent (T0-T3)
-## Run: R-<id>
-## Oleada: O<1|2|3> — <initial|corrective|escalated>
-## Fase: <prep|research-lab|execute|verify>
-## Batch: B-<id> | none
+### Orch
+T<0|1|2|3> — <brief reason> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+Role: Orchestrator | Action: Delegate
 ```
+
+Recovery: append `| Failure-ID: F-<id>` on the Role line when applicable.
 
 No existe `Action: Direct Execution`. T0 también delega.
 
@@ -119,6 +119,17 @@ El Orquestador **solo reenvía deltas** al siguiente sobre — no transcripts co
 |-----------|------|
 | Workstreams **independientes** | **Batch B-… REQUIRED** (fan-out + fan-in) |
 | Dep **real** | Serial (p. ej. lab APPROVE → implementer → verifier) |
+
+### Multitask Mode / Composer — reglas duras
+
+**Multitask Mode / Build in Parallel NO colapsa roles.** Paralelismo = varios **spawns de rol** en el mismo Batch — **nunca** un solo agente con lab + implement + verify.
+
+| Regla | Detalle |
+|-------|---------|
+| **Composer ≠ pipeline** | `composer-2.5-fast` / `generalPurpose` **nunca** posee lab → implement → verify → release en un hilo. Solo tareas acotadas con DoD claro. |
+| **Cadena obligatoria** | Metodología / docs / features: `lab-runner` (greenfield / regla nueva) → `implementer`(s) por sobre → `verifier`. Padre **solo** clasifica / spawnea / fusiona. |
+| **Multitask ≠ colapso** | Parent Multitask Mode autoriza Tasks **paralelos por rol** — **no** un worker monolítico que absorba todos los roles. |
+| **Anti-patrón explícito** | **Prohibido** Task un `generalPurpose` con “implementá el plan end-to-end” cubriendo lab + implement + verify + commit. |
 
 ## 7. Router T0–T3
 

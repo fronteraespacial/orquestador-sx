@@ -1,5 +1,5 @@
-## Complexity: T2 — greenfield CSV export
-## Role: orchestrator (classify and delegate only)
+### Env · orchestrator
+T2 — greenfield CSV export | Run R-csv-export | O1 initial | Fase research-lab | Batch none
 
 **Context:** User asks to add CSV export to a dashboard. No similar feature exists in the repo.
 

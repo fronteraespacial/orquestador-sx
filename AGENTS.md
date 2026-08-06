@@ -6,7 +6,7 @@
 
 1. [`start/README.md`](start/README.md) — bootstrap humano/agente
 2. [`canon/00-README-INSTALL-AGENT.md`](canon/00-README-INSTALL-AGENT.md) → [`canon/01-METHODOLOGY-SPACEX.md`](canon/01-METHODOLOGY-SPACEX.md)
-3. [`docs/agent/CONTEXT-MAP.md`](docs/agent/CONTEXT-MAP.md) — presupuestos de tokens / qué no cargar
+3. [`docs/agent/CONTEXT-MAP.md`](docs/agent/CONTEXT-MAP.md) — presupuestos de tokens / qué no cargar · **Multitask (Tier-0 hard):** spawn roles per gates — not one Composer/`generalPurpose` monolith for lab→implement→verify
 4. Skill canónica (post-install): `.agents/skills/orchestrator/SKILL.md`
 5. Entrypoint Cursor (post-install): `.cursor/agents/orchestrator.md`
 
