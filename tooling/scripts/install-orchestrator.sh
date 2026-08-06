@@ -202,6 +202,7 @@ append_project_entries() {
     "cursor/agents/implementer.md|.cursor/agents/implementer.md"
     "cursor/agents/lab-runner.md|.cursor/agents/lab-runner.md"
     "cursor/agents/verifier.md|.cursor/agents/verifier.md"
+    "cursor/agents/verifier-like-human.md|.cursor/agents/verifier-like-human.md"
     "cursor/agents/orchestrator.md|.cursor/agents/orchestrator.md"
     "cursor/agents/skeptic.md|.cursor/agents/skeptic.md"
     "cursor/agents/deletion.md|.cursor/agents/deletion.md"
@@ -214,6 +215,7 @@ append_project_entries() {
     "antigravity/agents/implementer/agent.md|.agents/agents/implementer/agent.md"
     "antigravity/agents/lab-runner/agent.md|.agents/agents/lab-runner/agent.md"
     "antigravity/agents/verifier/agent.md|.agents/agents/verifier/agent.md"
+    "antigravity/agents/verifier-like-human/agent.md|.agents/agents/verifier-like-human/agent.md"
     "antigravity/agents/skeptic/agent.md|.agents/agents/skeptic/agent.md"
     "antigravity/agents/deletion/agent.md|.agents/agents/deletion/agent.md"
     "antigravity/rules/spacex-orchestrator.md|.agents/rules/spacex-orchestrator.md"
@@ -239,6 +241,7 @@ append_user_entries() {
     "cursor/agents/implementer.md|.cursor/agents/implementer.md"
     "cursor/agents/lab-runner.md|.cursor/agents/lab-runner.md"
     "cursor/agents/verifier.md|.cursor/agents/verifier.md"
+    "cursor/agents/verifier-like-human.md|.cursor/agents/verifier-like-human.md"
     "cursor/agents/orchestrator.md|.cursor/agents/orchestrator.md"
     "cursor/agents/skeptic.md|.cursor/agents/skeptic.md"
     "cursor/agents/deletion.md|.cursor/agents/deletion.md"
@@ -263,6 +266,7 @@ append_codex_entries() {
     "codex/agents/lab.toml|.codex/agents/lab.toml"
     "codex/agents/executor_fast.toml|.codex/agents/executor_fast.toml"
     "codex/agents/verifier.toml|.codex/agents/verifier.toml"
+    "codex/agents/verifier_like_human.toml|.codex/agents/verifier_like_human.toml"
     "codex/config.toml.example|.codex/config.toml"
   )
 }

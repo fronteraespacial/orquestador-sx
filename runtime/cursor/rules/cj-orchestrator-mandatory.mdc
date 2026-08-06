@@ -2,7 +2,8 @@
 description: >-
   SpaceX Orchestrator — manual/conditional rule. Invoke via @ rule or AGENTS.md
   when running orchestrated sessions. Loads SKILL.md, T0–T3 header, gates
-  (lab/maverick/verifier), Task delegation. Not auto-applied to every chat.
+  (Discovery/lab/maverick/verifier/VLH/Harvest), Task delegation. Not auto-applied
+  to every chat.
 alwaysApply: false
 ---
 
@@ -20,35 +21,40 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
 
 ```markdown
 ### Orch
-T<0|1|2|3> — <brief reason> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+T<0|1|2|3> — <brief reason> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
 Role: Orchestrator | Action: Delegate
 ```
 
-2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate only.
+2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate, Harvest only.
 
-3. **Cursor spawn:** Task or `/explore`, `/scout`, `/maverick`, `/implementer`, `/lab-runner`, `/verifier`, `/skeptic`, `/deletion`. No `invoke_subagent`.
+3. **Cursor spawn:** Task or `/explore`, `/scout`, `/maverick`, `/implementer`, `/lab-runner`, `/verifier`, `/verifier-like-human`, `/skeptic`, `/deletion`. No `invoke_subagent`.
 
 4. **Gates (hard):**
-   - Greenfield → **`lab-runner` REQUIRED** under `.lab/YYYY-MM-DD-<slug>/` → **`APPROVE`** before **`implementer`**
-   - T2+ env anomaly → **`maverick` REQUIRED**
+   - **WorkType** + **Discovery** ⊂ `research-lab` when triggers hit (z2o · no dominant hyp · legacy hot path · ≥2 approaches · post-ESCALATE · arch trade-off · irreversible). Budget: 1 research Batch; ≤2 labs (≤3 T3); 1 REVISE → `DECIDE` | `YIELD_PLAN` | `STOP`. Skip T0/T1 clear path.
+   - **YIELD_PLAN:** Cursor **cannot** auto Plan Mode — ask user selector / **Shift+Tab**, paste Discovery Brief, review, **Build** (decline → STOP). ≠ lab `YIELD`.
+   - Greenfield → **`lab-runner` REQUIRED** under `.lab/YYYY-MM-DD-<slug>/` → **`APPROVE`** before **`implementer`**. Lab Batch: isolate dirs+ports/services/data; ≥2 APPROVE → human brake; one prod path. `ops-diagnostic`: no feature lab; no parallel mutations.
+   - T2+ env anomaly → **`maverick` REQUIRED**. Early CONSULT soft on z2o/arch. After T2/T3 PASS (+ VLH if gated): Harvest → Maverick CONSULT mandatory → `NO_CHANGE` | `YIELD_OPT` (human; no auto O2). Maverick always `cursor-grok-4.5-high-fast`.
    - After **`implementer`** → **`verifier` REQUIRED** before “done”
+   - After tech **PASS** + T2/T3 human-facing → **`verifier-like-human` REQUIRED** (evidence CAPTURED|BROWSER|COMPUTER|PROXY|UNAVAILABLE; serves-ask; UNAVAILABLE→INCONCLUSIVE; no edit/web/O2)
    - Child `## ESCALATE` → **`scout`** → retry or STOP
 
-5. Handoffs ≤40 lines.
+5. Handoffs ≤40 lines on **output**; input envelopes may be long. Verifier gap-inventory audits → COMPLETE list; parent **one O2** implementing pass. Compact `### Env` envelopes.
 
 6. **Multitask Mode / Build in Parallel (hard — no role collapse):**
-   - **Multitask Mode does NOT authorize** one `generalPurpose` / Composer for lab + implement + verify + release.
+   - **Multitask Mode does NOT authorize** one `generalPurpose` / Composer for lab + implement + verify + VLH + release.
    - **Parallel** = same **Batch**: multiple **Task** spawns **by role** in one parent turn — not one monolith child.
-   - **Serial gates = separate children:** `scout`/`maverick` (per gates) → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** — never one spawn for the chain.
-   - **Composer (`composer-2.5-fast`) = basic / bounded / surgical only** — scoped implementer, mechanical verifier, light reads; **not** lab, not full pipeline, not parent.
+   - **Serial gates = separate children:** `scout`/`maverick` → **`lab-runner`** (`APPROVE`) → **`implementer`** → **`verifier`** → **`verifier-like-human`** (if gated) — never one spawn for the chain; VLH ≠ lab/implement/verify.
+   - **Composer compensation:** more bounded iterations of the **same role** — **not** role collapse / mega-pipeline.
+   - **Composer (`composer-2.5-fast`) = basic / bounded / surgical only** — scoped implementer, light reads, Lab Batch (≥2) labs; **not** single-lab (Grok override), not VLH, not full pipeline, not parent.
    - Monolithic worker **only** if the human **explicitly** asks.
 
 ## Best-effort
 
 - Scout soft before greenfield/anomaly (`SKIPPED` OK offline)
+- Maverick early CONSULT on z2o/arch (`SKIPPED` OK if quota)
 - T3 optional `/skeptic`, `/deletion`
 - Parallel Scout **Batch** (≤3) with distinct `Enfoque de búsqueda`; optional **tanda** Scout-2
-- verify FAIL reproducible local → **O2** corrective; design/env → **O3** (no O4 / “Wave 4”)
+- verify FAIL reproducible local → **O2** corrective; design/env → **O3** (no O4 / “Wave 4”); VLH never self-opens O2
 - `readonly` on orchestrator is a hint — enforce zero-exec by prompt, not frontmatter alone
 
 ## Role routing
@@ -57,13 +63,14 @@ Role: Orchestrator | Action: Delegate
 |------|-----|--------|
 | explore | Local repo/MCP/system | No |
 | scout | Web/docs/prior art | No |
-| maverick | What-ifs; own `.lab/…-mav-…` | LAB only |
+| maverick | What-ifs; early + post-Harvest CONSULT; own `.lab/…-mav-…` | LAB only |
 | lab-runner | One hypothesis in `.lab/` | Lab dir only |
 | implementer | Production diffs | Yes (envelope) |
-| verifier | DoD tests/lint | No (runs tests) |
+| verifier | Technical DoD tests/lint | No (runs tests) |
+| verifier-like-human | Human-serve after tech PASS (T2/T3) | No |
 | skeptic | T3 requirements audit | No |
 | deletion | T3 delete proposals | No |
 
-**Models (Cursor):** parent `cursor-grok-4.5-high`; maverick always `cursor-grok-4.5-high-fast`; lab clear → `composer-2.5-fast`, lab T2/T3/ambiguous/anomaly → Task `cursor-grok-4.5-high-fast`; implementer/light → `composer-2.5-fast`; verifier mechanical DoD → `composer-2.5-fast`, judgment DoD or Composer-tier writer → Task `cursor-grok-4.5-high-fast`. **Never** `composer-2.5` without `-fast` (canonical = `composer-2.5-fast`). Composer fail → keep delta → one Grok High Fast corrective. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/agent/MODEL-ROUTING-POLICY.md`.
+**Models (Cursor):** parent `cursor-grok-4.5-high`; maverick + verifier + VLH always `cursor-grok-4.5-high-fast`; **single lab** → Task `cursor-grok-4.5-high-fast` (mandatory); **Lab Batch (≥2)** → `composer-2.5-fast`; implementer/light → `composer-2.5-fast`. Verifier returns **COMPLETE gap inventory** on routing audits; parent one O2 pass; handoffs ≤40 on output only. **Never** `composer-2.5` without `-fast`. Composer compensation = same-role iterations, not mega-pipeline. Release: cross-surface integration check (Cursor+AGY+OpenCode+Codex), not FAIL-whack-a-mole. Validate with `agent --list-models`; see `07-MODELS-MATRIX.md` / `docs/agent/MODEL-ROUTING-POLICY.md`.
 
 **Wiring:** `.agents/skills/orchestrator/reference.md`

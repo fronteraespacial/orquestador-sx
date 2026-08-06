@@ -6,7 +6,7 @@ Documento de continuidad para reanudar pruebas, instalación y orquestación sin
 
 | Campo | Valor |
 |-------|-------|
-| Pack VERSION | **1.1.0** |
+| Pack VERSION | **1.3.1** |
 | Fecha handoff | 2026-08-05 |
 | Orquestación test | roles explore×3, scout×1, implementer, verifier |
 
@@ -107,10 +107,10 @@ Documento de continuidad para reanudar pruebas, instalación y orquestación sin
 Defaults orquestador (remap si falta ID):
 
 - **Grok High** — parent / orchestrator
-- **Grok High Fast** — maverick, lab complejo, correctiva
-- **Composer Fast** — explore, lab claro, implementer/roles ligeros
+- **Grok High Fast** — maverick, **verifier**, **verifier-like-human**, **single lab-runner** (one spawn), corrective pass
+- **Composer Fast** — explore, scout, skeptic, deletion, implementer, **Lab Batch (≥2 parallel lab-runners)**
 
-Ver [`docs/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) y [`07-MODELS-MATRIX.md`](../07-MODELS-MATRIX.md).
+Ver [`docs/agent/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) y [`canon/07-MODELS-MATRIX.md`](../../canon/07-MODELS-MATRIX.md).
 
 ---
 
@@ -123,8 +123,9 @@ Ver [`docs/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) y [`07-MODELS-MATR
 | sx-scout | `opencode/north-mini-code-free` | ligero + web contrast |
 | sx-executor | `opencode/nemotron-3-ultra-free` | writer prod |
 | sx-lab | `opencode/nemotron-3-ultra-free` | writer `.lab` only |
-| sx-maverick | `opencode/nemotron-3-ultra-free` | creativo ≥ implementer |
-| sx-verifier | `opencode/nemotron-3-ultra-free` | DoD bash allow |
+| sx-maverick | `opencode-go/grok-4.5` when exposed; else nearest high-reasoning | creativo ≥ implementer; **Host remap** when no Grok |
+| sx-verifier | `opencode-go/grok-4.5` when exposed; else nearest high-reasoning | DoD bash allow; **Host remap** when no Grok |
+| sx-verifier-like-human | `opencode-go/grok-4.5` when exposed; else nearest high-reasoning | Human-serve after tech PASS; **Host remap** when no Grok |
 | sx-skeptic | `opencode/mimo-v2.5-free` | adversarial ≠ writer |
 | sx-expert | `opencode/nemotron-3-ultra-free` | análisis pesado RO |
 
@@ -153,7 +154,7 @@ Ver [`docs/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) y [`07-MODELS-MATR
 1. Preferir `Validate-OrchestratorPack.ps1 -Strict` (smoke) — **NO** `-Run` benchmark largo.
 2. **No** User `-Scope User` overwrite en pruebas.
 3. Usar `sandbox/pilot` para smoke.
-4. Modelos fast para explore/verifier.
+4. Modelos fast para explore/scout/implementer; verifier/VLH siempre Grok Fast (Cursor).
 
 ```powershell
 .\tooling\scripts\Validate-OrchestratorPack.ps1 -Strict
@@ -202,4 +203,4 @@ No usar JSONL inconclusos para ranking ni declarar ganador local.
 - [`docs/agent/AGENT-BOOTSTRAP-PROMPT.md`](AGENT-BOOTSTRAP-PROMPT.md) — prompt agente
 - [`03-INSTALL-CURSOR-WINDOWS.md`](../03-INSTALL-CURSOR-WINDOWS.md) — Cursor project scope
 - [`06-INSTALL-CODEX-WINDOWS.md`](../06-INSTALL-CODEX-WINDOWS.md) — Codex deferred
-- [`docs/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) — política modelos
+- [`docs/agent/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) — política modelos

@@ -1,6 +1,6 @@
 # Orquestador SX — multi-OS agent pack
 
-**Versión:** `1.2.0` ([`VERSION`](VERSION)) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
+**Versión:** `1.3.1` ([`VERSION`](VERSION)) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
 Pack distribuible de la metodología **Orquestador SpaceX + subagentes** para **Windows, Linux y macOS** (Cursor, Antigravity, OpenCode, Codex). Instalación impulsada por agente vía link/frase canónica, validación automatizada y benchmark reproducible.
 
@@ -10,7 +10,7 @@ Pack distribuible de la metodología **Orquestador SpaceX + subagentes** para **
 
 Repositorio **público discreto** (link-only): compartir solo por enlace directo con quien lo necesite; no promocionar en redes ni listados públicos.
 
-## Árbol v1.2.0
+## Árbol v1.3.1
 
 | Ruta | Contenido |
 |------|-----------|
@@ -71,7 +71,7 @@ En Linux / macOS / WSL:
 
 ## Validación
 
-Comprueba árbol canónico v1.2.0 (`canon/`, `runtime/`, `tooling/`), frontmatter, gates, secretos.
+Comprueba árbol canónico v1.3.1 (`canon/`, `runtime/`, `tooling/`), frontmatter, gates, secretos.
 
 ```powershell
 .\tooling\scripts\Validate-OrchestratorPack.ps1 -Strict

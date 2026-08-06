@@ -59,7 +59,7 @@ Listar modelos vivos en tu host y remapear según [`../../canon/07-MODELS-MATRIX
 agent --list-models   # Cursor CLI
 ```
 
-**Defaults Cursor del pack:** parent `cursor-grok-4.5-high`; maverick / lab complejo / correctiva `cursor-grok-4.5-high-fast`; lab claro e implementer/ligeros `composer-2.5-fast`. Si Composer no pasa verifier: conservar delta → **una** pasada Grok High Fast (no repetición ciega). Esto es una **decisión operativa**; no hay “ganador” local Grok-vs-Composer.
+**Defaults Cursor del pack:** parent `cursor-grok-4.5-high`; maverick + **verifier** + **verifier-like-human** + **single lab-runner** siempre `cursor-grok-4.5-high-fast`; **Lab Batch (≥2 parallel labs)** → cada lab-runner `composer-2.5-fast`; implementer/explore/scout/ligeros `composer-2.5-fast`. Si Composer no satisface verifier: conservar delta → **una** pasada Grok High Fast (no repetición ciega). OpenCode mav/ver/VLH: `opencode-go/grok-4.5` when exposed; else **Host remap** nearest high-reasoning. Decisión operativa; no hay “ganador” local Grok-vs-Composer.
 
 ## Benchmark (opcional — no bloquea onboarding)
 

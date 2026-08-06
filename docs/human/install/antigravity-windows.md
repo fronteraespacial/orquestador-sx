@@ -38,7 +38,7 @@ Verifica: lock, `.agents/`, `GEMINI.md`.
 | Lock | `<repo>\.orchestrator-lock.json` |
 | Lab | `<repo>\.lab\` (**única ruta operativa**; no usar `projects/.lab/`) |
 
-Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `verifier` (6 base) + opcionales `skeptic`, `deletion`.
+Roles carpeta: `explore`, `scout`, `maverick`, `implementer`, `lab-runner`, `verifier`, `verifier-like-human` + opcionales `skeptic`, `deletion`.
 
 ## 2. Subagentes AGY 2.0
 
@@ -64,11 +64,19 @@ Tras scaffold (Path A) o init project (Path B):
 
 6. Crear `\.lab\` en la raíz si no existe. **No** usar `projects/.lab/` como path operativo.
 
-7. Ajustar modelos en frontmatter: `agy models` (o UI). Aliases `flash` / `pro` → preferir IDs concretos (`gemini-3.6-flash-high`, `gemini-3.1-pro-high`).
+7. Ajustar modelos en frontmatter: `agy models` (o UI). Aliases `flash` / `pro` → preferir IDs concretos (`gemini-3.6-flash-high`, `gemini-3.1-pro-high`). **Maverick + VerifierLikeHuman + verifier (always):** **`Host remap`** `gemini-3.1-pro-high` — AGY no tiene Grok; **nunca** poner `grok-*` ni llamar Grok al remap; **nunca** flash para verifier. **lab-runner:** single lab → high-reasoning remap; Lab Batch (≥2) → flash/fast cheaper ID. Roles siguen habilitados.
 
 8. Confirmar Orquestador de sesión **zero direct execution** en hilo principal (rules + GEMINI).
 
 9. Documentar cleanup: al terminar loop, **matar subagentes idle** (UI / `manage_subagents` si existe).
+
+### 1.3.1 — Discovery / YIELD_PLAN / VLH (Antigravity)
+
+- **WorkType** + Discovery ⊂ `research-lab` (budget acotado) → orch-only `DECIDE` | `YIELD_PLAN` | `STOP`.
+- **YIELD_PLAN (ask-only):** AGY **no** silent auto-switch. Tras DECIDE el orch pide al humano abrir **Planning Mode** + **Artifact Review** → **Request Review** / **Proceed** antes de Build → recién ahí O1 `execute`. Decline → **STOP**. ≠ lab `YIELD`.
+- **Lab Batch:** aislar dirs + ports/services/data; fan-in; human brake si ≥2 `APPROVE`.
+- Cadena: `implementer` → **`verifier`** (técnico) → **`verifier-like-human`** si T2/T3 human-facing tras PASS técnico.
+- **Host remap** Maverick/VLH: ID real AGY `gemini-3.1-pro-high` (high-reasoning); **nunca** etiquetar como Grok ni usar `grok-*`.
 
 ## 4. Contenido crítico (no omitir)
 
@@ -76,11 +84,12 @@ En `.agents/rules/cj-orchestrator-bootstrap.md`, `.agents/rules/spacex-orchestra
 
 - **Lock/bootstrap (agent-native):** chequear `.orchestrator-lock.json`; ask → materialize; load skill when OK
 - **En criollo REQUIRED** en handoffs/close-out (3–6 frases prácticas)
-- Header compacto `### Orch` (T|Run|O|Fase|Batch + Role|Action; T0 incluido)
+- Header compacto `### Orch` (T|WorkType|Run|O|Fase|Batch + Role|Action; T0 incluido)
 - **Zero direct execution** en hilo principal
 - **`define_subagent` + `invoke_subagent`** (no Cursor `Task`)
-- Routing table (6 base + skeptic/deletion opcionales)
-- **Hard gates:** Lab greenfield REQUIRED (`.lab/` en raíz), Maverick env-anomaly REQUIRED, Verifier close-gate, ESCALATE→scout
+- Routing table (base + VLH + skeptic/deletion opcionales)
+- **Hard gates:** Lab greenfield REQUIRED (`.lab/` en raíz), Maverick env-anomaly REQUIRED, Verifier close-gate, VLH after tech PASS (T2/T3 human-facing), ESCALATE→scout
+- **Host remap:** Maverick/VLH → `gemini-3.1-pro-high` (nunca etiquetar “Grok”)
 - **Best-effort:** Scout soft, T3 auditors optional, Scout fan-out waves
 - Lifecycle cleanup; naming `YYYY-MM-DD-mav-<slug>`
 - Separación explícita **hard rules** vs **best-effort**
@@ -99,7 +108,7 @@ Handoffs ≤40 líneas (igual que 02).
 
 - Si el modelo trata SKILL.md como “docs opcionales”, **`.agents/rules/` + GEMINI`** deben repetir gates hard.
 - No uses paths CJ-linux en prompts Windows.
-- Maverick: ID concreto (`gemini-3.1-pro-high`), no solo alias `pro`.
+- Maverick / VLH: **`Host remap`** ID concreto (`gemini-3.1-pro-high`), no solo alias `pro`, **nunca** “Grok”.
 - GEMINI solo = OK en builds viejos; ideal instalar **ambos** rule + GEMINI merge.
 
 ## 7. Smoke

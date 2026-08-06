@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.3.1] - 2026-08-06
+
+### Changed
+
+- **Cursor model routing (user decision):** parent stays `cursor-grok-4.5-high`; Maverick / technical Verifier / VerifierLikeHuman **always** `cursor-grok-4.5-high-fast` (no Composer mechanical verifier); **single** lab-runner → Grok Fast; **Lab Batch ≥2** parallel → each lab-runner `composer-2.5-fast`; all other children → `composer-2.5-fast`; large Composer scope → more bounded envelopes of the **same role**, not mega-pipeline.
+- **Verify loop (A–E):** verifier FAIL returns **complete gap inventory**; parent opens **at most one O2** per verify fan-in (consolidated corrective Batch); input envelopes may be long — output handoffs ≤40 only; cross-surface integration check after multi-surface execute Batch; **RELEASE CHECKLIST** fase for VERSION/lock/sandbox/zip/SHA256SUMS/tags — not via verify FAIL cascades.
+- **Cross-host remap:** AGY `gemini-3.1-pro-high` for Maverick/VLH/Verifier judgment equivalents; OpenCode/Codex prose aligned — Grok when exposed, else **Host remap**; never label remap “Grok”.
+- **Docs aligned:** `MODEL-ROUTING-POLICY.md`, `CONTEXT-MAP.md`, canon 01/02/07, SKILL + `reference.md` + `reference.antigravity.md`.
+
+## [1.3.0] - 2026-08-05
+
+### Added
+
+- **Discovery / Pre-Plan:** Discovery ⊂ `research-lab` (not a 5th Fase) with bounded budget; orch-only `DECIDE` | `YIELD_PLAN` | `STOP` before Build.
+- **WorkType router:** header taxonomy `greenfield` | `evolving-product` | `legacy-app` | `ops-diagnostic` drives Discovery enter/skip, lab isolation, and ops-diagnostic no-mutate rules.
+- **Lab Batch (targeted):** parallel lab-runners with path/port/service/data isolation, fan-in matrix, human brake on ≥2 `APPROVE`.
+- **Algorithm Ledger + Harvest:** parent-owned Ledger ≤10 lines (Need/Delete/Simplify in prep/DECIDE; Automate at Harvest); post T2/T3 tech PASS → Harvest → Maverick CONSULT → `NO_CHANGE` | `YIELD_OPT` (human; never auto O2).
+- **VerifierLikeHuman:** dedicated post-PASS human-judgment role (T2/T3 user-facing); Evidence-class / INCONCLUSIVE; cannot open O2.
+- **Native plan flows (ask-only):** YIELD_PLAN asks human for host Plan/Build (Cursor selector / Shift+Tab, AGY Planning Mode + Artifact Review, OpenCode/Codex `/plan`) — decline → STOP; ≠ lab `YIELD`.
+- **Host model remap:** Maverick + VLH use Grok 4.5 High Fast when the host exposes it; otherwise explicit **Host remap** high-reasoning (e.g. AGY `gemini-3.1-pro-high`) — never label remap as Grok.
+
+### Changed
+
+- **Maverick policy:** early CONSULT on Discovery zero-to-one / architecture trade-offs; env-anomaly T2+ REQUIRED; mandatory post-Harvest CONSULT.
+- **Install / scaffold wiring:** VLH agent templates on Cursor / Antigravity / Codex / OpenCode; `scaffold-manifest.json` registers `verifier-like-human`; installers copy new agents; canon 01/02/07/09 + SKILL/references + CONTEXT-MAP / MODEL-ROUTING-POLICY aligned.
+- **`scaffold-manifest.json`:** `rawBase` / lock template pinned to `v1.3.0`; fallback `main`.
+- **AGY Desktop pin residuals:** `GEMINI.user.md`, `SCAFFOLD-FETCH.md`, and `SKILL.md` bootstrap line aligned to tag `v1.3.0`.
+
 ## [1.2.10] - 2026-08-05
 
 ### Changed

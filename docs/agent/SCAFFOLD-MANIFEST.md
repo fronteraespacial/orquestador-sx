@@ -9,14 +9,14 @@ When a human accepts Orquestador SX prep in Antigravity Desktop, the agent **FET
 | Lock | `.orchestrator-lock.json` with `source: agent-native` |
 | Skill | `.agents/skills/orchestrator/SKILL.md` (+ optional `reference.antigravity.md`) — **from pack or GitHub raw** |
 | Rules | `.agents/rules/cj-orchestrator-bootstrap.md`, `spacex-orchestrator.md` |
-| Agents | 8 roles under `.agents/agents/<role>/agent.md` |
+| Agents | 9 roles under `.agents/agents/<role>/agent.md` (incl. `verifier-like-human`) |
 | Compat | `GEMINI.md` merge (never overwrite human rules) |
 | Lab | `.lab/README.md` |
 | Fetch guide | [`runtime/antigravity/SCAFFOLD-FETCH.md`](../../runtime/antigravity/SCAFFOLD-FETCH.md) |
 
 ## GitHub raw
 
-Manifest field `rawBase` (pin `v1.2.8`; fallback `main`). Per-file URL: `{rawBase}/{rawPath}`.
+Manifest field `rawBase` (pin `v1.3.1`; fallback `main`). Per-file URL: `{rawBase}/{rawPath}`.
 
 ## Integrity markers (required in SKILL.md)
 

@@ -1,18 +1,14 @@
 # First run (5 minutes) — multi-OS
 
-Guía humana para la primera instalación del **Orquestador SX** v1.2.0 en **Windows, Linux o macOS**.
+Guía humana para la primera instalación del **Orquestador SX** v1.3.1 en **Windows, Linux o macOS**.
 
 **Repositorio canónico:** [github.com/fronteraespacial/orquestador-sx](https://github.com/fronteraespacial/orquestador-sx)
 
 **Guía canónica (este doc en GitHub):** [github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md](https://github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md)
 
-**Release estable (v1.2.0):** [github.com/fronteraespacial/orquestador-sx/releases/tag/v1.2.0](https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.2.0)
+**Release estable (v1.3.1):** [github.com/fronteraespacial/orquestador-sx/releases/tag/v1.3.1](https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.3.1)
 
-Descargar **`orquestador-sx-v1.2.0.zip`** desde el release y verificar:
-
-```text
-e2656ffde8dcccfb53164021de1fc671ea93b4238ef537e653c90a7562339aec  orquestador-sx-v1.2.0.zip
-```
+Descargar **`orquestador-sx-v1.3.1.zip`** desde el release y verificar con el `SHA256SUMS` del mismo release (formato GNU: `hash  filename`).
 
 Alternativa sin `gh`: clonar el repo o descargar el zip del release desde el navegador — no requiere autenticación.
 

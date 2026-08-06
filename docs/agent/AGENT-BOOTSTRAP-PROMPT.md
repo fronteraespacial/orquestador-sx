@@ -19,7 +19,7 @@ Bloque compacto `### Orch` — **no** un `##` H2 por campo:
 
 ```markdown
 ### Orch
-T<n> — <razón breve> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
+T<n> — <razón breve> | WorkType <greenfield|evolving-product|legacy-app|ops-diagnostic> | Run R-<id> | O<1|2|3> <initial|corrective|escalated> | Fase <prep|research-lab|execute|verify> | Batch <B-<id>|none>
 Role: Orchestrator | Action: Delegate
 ```
 

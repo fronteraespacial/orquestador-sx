@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1.1",
   "description": "Minimum paths agent materializes after human approves AGY native init — FETCH/COPY only, never invent",
-  "rawBase": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.2.10",
+  "rawBase": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/v1.3.1",
   "rawBaseFallback": "https://raw.githubusercontent.com/fronteraespacial/orquestador-sx/main",
-  "rawBaseNote": "Primary pin: tag v1.2.10. Fallback: main if tag fetch fails. Each file: rawUrl = rawBase + '/' + rawPath.",
+  "rawBaseNote": "Primary pin: tag v1.3.1. Fallback: main if tag fetch fails. Each file: rawUrl = rawBase + '/' + rawPath.",
   "lock": {
     "path": ".orchestrator-lock.json",
     "template": {
@@ -11,7 +11,8 @@
       "enabled": true,
       "source": "agent-native",
       "policy": "track-stable",
-      "version": "1.2.10",
+      "version": "1.3.1",
+
       "sha256": "",
       "installed_at": "<ISO8601>",
       "last_check_at": ""
@@ -37,6 +38,7 @@
     { "path": ".agents/agents/lab-runner/agent.md", "required": true, "source": "runtime/antigravity/agents/lab-runner/agent.md", "rawPath": "runtime/antigravity/agents/lab-runner/agent.md" },
     { "path": ".agents/agents/implementer/agent.md", "required": true, "source": "runtime/antigravity/agents/implementer/agent.md", "rawPath": "runtime/antigravity/agents/implementer/agent.md" },
     { "path": ".agents/agents/verifier/agent.md", "required": true, "source": "runtime/antigravity/agents/verifier/agent.md", "rawPath": "runtime/antigravity/agents/verifier/agent.md" },
+    { "path": ".agents/agents/verifier-like-human/agent.md", "required": true, "source": "runtime/antigravity/agents/verifier-like-human/agent.md", "rawPath": "runtime/antigravity/agents/verifier-like-human/agent.md" },
     { "path": ".agents/agents/skeptic/agent.md", "required": true, "source": "runtime/antigravity/agents/skeptic/agent.md", "rawPath": "runtime/antigravity/agents/skeptic/agent.md" },
     { "path": ".agents/agents/deletion/agent.md", "required": true, "source": "runtime/antigravity/agents/deletion/agent.md", "rawPath": "runtime/antigravity/agents/deletion/agent.md" },
     { "path": "GEMINI.md", "required": true, "merge": true, "source": "runtime/GEMINI.md", "rawPath": "runtime/GEMINI.md" },
@@ -44,10 +46,10 @@
     { "path": ".lab/README.md", "required": true, "source": "runtime/project/lab/README.md", "rawPath": "runtime/project/lab/README.md" }
   ],
   "roles": [
-    "explore", "scout", "maverick", "lab-runner", "implementer", "verifier", "skeptic", "deletion"
+    "explore", "scout", "maverick", "lab-runner", "implementer", "verifier", "verifier-like-human", "skeptic", "deletion"
   ],
   "post_scaffold": [
-    "define_subagent for each role (SKILL templates in reference.antigravity.md)",
+    "define_subagent for each role including VerifierLikeHuman (SKILL templates in reference.antigravity.md)",
     "Run integrity check on SKILL.md (integrityMarkers)",
     "Remind human: Customizations → Always On on bootstrap + spacex-orchestrator rules",
     "Load SKILL.md before orchestrated work"

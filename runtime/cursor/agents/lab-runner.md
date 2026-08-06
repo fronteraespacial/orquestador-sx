@@ -29,13 +29,16 @@ Fuente espejo: `.agents/agents/lab-runner/agent.md` (Antigravity).
 - Si el envelope trae `## External contrast`, úsalo; no re-busques.
 - Preferí menos archivos; delete-check al promover.
 
-## Model (conditional — remappable)
+## Model (conditional — orchestrator overrides Task `model:`)
 
-Default frontmatter: **`composer-2.5-fast`** for **clear / bounded** labs.
+Frontmatter default: **`composer-2.5-fast`** — used for **Lab Batch (≥2 parallel labs)** in one Batch (cheaper fan-out).
 
-Orchestrator **must** pass Task `model: cursor-grok-4.5-high-fast` when the lab is **T2/T3**, **ambiguous**, or **anomalous** (WSL / Docker / proxy / env), and after insufficient verifier or `## ESCALATE`. Do **not** force Grok on every simple lab.
+| Case | Orchestrator Task `model:` |
+|------|----------------------------|
+| **Single lab** (one hypothesis, one `.lab/<id>/`) | **`cursor-grok-4.5-high-fast`** — **mandatory override** |
+| **Lab Batch (≥2)** parallel labs in same Batch | **`composer-2.5-fast`** (frontmatter default; no Grok override) |
 
-Validar con `agent --list-models`. Policy: `docs/MODEL-ROUTING-POLICY.md`.
+Also use Grok Fast for single lab when T2/T3, ambiguous, or anomalous (WSL / Docker / proxy / env). Validar con `agent --list-models`. Policy: `docs/agent/MODEL-ROUTING-POLICY.md`.
 
 ## Handoff (obligatorio)
 

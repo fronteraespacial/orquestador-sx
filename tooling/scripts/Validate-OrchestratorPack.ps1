@@ -40,6 +40,7 @@ function Test-RuntimeErrors {
 
 $RequiredRuntimeAssets = @(
     'runtime/cursor/agents/orchestrator.md',
+    'runtime/cursor/agents/verifier-like-human.md',
     'runtime/cursor/agents/skeptic.md',
     'runtime/cursor/agents/deletion.md',
     'runtime/cursor/rules/cj-orchestrator-bootstrap.mdc',
@@ -58,6 +59,7 @@ $RequiredRuntimeAssets = @(
     'runtime/opencode/opencode.jsonc.example',
     'runtime/codex/config.toml.example',
     'runtime/codex/agents/orchestrator.toml',
+    'runtime/codex/agents/verifier_like_human.toml',
     'runtime/lock/orchestrator-lock.json.example'
 )
 
@@ -581,6 +583,7 @@ function Test-InstallTarget {
     }
     $expected = @(
         '.cursor\agents\orchestrator.md',
+        '.cursor\agents\verifier-like-human.md',
         '.cursor\agents\skeptic.md',
         '.cursor\agents\deletion.md',
         '.cursor\rules\cj-orchestrator-bootstrap.mdc',

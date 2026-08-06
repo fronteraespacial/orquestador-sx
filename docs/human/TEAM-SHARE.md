@@ -6,7 +6,7 @@ Un bloque para Slack o mail: link + pegar al agente + frases install/update.
 
 ## Bloque para Slack / mail
 
-**Asunto:** Orquestador SX v1.2.0 — instalación multi-OS (~5 min)
+**Asunto:** Orquestador SX v1.3.1 — instalación multi-OS (~5 min)
 
 Hola,
 
@@ -17,13 +17,9 @@ Metodología **Orquestador SX** (subagentes T0–T3, `.lab`, gates) para Cursor 
 | **Repositorio** | https://github.com/fronteraespacial/orquestador-sx |
 | **Guía first run** | https://github.com/fronteraespacial/orquestador-sx/blob/main/docs/human/FIRST-RUN.md |
 | **Prompt install (agente)** | https://github.com/fronteraespacial/orquestador-sx/blob/main/docs/agent/DEVICE-INSTALL-PROMPT.md |
-| **Release v1.2.0** | https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.2.0 |
+| **Release v1.3.1** | https://github.com/fronteraespacial/orquestador-sx/releases/tag/v1.3.1 |
 
-Descargá **`orquestador-sx-v1.2.0.zip`** y verificá SHA256:
-
-```text
-e2656ffde8dcccfb53164021de1fc671ea93b4238ef537e653c90a7562339aec  orquestador-sx-v1.2.0.zip
-```
+Descargá **`orquestador-sx-v1.3.1.zip`** y verificá SHA256 con el `SHA256SUMS` del mismo release.
 
 Repo **público discreto** (link-only).
 

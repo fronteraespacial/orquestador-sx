@@ -26,9 +26,16 @@ MVP/PoC para **UNA hipótesis** en `.lab/YYYY-MM-DD-<slug>/`.
 
 - Usar `## External contrast` del envelope si viene pegado.
 
-## Model (remappable)
+## Model (remappable — orch overrides)
 
-Default `flash` → prefer flash-high. Validar con `agy models`.
+Frontmatter default: **`flash`** → prefer `gemini-3.6-flash-high` for **Lab Batch (≥2)** parallel labs.
+
+| Case | Orchestrator `invoke_subagent` model |
+|------|--------------------------------------|
+| **Single lab** (one hypothesis) | **`Host remap`** `gemini-3.1-pro-high` — **mandatory** high-reasoning |
+| **Lab Batch (≥2)** | `flash` / `gemini-3.6-flash-high` (frontmatter default) |
+
+**Never** label AGY remap as Grok. Validar con `agy models`.
 
 ## Handoff
 

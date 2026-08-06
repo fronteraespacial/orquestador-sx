@@ -27,18 +27,29 @@ Copiar desde `runtime/codex/`:
 | `agents/lab.toml` | solo `.lab/<id>/` | `workspace-write` |
 | `agents/executor_fast.toml` | implementer prod | `workspace-write` |
 | `agents/verifier.toml` | tests DoD | `read-only` |
+| `agents/verifier_like_human.toml` | VLH post tech PASS | `read-only` |
 
 Cada TOML incluye:
 
 - `name`, `description`, `developer_instructions` (requeridos en roles descubiertos)
-- `sandbox_mode` read-only donde aplica (orchestrator, explore, scout, verifier)
+- `sandbox_mode` read-only donde aplica (orchestrator, explore, scout, verifier, verifier_like_human)
 - `# model = "<remap-after-codex>"` como **placeholder** — **no inventar** IDs; fijar tras listar modelos en el host
+- **Maverick / Verifier / VLH:** Grok high-fast when host exposes; else **Host remap** high-reasoning — never label remap Grok
+- **lab:** single lab → high-reasoning remap; Lab Batch (≥2) → cheaper/fast ID
+- Verifier gap inventory → parent one O2 pass; handoffs ≤40 on output only
 
 Contrato embebido en `developer_instructions`:
 
 - Orquestador sin ejecución directa
 - Sala canónica **`.lab/`** (no `projects/.lab/`)
-- Gates: scout soft, lab greenfield REQUIRED, maverick env-anomaly T2+, verifier post-writer, ESCALATE@2
+- Gates: WorkType; Discovery→YIELD_PLAN; scout soft; lab greenfield REQUIRED; maverick env-anomaly T2+; verifier post-writer → VLH si gated; Harvest→Maverick CONSULT; ESCALATE@2
+
+### 1.3.1 — Discovery / YIELD_PLAN / VLH (Codex)
+
+- **WorkType** + Discovery ⊂ `research-lab` (budget acotado) → `DECIDE` | `YIELD_PLAN` | `STOP`.
+- **YIELD_PLAN:** orch pide al humano abrir Codex **`/plan`** → aprobación **explícita** de ejecución → recién ahí `executor_fast`. Decline → STOP. Sin auto-entrar Plan ni auto-ejecutar. ≠ lab `YIELD`.
+- Cadena: writer → `verifier` → `verifier_like_human` (T2/T3 human-facing tras PASS técnico).
+- **Harvest** parent-only → Maverick CONSULT → `YIELD_OPT` (humano; sin auto-O2).
 
 ### Límites `[agents]` actuales
 

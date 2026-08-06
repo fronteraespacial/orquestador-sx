@@ -1,6 +1,6 @@
 # Start here
 
-Punto de entrada post-factorización v1.2.0 — **multi-OS agent pack**.
+Punto de entrada post-factorización v1.3.1 — **multi-OS agent pack**.
 
 ## Humanos
 

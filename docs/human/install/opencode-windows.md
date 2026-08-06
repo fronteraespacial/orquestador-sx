@@ -28,6 +28,7 @@ OpenCode trae built-ins **Explore**, **Scout** y **General**. Para evitar colisi
 | lab-runner | `sx-lab` | — |
 | maverick | `sx-maverick` | — |
 | verifier | `sx-verifier` | — |
+| verifier-like-human | `sx-verifier-like-human` | — |
 | skeptic | `sx-skeptic` | — |
 | expert | `sx-expert` | — |
 
@@ -43,21 +44,25 @@ El Task allowlist del orchestrator **niega `*`** y solo permite las keys `sx-*` 
 3. `default_agent: "orchestrator"`.
 4. Orchestrator (contrato duro):
    - `edit: deny`, `bash: deny`, `webfetch/websearch: deny`
-   - `task`: deny `*`, allow solo `sx-explore|sx-scout|sx-executor|sx-lab|sx-maverick|sx-skeptic|sx-expert|sx-verifier`
+   - `task`: deny `*`, allow solo `sx-explore|sx-scout|sx-executor|sx-lab|sx-maverick|sx-skeptic|sx-expert|sx-verifier|sx-verifier-like-human`
 5. Permisos granulares de workers (ya en el example):
-   - Read-only + sin web: `sx-explore`, `sx-skeptic`, `sx-expert`
+   - Read-only + sin web: `sx-explore`, `sx-skeptic`, `sx-expert`, `sx-verifier-like-human`
    - Web allow, edit/bash deny: `sx-scout`
    - Edit solo `.lab/**`: `sx-lab`, `sx-maverick`
    - Writer prod: `sx-executor` (web deny)
    - Verifier: edit/web deny, bash allow (tests)
-6. Modelos (matriz CJ 2026-08-04 — **no** DeepSeek V4 Flash Free en writers; remapear con `opencode models`):
+6. Modelos (matriz CJ 2026-08-04 — remapear con `opencode models`):
 
 | Agent | Model |
 |-------|--------|
-| sx-executor, sx-lab, sx-verifier, sx-maverick, sx-expert | `opencode/nemotron-3-ultra-free` (alt `opencode-go/grok-4.5`) |
+| sx-maverick, sx-verifier, sx-verifier-like-human | `opencode-go/grok-4.5` when exposed; else **Host remap** nearest high-reasoning — **never** label remap Grok |
+| sx-lab (single lab) | orch Task override → Grok when exposed; else Host remap high-reasoning |
+| sx-lab (Lab Batch ≥2), sx-executor, sx-expert | `opencode/nemotron-3-ultra-free` (alt `opencode-go/grok-4.5`) |
 | sx-scout, sx-explore | `opencode/north-mini-code-free` |
 | sx-skeptic | `opencode/mimo-v2.5-free` |
 | orchestrator | sin model fijo (picker TUI) |
+
+**Composer compensation** = same-role bounded iterations — not mega-pipeline. Verifier gap inventory → parent one O2 pass; handoffs ≤40 on output only.
 
 7. Copiar skill a `.agents/skills/orchestrator/SKILL.md` y referenciarla en `instructions`.
 8. Crear/asegurar `.lab/README.md` (naming + APPROVE) en el repo objetivo.
@@ -66,15 +71,18 @@ El Task allowlist del orchestrator **niega `*`** y solo permite las keys `sx-*` 
 
 ## 4. Prompts y gates
 
-Los prompts largos ya están en el `.example` (incluidos **sx-skeptic** y **sx-expert**). Si mergeás a mano, **no truncar** prompts de scout/maverick/orchestrator (gates viven ahí).
+Los prompts largos ya están en el `.example` (incluidos **sx-verifier-like-human**, **sx-skeptic** y **sx-expert**). Si mergeás a mano, **no truncar** prompts de scout/maverick/orchestrator (gates viven ahí).
 
 El `orchestrator.prompt` del pack ya incluye:
 
 - Zero direct execution (también T0)
+- **WorkType** + Discovery ⊂ `research-lab` (budget acotado) → `DECIDE` | `YIELD_PLAN` | `STOP`
+- **YIELD_PLAN:** pedir al humano Plan/Build nativo de OpenCode → recién ahí `sx-executor`; decline → STOP. ≠ lab `YIELD`. Sin auto-switch de modo.
 - Scout gate soft + SKIPPED
 - **Lab greenfield REQUIRED** (APPROVE before `sx-executor`)
-- **Maverick env anomaly T2+ REQUIRED**
-- **Verifier post-writer REQUIRED**
+- **Maverick env anomaly T2+ REQUIRED**; post-Harvest CONSULT → `YIELD_OPT` (humano)
+- **Verifier post-writer REQUIRED** → **`sx-verifier-like-human`** tras PASS técnico si T2/T3 human-facing
+- **Harvest** parent-only (Ledger) → Maverick CONSULT
 - **ESCALATE@2** → `sx-scout` → retry|STOP
 - `.lab/` canónico
 

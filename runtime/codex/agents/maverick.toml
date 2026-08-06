@@ -1,6 +1,6 @@
 # SpaceX Orchestrator pack — Codex agent role
 # STATUS: deferred until `codex` is installed. Verify keys against your Codex version.
-# model = "<remap-after-codex>"  # placeholder — do not invent model IDs
+# model = "<remap-after-codex>"  # Grok high-fast equiv when exposed; else Host remap best high-reasoning OpenAI ID (never call remap Grok)
 
 name = "maverick"
 description = "Counterintuitive what-ifs; CONSULT read-only or LAB only under .lab/*-mav-*; never defines main path"
