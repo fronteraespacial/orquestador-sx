@@ -26,16 +26,30 @@
 
 **No** inventar `invoke_subagent` en Cursor. **No** asumir que Cursor carga `.agents/agents/`.
 
-## 3. Oleadas y deltas
+## 3. Run, oleadas, fases y deltas
 
 ```text
-Wave 0  Orch: gate + sobres
-Wave 1  scout|explore|lab|maverick|auditors → handoffs ≤40
-Wave 2  implementer fan-out → handoffs
-Wave 3  verifier + triage automation + narrate
+Tier T0–T3         complejidad del ask (T0 trivial → T3 máx.; cascade +1 hasta T3 → ESCALATE, no T4)
+Run R-<id>         objetivo del usuario (puede abarcar O1→O3)
+└─ Oleada O1|O2|O3 ciclo completo de fases
+   └─ Fase          prep → research-lab → execute → verify (omitir vacías)
+      └─ Batch B-<n> N spawns paralelos + fan-in
+      └─ Spawn       exactamente 1 hijo (nunca etiquetar como oleada)
+      └─ Retry       reintento técnico misma fase/batch (≤2; ESCALATE@2)
+```
+
+Ejemplo feliz:
+
+```text
+O1 · prep           Orch: gate + sobres
+O1 · research-lab   scout|explore|lab|maverick|auditors → handoffs ≤40
+O1 · execute        implementer Batch fan-out → handoffs
+O1 · verify         verifier + triage automation + narrate
 ```
 
 Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguiente sobre. Prohibido reenviar el transcript completo del hijo.
+
+**Paralelismo:** Batch **REQUIRED** si workstreams independientes; serial solo con deps reales (p. ej. lab APPROVE antes de execute).
 
 **En criollo:** todo cierre al humano (implementer handoff, narrate final del Orquestador) incluye `## En criollo` **al final del mensaje entregado** — contrato metodológico, no tip opcional. Solo al cierre del trabajo entregado; nunca como preámbulo del plan o de la oleada. Regla instalada: `.cursor/rules/cj-criollo-changelog.mdc`.
 
@@ -62,7 +76,7 @@ Orquestador **pega solo deltas** (bloque canónico o 3–8 bullets) en el siguie
 - Prior art / better approach: …
 - Fresh docs before implement/test: …
 - Recommendation: ADOPT | ADAPT | DOCS-FIRST | NO-PRIOR-ART | DEAD-END
-- Implications for envelope: … (optional wave-2 Scout: …)
+- Implications for envelope: … (optional Batch Scout-2 / tanda Scout: …)
 ```
 
 ### maverick
@@ -126,7 +140,7 @@ Verdict: PASS | FAIL | INCONCLUSIVE
 
 ## 5. Envelopes por rol (mínimos)
 
-Todos: Complexity, Role, Sobre, Wave, Objetivo, Archivos/No tocar, Aceptación, Lab previo, Deltas previos, External contrast.
+Todos: Complexity, Role, Sobre, Run, Oleada, Fase, Batch, Objetivo, Archivos/No tocar, Aceptación, Lab previo, Deltas previos, External contrast.
 
 | Rol | Extra |
 |-----|--------|
@@ -143,13 +157,15 @@ Plantillas largas: skill § Envelopes by role.
 ## 6. Flujo feliz
 
 ```text
-User ask
-  → Wave 0: header + gate (señales, cascade rules)
-  → Wave 1: [scout?] [lab APPROVE?] [maverick si env-anomaly?]
+User ask → Run R-<id>
+  → O1 · prep: header + gate (señales, cascade rules)
+  → O1 · research-lab: [scout?] [lab APPROVE?] [maverick si env-anomaly?]
   → [freno humano?]
-  → Wave 2: implementer(s) con deltas
-  → Wave 3: verifier REQUIRED si hubo writer → triage automation → narrate
-  → ANOMALIA/ESCALATE → scout / cascade +1 / STOP
+  → O1 · execute: implementer(s) Batch si WS independientes, con deltas
+  → O1 · verify: verifier REQUIRED si hubo writer → triage automation → narrate
+  → verify FAIL reproducible → O2 · execute→verify
+  → verify FAIL diseño/hipótesis → O3 · research-lab (+ cascade +1 si T<T3)
+  → ANOMALIA/ESCALATE → scout / cascade +1 / STOP (T3 ceiling → ESCALATE, no T4)
 ```
 
 ## 7. Fronteras

@@ -4,7 +4,7 @@ Leé completo antes de instalar. Filosofía **universal**; los CLIs solo cambian
 
 ## 1. Idea en una frase
 
-El **Orquestador** recibe el prompt crudo, lo clasifica, lo traduce a un **gate interno corto**, planifica **oleadas 0–3**, escribe sobres, delega y fusiona **handoffs compactos (deltas)**. Los hijos ejecutan. El padre **no** edita, testea, despliega, hace web research ni explora el sistema — **ni en T0**.
+El **Orquestador** recibe el prompt crudo, lo clasifica, lo traduce a un **gate interno corto**, planifica **Run → Oleada O1–O3 → Fases**, escribe sobres, delega y fusiona **handoffs compactos (deltas)**. Los hijos ejecutan. El padre **no** edita, testea, despliega, hace web research ni explora el sistema — **ni en T0**.
 
 ## 2. Best-effort vs enforcement
 
@@ -46,10 +46,15 @@ Violación = fallo de proceso, no “el producto lo permitió”.
 ## Complexity: T<0|1|2|3> — <Brief reason>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
-## Wave: <0|1|2|3> — <prep|research-lab|execute|verify>
+## Run: R-<id>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id> | none
 ```
 
 No existe `Action: Direct Execution`. T0 también delega.
+
+**Anti-patrón:** nunca numerar una oleada por `invoke_subagent` / Task / Scout / fase — la oleada es ciclo completo; un spawn o batch es un paso dentro de una fase.
 
 ## 5. Señales de clasificación (≤10 líneas en el gate)
 
@@ -71,20 +76,49 @@ No existe `Action: Direct Execution`. T0 también delega.
 - Tier: T*
 - Signals: …
 - Lab / Scout / Maverick: …
-- Waves: 0→…
+- Run: R-<id> · Oleada: O1→… · Fases: prep→…
 - Human brake: yes|no
 ```
 
-## 6. Oleadas 0–3
+## 6. Taxonomía Run / Oleada / Fase / Batch
 
-| Oleada | Nombre | Quién |
-|--------|--------|-------|
-| **0** | Prep | Orquestador: clasificar, gate, sobres (sin tools de ejecución) |
-| **1** | Research/lab | scout, explore, auditors T3, lab-runner, maverick si aplica |
-| **2** | Execute | implementer/executor (fan-out acotado) |
-| **3** | Verify/harvest | verifier si hubo writer; triage automation; narrar |
+| Término | Significado |
+|---------|-------------|
+| **Tier T0–T3** | Complejidad; máx T3; cascade en T3 → **ESCALATE** (no T4) |
+| **Run R-…** | Objetivo del usuario (estable por pedido) |
+| **Oleada O1–O3** | Ciclo completo: O1 inicial, O2 correctivo, O3 escalado; no O4 por defecto |
+| **Fase** | `prep` \| `research-lab` \| `execute` \| `verify` (sin P0–P3 ni Wave 0–3) |
+| **Batch B…** | Spawns paralelos + fan-in |
+| **Spawn** | Un hijo; **nunca** es una oleada |
+| **Retry** | Reintento técnico en la misma fase/batch (≤2; ESCALATE@2) |
+
+Jerarquía: `Run` ⊃ `Oleada` ⊃ `Fase` ⊃ `Batch|Spawn`.
+
+| Fase | Quién |
+|------|-------|
+| **prep** | Orquestador: clasificar, gate, sobres (sin tools de ejecución) |
+| **research-lab** | scout, explore, auditors T3, lab-runner, maverick si aplica |
+| **execute** | implementer/executor (Batch si WS independientes) |
+| **verify** | verifier si hubo writer; triage automation; narrar |
 
 El Orquestador **solo reenvía deltas** al siguiente sobre — no transcripts completos.
+
+### verify FAIL → transición
+
+| Evidencia verifier | Acción |
+|--------------------|--------|
+| **Transient** (flake, timeout, red) | **Retry** en fase verify (mismo batch) |
+| **Reproducible local** (1–2 archivos, DoD claro) | **O2**: prep → execute correctivo → reverify |
+| **Hipótesis / diseño / env / mismo fingerprint** | **O3** con fase **research-lab** (+ lab/scout/maverick); cascade +1 tier si T<T3 |
+| Tras **O3**, budget agotado, o riesgo alto | **ESCALATE / STOP** + freno humano |
+| Cascade cuando ya **T3** | **ESCALATE** (no T4) |
+
+### Paralelismo
+
+| Condición | Modo |
+|-----------|------|
+| Workstreams **independientes** | **Batch B-… REQUIRED** (fan-out + fan-in) |
+| Dep **real** | Serial (p. ej. lab APPROVE → implementer → verifier) |
 
 ## 7. Router T0–T3
 
@@ -92,8 +126,8 @@ El Orquestador **solo reenvía deltas** al siguiente sobre — no transcripts co
 |------|--------|-----------|
 | **T0** | Typo, 1 hunk, lectura | `explore` o `implementer` menor |
 | **T1** | Bug 1–2 archivos | explore/implementer → **verifier si writer** |
-| **T2** | ≥2 WS, refactor | Scout soft → Lab greenfield → Maverick env-anomaly → fan-out → verifier |
-| **T3** | Feature/P0, borroso, automatizar | Scout → Lab REQUIRED (greenfield) → auditors → fan-out → verifier |
+| **T2** | ≥2 WS, refactor | Scout soft → Lab greenfield → Maverick env-anomaly → Batch fan-out → verifier |
+| **T3** | Feature/P0, borroso, automatizar | Scout → Lab REQUIRED (greenfield) → auditors → Batch fan-out → verifier |
 
 ## 8. Gates
 

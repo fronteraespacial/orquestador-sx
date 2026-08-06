@@ -22,9 +22,15 @@ Load `.agents/skills/orchestrator/SKILL.md` for full Algorithm, envelopes, and a
 ## Complexity: T<0|1|2|3> — <Brief reason>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
+## Run: R-<slug>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id>|—   (— = spawn único o prep sin hijos)
 ```
 
 Never invent `Action: Direct Execution`. **T0 still delegates** — reads → `explore`, any edit → `implementer`.
+
+**Taxonomy:** **Run** ⊃ **Oleada O1–O3** ⊃ **Fase** ⊃ **Batch** (parallel) or **Spawn** (one child). Do **not** use `Wave 0–3`, `wave-2 Scout`, or `next wave` — use **Batch**, **tanda**, or **Fase**. **Oleada** = full cycle; a child spawn is never an oleada. **Retry** = same fase/batch (≤2); **O2** = corrective cycle; **O3** = escalated (+ research-lab); no **O4** by default.
 
 ### 2. Zero direct execution (main thread)
 
@@ -50,7 +56,24 @@ The session Orchestrator **MUST NOT** execute commands, read files, or edit code
 
 ### 5. Handoffs
 
-All subagents ≤40 lines. Orchestrator merges parallel Scout waves into one contrast block.
+All subagents ≤40 lines. Orchestrator merges parallel Scout **Batch** fan-in into one contrast block.
+
+### 5b. Parallelism vs serial (hard)
+
+| Condition | Mode |
+|-----------|------|
+| Independent workstreams | **Batch B-… REQUIRED** — emit **multiple `invoke_subagent` in the SAME parent turn**; do **not** wait for A before B when A∥B |
+| Real dependency | Serial in same **Oleada** — e.g. lab **APPROVE** → `implementer` → `verifier` (not a new Oleada per child) |
+| Example T3 research-lab | `O1 / research-lab / B1`: 2–3 scouts + `explore` (+ optional `skeptic`) parallel → fan-in → `lab-runner` if greenfield |
+
+### 5c. verify FAIL → Oleada transition
+
+| Evidence | Action |
+|----------|--------|
+| Transient (flake, timeout) | **Retry** in fase `verify` (same batch) |
+| Localized reproducible fix | **O2** — corrective `execute` → `verify` (not “Wave 4”) |
+| Design / env / same fingerprint | **O3** — fase `research-lab` (+ scout/maverick/lab per gates); cascade +1 tier if below T3 |
+| After **O3** or budget exhausted | **ESCALATE / STOP** — no O4, no T4 |
 
 ### 6. Lifecycle cleanup
 
@@ -62,7 +85,7 @@ When the loop completes: **kill idle subagents** (UI / `manage_subagents` / equi
 
 - **Scout soft-mandatory** before greenfield/anomaly — accept `External contrast: SKIPPED — <reason>` offline.
 - **T3 optional auditors:** `skeptic`, `deletion` — spawn on fuzzy/high-stakes asks; skip if quota tight.
-- **Scout fan-out:** ≤3 parallel scouts with distinct `Enfoque de búsqueda`; optional wave-2 from `Implications`.
+- **Scout fan-out:** ≤3 parallel scouts with distinct `Enfoque de búsqueda` in one **Batch**; optional second **tanda** (new Batch) from `Implications` — never “wave-2 Scout” or “next wave”.
 - **Curiosity:** subagents may flag; Orchestrator decides (except env-anomaly maverick = REQUIRED).
 - **Maverick budget:** 3 attempts/theory → `## MAV-ESCALATE`.
 

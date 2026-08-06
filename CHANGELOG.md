@@ -2,6 +2,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.2.9] - 2026-08-05
+
+### Changed
+
+- **Taxonomy (Run / Oleada O1–O3 / Fase / Batch):** replaces legacy `Wave 0–3` and `wave-2 Scout` across Cursor wiring, AGENTS template, bootstrap prompt, install canon, verify checklist, and scout handoffs. Header now includes `## Run`, `## Oleada`, `## Fase`, `## Batch`.
+- **Parallel Batch:** independent workstreams → multiple Task / `invoke_subagent` **same turn**; Multitask Mode = same Batch parallel Tasks (not role collapse).
+- **verify FAIL transitions:** reproducible local → **O2** corrective (`execute` → `verify`); design/env/hipótesis → **O3** (+ `research-lab`); no O4 / “Wave 4”.
+- **`MODEL-ROUTING-POLICY.md` §1.2:** O2 corrective routing — Composer Fast mechanical; Grok High Fast judgment/anomaly or single pass after Composer unsatisfied.
+- **`runtime/skills/orchestrator/reference.md`**, **`runtime/cursor/agents/orchestrator.md`**, **`runtime/cursor/rules/cj-orchestrator-mandatory.mdc`**, **`docs/agent/CONTEXT-MAP.md`:** aligned with canon 01/02 + SKILL (already migrated in lab APPROVE).
+- **`scaffold-manifest.json`:** `rawBase` / lock template pinned to `v1.2.9`; fallback `main`.
+
 ## [1.2.8] - 2026-08-05
 
 ### Added

@@ -26,14 +26,32 @@ CLI `Orchestrator.ps1 init -Scope project` remains valid **alternative** (Window
 ## Parent orchestrator (main thread)
 
 ```markdown
-## Complexity: T<n> — <reason>
+## Complexity: T<0|1|2|3> — <reason>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
-## Wave: <0|1|2|3> — <prep|research-lab|execute|verify>
+## Run: R-<slug>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id>|—   (— = spawn único o prep sin hijos)
 ```
+
+**Taxonomy (do not use Wave 0–3 or “next wave”):**
+
+| Layer | Meaning |
+|-------|---------|
+| **Run R-…** | Stable user objective (may span O1→O3) |
+| **Oleada O1–O3** | Full cycle of fases — O1 initial, O2 corrective, O3 escalated; **no O4** by default |
+| **Fase** | Named step: `prep` → `research-lab` → `execute` → `verify` (skip empty) |
+| **Batch B-…** | N parallel `invoke_subagent` + fan-in merge — **required** when workstreams are independent |
+| **Spawn** | Exactly one child — never label a spawn as an oleada |
+| **Retry** | Technical retry in same fase/batch (≤2; ESCALATE@2) — not O2 |
 
 - **Zero direct execution** — classify, gate, envelopes, spawn, merge deltas, narrate.
 - **T0 included** — reads → `explore`; any edit → `implementer`.
+- **Parallel Batch (hard):** independent work → emit **multiple `invoke_subagent` in the SAME parent turn**; do **not** wait for A before launching B when A∥B.
+- **Serial deps (same Oleada):** lab **APPROVE** → `implementer` → `verifier` — sequential fases, **not** a new Oleada per child.
+- **Example T3:** `O1 / research-lab / B1` = 2–3 scouts + `explore` (+ optional `skeptic`) in parallel → fan-in → `lab-runner` if greenfield.
+- **verify FAIL → transition:** transient → **Retry** (same fase); localized reproducible → **O2** (corrective execute→verify); design/env/hypothesis → **O3** + fase `research-lab`; after **O3** budget → **ESCALATE/STOP** (no O4, no T4).
 - Kill idle subagents when loop completes.
 
 ## Compact role system prompts (envelope seeds)

@@ -18,7 +18,10 @@ Sos el **Orchestrator SpaceX** en este repo. Zero direct execution — incluso T
 ## Complexity: T<n> — <razón breve>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
-## Wave: <0|1|2|3> — <prep|research-lab|execute|verify>
+## Run: R-<id>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id> | none
 
 ## Bootstrap (antes de orquestar)
 

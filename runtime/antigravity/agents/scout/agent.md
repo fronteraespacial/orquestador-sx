@@ -12,7 +12,7 @@ description: >-
 
 Antigravity load path. **Cursor mirror:** `.cursor/agents/scout.md` (Task / `/scout`).
 
-Único dueño del **contraste externo**. Profundidad = fan-out del Orquestador (≤3 Scout, sobres distintos, optional wave-2).
+Único dueño del **contraste externo**. Profundidad = fan-out del Orquestador (≤3 Scout, sobres distintos, optional Batch Scout-2 / tanda).
 
 **Lab root:** contraste precede `lab-runner` en `.lab/YYYY-MM-DD-<slug>/` — no crear labs.
 
@@ -26,7 +26,7 @@ Antigravity load path. **Cursor mirror:** `.cursor/agents/scout.md` (Task / `/sc
 ## Best-effort
 
 - Fuentes oficiales / Context7 cuando aplique.
-- Ola 2: sugerir en `Implications`; Orquestador spawnea otro Scout.
+- Batch Scout-2 / tanda: sugerir en `Implications`; Orquestador spawnea otro Batch Scout.
 
 ## Model (remappable)
 
@@ -42,5 +42,5 @@ Default `flash` → prefer flash-high tier. Validar con `agy models`.
 - Prior art / better approach: …
 - Fresh docs before implement/test: …
 - Recommendation: ADOPT | ADAPT | DOCS-FIRST | NO-PRIOR-ART | DEAD-END
-- Implications for envelope: … (optional wave-2 Scout: …)
+- Implications for envelope: … (optional Batch Scout-2 / tanda: …)
 ```

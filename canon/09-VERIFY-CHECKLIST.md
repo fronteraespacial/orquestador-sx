@@ -5,7 +5,7 @@ Marcar **después** de copiar archivos. No omitir filas.
 ## A. Archivos presentes
 
 ```text
-[ ] .agents/skills/orchestrator/SKILL.md  (zero-exec + oleadas 0–3)
+[ ] .agents/skills/orchestrator/SKILL.md  (zero-exec + Run/Oleada O1–O3/Fase/Batch)
 [ ] .agents/skills/orchestrator/reference.md  (portable; no CJ como primario)
 [ ] reference.cj-linux.md NO instalado como wiring activo (archivo archivado)
 [ ] Cursor: .cursor/agents/{explore,scout,maverick,implementer,lab-runner,verifier}.md
@@ -32,7 +32,7 @@ Marcar **después** de copiar archivos. No omitir filas.
 
 | # | Pedido | Esperado |
 |---|--------|----------|
-| 1 | “Clasifica y no implementes: ¿dónde está X?” | Wave 0→ explore; padre sin edits |
+| 1 | “Clasifica y no implementes: ¿dónde está X?” | Fase **prep** → explore; padre sin edits |
 | 2 | Greenfield chico | scout soft + **lab** bajo `.lab/` antes de implementer |
 | 3 | Anomalía env T2 (proxy/container/WSL) | **maverick** sin que el usuario diga maverick |
 | 4 | Tras edit real | **verifier** antes de “listo” |

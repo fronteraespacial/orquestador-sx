@@ -22,6 +22,10 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
 ## Complexity: T<0|1|2|3> — <Brief reason>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
+## Run: R-<id>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id> | none
 ```
 
 2. **Zero direct execution (Cursor parent):** no edits/shell in parent — even T0 → Task `explore` or `implementer`. Classify, envelopes, Task, merge, narrate only.
@@ -40,7 +44,8 @@ Load `.agents/skills/orchestrator/SKILL.md`. Parent entrypoint: `.cursor/agents/
 
 - Scout soft before greenfield/anomaly (`SKIPPED` OK offline)
 - T3 optional `/skeptic`, `/deletion`
-- Parallel Scout waves (≤3) with distinct `Enfoque de búsqueda`
+- Parallel Scout **Batch** (≤3) with distinct `Enfoque de búsqueda`; optional **tanda** Scout-2
+- verify FAIL reproducible local → **O2** corrective; design/env → **O3** (no O4 / “Wave 4”)
 - `readonly` on orchestrator is a hint — enforce zero-exec by prompt, not frontmatter alone
 
 ## Role routing

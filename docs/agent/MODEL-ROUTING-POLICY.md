@@ -46,6 +46,18 @@ When Composer output does **not** satisfy the orchestrator or verifier:
 
 Same single Grok High Fast corrective path applies after `## ESCALATE` or an insufficient verifier close when the prior writer was Composer-family.
 
+### 1.2 O2 corrective routing (Oleada O2)
+
+When verify **FAIL** is reproducible local (1–2 files, clear DoD) → parent opens **O2** (`execute` → `verify`), not “Wave 4”:
+
+| O2 scope | Model | When |
+|----------|-------|------|
+| **Mechanical** | `composer-2.5-fast` | Surgical fix, clear paths, scripted DoD |
+| **Judgment / anomaly / design** | `cursor-grok-4.5-high-fast` | Ambiguous acceptance, env fingerprint, methodology |
+| **After Composer unsatisfied** | `cursor-grok-4.5-high-fast` | One corrective pass per §1.1 — keep delta, enrich envelope |
+
+O3 (design/env/hipótesis) defaults to Grok High Fast for `research-lab` roles; implementer in O2 stays Composer unless judgment row applies.
+
 ## 2. Measured (local pack evidence)
 
 | Run ID | Status | Use |

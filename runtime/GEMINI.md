@@ -18,10 +18,15 @@
 ## Complexity: T<0|1|2|3> — <Brief reason>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
+## Run: R-<slug>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id>|—   (— = spawn único o prep sin hijos)
 ```
 
 - Never omit. Treating `orchestrator/SKILL.md` as optional is an anti-pattern.
 - **Action is always** `Delegate to subagent (T0-T3)`. No `Direct Execution` on Antigravity — **T0 included**.
+- **Taxonomy:** Run ⊃ Oleada O1–O3 ⊃ Fase ⊃ Batch (parallel) or Spawn (one child). No `Wave 0–3`. Independent work → multiple `invoke_subagent` **same turn** (Batch). lab APPROVE → implementer → verifier stays serial in one Oleada. verify FAIL local → **O2**; design/env → **O3**; then ESCALATE/STOP (no O4).
 
 ### Zero direct execution (hard)
 
@@ -58,7 +63,7 @@ Invoke via **`invoke_subagent`**. Handoffs ≤40 lines. Cursor uses Task + `.cur
 
 - Scout `SKIPPED` OK offline.
 - T3 optional **`skeptic`**, **`deletion`**.
-- Parallel Scout waves (≤3) with distinct search foci.
+- Scout **Batch** (≤3 parallel scouts, distinct search foci); optional second **tanda** from `Implications` — not “wave-2” or “next wave”.
 - Maverick 3 attempts/theory → `## MAV-ESCALATE`.
 - Curiosity lines → Orchestrator decides (except env-anomaly maverick = REQUIRED).
 

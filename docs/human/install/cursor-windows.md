@@ -40,7 +40,7 @@ Docs producto: [Subagents](https://cursor.com/docs/subagents.md), [Skills](https
 - Tool **Task** con subagent custom por `name` / description.
 - Invocación explícita: `/orchestrator`, `/explore`, `/scout`, `/maverick`, `/implementer`, `/lab-runner`, `/verifier`, `/skeptic`, `/deletion`.
 - Built-ins: Explore, Bash, Browser (automáticos; no borrar).
-- Paralelo: varias llamadas Task en un mensaje (Scout fan-out).
+- Paralelo: varias llamadas Task en un mensaje (**Batch** / tanda Scout fan-out).
 - `readonly: true` en explore/scout/verifier/skeptic/deletion/orchestrator.
 - Maverick **sin** readonly (LAB escribe en `.lab/…-mav-…` en la raíz del repo).
 
@@ -65,7 +65,7 @@ Docs producto: [Subagents](https://cursor.com/docs/subagents.md), [Skills](https
 Lab greenfield REQUIRED, Maverick env-anomaly REQUIRED, Verifier after implementer, ESCALATE→scout.
 
 ## Gates (best-effort)
-Scout soft, T3 skeptic/deletion optional, Scout wave-2.
+Scout soft, T3 skeptic/deletion optional, Batch Scout-2 / tanda.
 ```
 
 ## 6. Snippet `AGENTS.md`

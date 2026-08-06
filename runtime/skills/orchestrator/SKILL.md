@@ -2,9 +2,11 @@
 name: orchestrator
 description: >-
   Universal zero-direct-execution orchestrator: raw prompt → short internal gate,
-  wave plan 0–3, delegate, merge compact handoffs. Algorithm fractal, T0–T3,
-  .lab room, Scout/Lab/Maverick/Verifier/ESCALATE. Never edits, tests, deploys,
-  web-researches, or explores — even T0. Use when orchestrating multi-step work.
+  oleadas O1–O3 (initial / corrective / escalated) with named fases
+  (prep / research-lab / execute / verify), delegate, merge compact handoffs.
+  Algorithm fractal, T0–T3, .lab room, Scout/Lab/Maverick/Verifier/ESCALATE.
+  Never edits, tests, deploys, web-researches, or explores — even T0.
+  Use when orchestrating multi-step work.
 metadata:
   surfaces:
     - cli
@@ -182,7 +184,7 @@ See also: [reference.antigravity.md](reference.antigravity.md) (optional install
 
 ## Idea
 
-The **orchestrator** receives the **raw user prompt**, classifies it, translates it to a **short internal gate**, plans **waves 0–3**, writes **role envelopes**, **delegates**, and **merges compact handoffs**. It only **forwards deltas** (not full child transcripts) into the next envelope.
+The **orchestrator** receives the **raw user prompt**, classifies it, translates it to a **short internal gate**, plans **oleadas O1–O3** (each with named **fases**: prep → research-lab → execute → verify), writes **role envelopes**, **delegates**, and **merges compact handoffs**. It only **forwards deltas** (not full child transcripts) into the next envelope.
 
 **Children execute.** The orchestrator **never**:
 
@@ -217,8 +219,13 @@ The **orchestrator** receives the **raw user prompt**, classifies it, translates
 ## Complexity: T<0|1|2|3> — <Brief reason>
 ## Role: Orchestrator
 ## Action: Delegate to subagent (T0-T3)
-## Wave: <0|1|2|3> — <prep|research-lab|execute|verify>
+## Run: R-<id>
+## Oleada: O<1|2|3> — <initial|corrective|escalated>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id> | none
 ```
+
+On recovery after a failed verify or ESCALATE, add **`## Failure-ID: F-<id>`** when applicable.
 
 Return fields from children (orchestrator merges): `Delete check:` + `Automation candidates:` + `External contrast:` (REQUIRED/SKIPPED/COMPLEMENTARY per thresholds) + optional `Curiosity:` + `ANOMALIA:` / `## ESCALATE` if any.
 
@@ -246,29 +253,65 @@ Annotate before spawning:
 - Lab: yes|no — why
 - Scout: REQUIRED|soft|skip — why
 - Maverick: REQUIRED|optional|no
-- Waves planned: 0→…
+- Oleadas planned: O1→…
 - Human brake: yes|no — trigger
 ```
 
-## Waves 0–3
+## Oleadas, Fases y Batches
 
-| Wave | Name | Who | Orchestrator may |
-|------|------|-----|------------------|
-| **0** | Prep | Orchestrator only | Classify, gate, envelopes, spawn plan. **No** child tools for exploration/coding. |
-| **1** | Research / lab | `scout`, `explore`, T3 auditors, `lab-runner`, `maverick` if gated | Merge contrast / lab verdict / maverick take → deltas only into next envelopes |
-| **2** | Execute | `implementer` / `executor` fan-out (bounded envelopes) | Merge implementer handoffs; refine next envelopes from deltas |
-| **3** | Verify / harvest | `verifier` (REQUIRED if implementer ran); automation triage; cleanup narration | Narrate; brake if needed; stop or cascade |
+**Composition:** `Run` ⊃ `Oleada` ⊃ `Fase` ⊃ `Batch | Spawn`. A **Run** (`R-<id>`) anchors the user's objective across oleadas. An **Oleada** is a full cycle; a **Fase** is one step inside it; a **Batch** (`B-<id>`) groups simultaneous spawns in the same fase. A **Spawn** is one child — never an oleada.
 
-Skip empty waves (e.g. T0: 0 → explore/implementer in 2 → verifier in 3 if writer ran). Never collapse wave 2 into the parent thread.
+| Oleada | Kind | When |
+|--------|------|------|
+| **O1** | initial | First pass on the Run objective |
+| **O2** | corrective | Local fix after verify FAIL (same design, bounded retry exhausted) |
+| **O3** | escalated | Design/env shift; cascade +1 or research-lab reopen; **max O1+O2+O3** per Run |
+
+**Legacy map (doc migration only):** Wave/Oleada 0→`prep`, 1→`research-lab`, 2→`execute`, 3→`verify`.
+
+### Fases inside an Oleada
+
+| Fase | Who | Orchestrator may |
+|------|-----|------------------|
+| **prep** | Orchestrator only | Classify, gate, envelopes, spawn plan. **No** child tools for exploration/coding. |
+| **research-lab** | `scout`, `explore`, T3 auditors, `lab-runner`, `maverick` if gated | Merge contrast / lab verdict / maverick take → deltas only into next envelopes |
+| **execute** | `implementer` / `executor` fan-out (bounded envelopes) | Merge implementer handoffs; refine next envelopes from deltas |
+| **verify** | `verifier` (REQUIRED if implementer ran); automation triage; cleanup narration | Narrate; brake if needed; stop or cascade |
+
+Skip empty fases (e.g. T0: prep → explore/implementer in execute → verifier in verify if writer ran). Never collapse **execute** into the parent thread.
+
+### Parallel fan-out (REQUIRED when applicable)
+
+| Rule | Detail |
+|------|--------|
+| **Same Batch = simultaneous** | Children sharing `Batch: B-<id>` spawn together; parent **waits fan-in** before the next fase. |
+| **Scout cap** | ≤3 scouts per gate; merge one contrast block. |
+| **Writers parallel** | Only when envelope paths are **non-overlapping**. |
+| **Serial deps** | lab APPROVE → implementer → verifier stays serial — not a Batch excuse. |
+| **T2+ disjoint workstreams** | Batch fan-out **REQUIRED** — do not serialize independent scouts or implementers. |
+
+**Anti-patterns:** serializing independent scouts; calling an oleada a spawn/fase/tanda Scout; treating each parallel child as a new Oleada.
+
+### Verify FAIL → transition
+
+| Symptom | Action |
+|---------|--------|
+| Transient (flake, env glitch) | **Retry** same fase/batch (bounded; not a new oleada) |
+| Local fix (same design, clear repro) | **O2** — execute → verify |
+| Design/env shift, cascade eligible | Cascade +1 tier if below T3; **O3** with research-lab reopen |
+| Post-O3 still FAIL at T3 | **ESCALATE** or **STOP** — no T4, no O4 by default |
+| ESCALATE@2 in-child | Scout → contrast delta → retry envelope (may bump oleada) |
+
+**Retry vs Oleada:** **Retry** = technical, same fase/batch (transient verify, bounded re-run). **Oleada bump** (O2/O3) = new cycle with enriched envelope. At **T3 ceiling**, cascade = **ESCALATE**, not T4. Max **O1 + O2 + O3** per Run unless human approves reset.
 
 ### Multitask Mode / Build in Parallel (roles stay separate)
 
-**Multitask Mode does not collapse roles.** Parallelism is **multiple role spawns**, not one monolithic worker.
+**Multitask Mode does not collapse roles.** Parallelism = **multiple spawns in the same Batch** (same fase), **not** a new Oleada per child.
 
 | Rule | Detail |
 |------|--------|
 | **No monolith** | Multitask / Build in Parallel **does not** authorize one `generalPurpose` / Composer session to run lab + implement + verify + release in one thread. |
-| **Parent always spawns** | Orchestrator **always** delegates by role: `scout`/`maverick` per gates → **`lab-runner`** (greenfield; **`APPROVE`**) → **`implementer`** → **`verifier`**. Parallel = fan-out **across roles/envelopes**, not merged duties. |
+| **Parent always spawns** | Orchestrator **always** delegates by role: `scout`/`maverick` per gates → **`lab-runner`** (greenfield; **`APPROVE`**) → **`implementer`** → **`verifier`**. Parallel = fan-out **across roles/envelopes in one Batch**, not merged duties or extra oleadas. |
 | **Monolithic worker** | Only when the **human explicitly** asks for a single agent to do everything. |
 | **Models** | Parent: Grok High. Implementers: scoped Composer. Maverick / ambiguous lab / post-verifier-fail recovery: Grok High Fast. Verifier: Composer Fast (mechanical DoD) or Grok Fast (judgment / Composer-writer). |
 
@@ -276,7 +319,7 @@ Skip empty waves (e.g. T0: 0 → explore/implementer in 2 → verifier in 3 if w
 
 | Tier | When | Topology |
 |------|------|----------|
-| **T0** | Simple query, typo, 1 minor hunk | Delegate `explore` or `implementer`. Header + Wave required. |
+| **T0** | Simple query, typo, 1 minor hunk | Delegate `explore` or `implementer`. Header + Oleada/Fase required. |
 | **T1** | Multi-command diag, bug 1–2 files | `explore` / `implementer` → **`verifier` if implementer** |
 | **T2** | ≥2 workstreams, clear req, refactor | Scout soft → Lab if greenfield → Maverick if env-anomaly → fan-out → verifier |
 | **T3** | Feature/P0, fuzzy, new automation | Scout soft → Lab (greenfield REQUIRED) → auditors → fan-out → verifier |
@@ -298,10 +341,10 @@ Paste Scout’s `## External contrast` (or a **delta summary**) into the next ch
 | Mode | When |
 |------|------|
 | **REQUIRED** | Greenfield; anomaly/ESCALATE; new automation/tool adopt; architecture trade-off that may brake |
-| **COMPLEMENTARY** | T2/T3 fuzzy; known-issue smell; optional wave-2 deepen |
+| **COMPLEMENTARY** | T2/T3 fuzzy; known-issue smell; optional Batch/tanda deepen in research-lab |
 | **SKIP / omit** | T0 and most mechanical T1; doctrine already in-repo; would only decorate narration |
 
-Sources order: official docs → serious GitHub issues/PRs → evidenced forums. Cap ≤3 Scouts/gate; merge one contrast block. No `scout-deep` agent — depth = Orchestrator-directed waves.
+Sources order: official docs → serious GitHub issues/PRs → evidenced forums. Cap ≤3 Scouts/gate; merge one contrast block. No `scout-deep` agent — depth = Orchestrator-directed Batches/tandas in research-lab.
 
 ### Lab gate (greenfield REQUIRED)
 
@@ -344,7 +387,7 @@ After **2** failed approaches in the same envelope (max **3** if last is repro-o
 
 ### Human brake / debate
 
-**Stop and ask** (short, non-jargon; 1–2 options) if: fuzzy automate/migrate without owner; auditors/lab REJECT large chunk; human-only trade-off; evidence ≠ user’s diagnosis; external contrast flips approach; lab REJECT. Do not launch expensive waves until answered (except trivial T0 already mid-flight).
+**Stop and ask** (short, non-jargon; 1–2 options) if: fuzzy automate/migrate without owner; auditors/lab REJECT large chunk; human-only trade-off; evidence ≠ user’s diagnosis; external contrast flips approach; lab REJECT. Do not launch expensive oleadas until answered (except trivial T0 already mid-flight).
 
 **Do not brake:** obvious typo, localized bug with clear acceptance, user said “implement the plan”.
 
@@ -379,7 +422,7 @@ Canonical root: **`.lab/`** at repo root (see pack `runtime/project/lab/README.m
 
 | Role | Job | Prefer |
 |------|-----|--------|
-| **Orchestrator** | Classify, gate, waves, envelopes, merge deltas, brake, harvest, narrate | Heavy |
+| **Orchestrator** | Classify, gate, oleadas/fases, envelopes, merge deltas, brake, harvest, narrate | Heavy |
 | **explore** | Local repo/MCP reads | Fast |
 | **scout** | External contrast only | Fast |
 | **maverick** | Counterintuitive what-ifs; own `.lab/*-mav-*/` | Heavy/medium |
@@ -422,7 +465,10 @@ While IDs exist on the host:
 ## Role: <role>
 ## Model hint: fast | heavy
 ## Sobre: <id>
-## Wave: <1|2|3>
+## Run: R-<id>
+## Oleada: O<1|2|3>
+## Fase: <prep|research-lab|execute|verify>
+## Batch: B-<id> | none
 **Objetivo:** …
 **Archivos / No tocar:** …
 **Aceptación:** criterio verificable
@@ -478,7 +524,7 @@ Readonly local. Entrega: `## Explore handoff`.
 ## Anti-patterns
 
 - Parent edits/tests/deploys/researches/explores (including T0)
-- Fan-out without classify / missing header or Wave
+- Fan-out without classify / missing header or Oleada/Fase/Batch
 - Forwarding full child transcripts instead of deltas
 - Greenfield → implementer without lab APPROVE under **`.lab/`**
 - Using `projects/.lab/` as operational path
@@ -489,4 +535,5 @@ Readonly local. Entrega: `## Explore handoff`.
 - Treating Cursor `readonly` as hard enforcement
 - Assuming the skill switched the model
 - Multitask / Build in Parallel → one agent doing lab + implement + verify + release
-- Collapsing wave 2+3 into parent or a single `generalPurpose` “do it all” Task
+- Collapsing execute+verify into parent or a single `generalPurpose` “do it all” Task
+- New Oleada per parallel child instead of same Batch

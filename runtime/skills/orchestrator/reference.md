@@ -17,8 +17,9 @@ Primary reference for this pack. CJ-linux snapshot: `reference.cj-linux.md` (**a
 2. **Never** assume Cursor loads `.agents/agents/`.
 3. Prefer project-level `.cursor/agents/` (CLI may miss user-level).
 4. Models: list on host, then remap (`agent --list-models`, `agy models`, `opencode models`). Cursor pack pins: see below.
-5. Gates: Scout soft; Lab greenfield REQUIRED under **`.lab/`**; Maverick env-anomaly T2+ REQUIRED; Verifier after implementer; waves 0–3; zero-exec parent.
-6. Cursor can **audit** zero-exec (readonly + logs); it cannot **fully enforce** it — OpenCode/Codex deny is stronger when wired.
+5. Gates: Scout soft; Lab greenfield REQUIRED under **`.lab/`**; Maverick env-anomaly T2+ REQUIRED; Verifier after implementer; **Run → Oleada O1–O3 → Fase → Batch** (not Wave 0–3); zero-exec parent.
+6. **Taxonomy:** Run ⊃ Oleada O1–O3 ⊃ Fase (`prep` \| `research-lab` \| `execute` \| `verify`) ⊃ Batch \| Spawn. Independent workstreams → **Batch B-… REQUIRED** (multiple Task / `invoke_subagent` **same turn** when deps allow). verify FAIL reproducible local → **O2** corrective (`execute` → `verify`); design/env/hipótesis → **O3** (+ `research-lab`); no O4 / “Wave 4” by default.
+7. Cursor can **audit** zero-exec (readonly + logs); it cannot **fully enforce** it — OpenCode/Codex deny is stronger when wired.
 
 ## Cursor model defaults (pack)
 

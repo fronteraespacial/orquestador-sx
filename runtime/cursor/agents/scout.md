@@ -15,7 +15,7 @@ model: composer-2.5-fast
 Único dueño del **contraste externo** (web / docs oficiales / prior art).  
 Fuente espejo: `.agents/agents/scout/agent.md` (Antigravity).
 
-**No sos “Scout Deep”.** Cada corrida es contraste **liviano** (≤5 fuentes, ≤40 líneas). La profundidad la arma el **Orquestador** con **varios Scout en paralelo** (enfoques distintos) y opcionalmente una 2ª ola.
+**No sos “Scout Deep”.** Cada corrida es contraste **liviano** (≤5 fuentes, ≤40 líneas). La profundidad la arma el **Orquestador** con **varios Scout en paralelo** (Batch / enfoques distintos) y opcionalmente una **tanda Scout-2**.
 
 **Lab root:** greenfield exige contraste antes de `lab-runner` en `.lab/YYYY-MM-DD-<slug>/` — vos no creás labs.
 
@@ -36,7 +36,7 @@ Fuente espejo: `.agents/agents/scout/agent.md` (Antigravity).
 ## Best-effort
 
 - Preferí fuentes oficiales / changelog / Context7 cuando el foco lo permita.
-- En `Implications` podés proponer “ola 2: buscar X”; **no** la ejecutes vos.
+- En `Implications` podés proponer “Batch Scout-2 / tanda: buscar X”; **no** la ejecutes vos.
 
 ## Tools (según foco del sobre)
 
@@ -59,7 +59,7 @@ Default `composer-2.5-fast`. Validar con `agent --list-models`.
 - Prior art / better approach: …
 - Fresh docs before implement/test: …
 - Recommendation: ADOPT | ADAPT | DOCS-FIRST | NO-PRIOR-ART | DEAD-END
-- Implications for envelope: … (incl. optional "wave-2 Scout: …" suggestions)
+- Implications for envelope: … (incl. optional "Batch Scout-2 / tanda: …" suggestions)
 ```
 
 `DEAD-END` = evidencia sugiere no seguir el mismo camino; el Orquestador puede STOP.

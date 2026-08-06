@@ -1,6 +1,6 @@
 # Context map — token budget (agentes)
 
-Presupuestos para sesiones orquestadas sobre el pack v1.2.0. Objetivo: cargar lo mínimo operativo.
+Presupuestos para sesiones orquestadas sobre el pack v1.2.9. Objetivo: cargar lo mínimo operativo.
 
 ## Tier 0 — siempre (≤ ~15k tokens efectivos)
 
@@ -34,6 +34,8 @@ Presupuestos para sesiones orquestadas sobre el pack v1.2.0. Objetivo: cargar lo
 
 - **Build in Parallel ≠ monolith:** no un solo `generalPurpose`/Composer para lab + implement + verify + release.
 - Parent spawnea roles: `scout`/`maverick` (gates) → `lab-runner` (`APPROVE`) → `implementer` → `verifier`.
+- **Batch:** independent workstreams → multiple Task **same turn**; Multitask Mode = same Batch parallel Tasks.
+- verify FAIL local → **O2**; design/env → **O3** (no O4).
 - Worker monolítico solo si el humano lo pide explícitamente.
 - **Install/update scripts:** ejecutar solo con link FIRST-RUN / DEVICE-INSTALL o frase canónica; sin eso, ofrecer únicamente.
 

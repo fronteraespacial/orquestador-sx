@@ -10,7 +10,7 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 ## Orchestration
 
-- The **Orchestrator** receives the raw user prompt, classifies (T0–T3), writes a short internal gate, plans **waves 0–3**, delegates via the surface spawn API, and merges **compact handoffs (deltas only)**.
+- The **Orchestrator** receives the raw user prompt, classifies (T0–T3), writes a short internal gate, plans **Run → Oleada O1–O3 → Fase → Batch**, delegates via the surface spawn API, and merges **compact handoffs (deltas only)**.
 - **Zero direct execution:** the Orchestrator does **not** edit, run tests, deploy, web-research, or explore the system — **including T0**. Children execute (`explore`, `scout`, `maverick`, `lab-runner`, `implementer`/`executor`, `verifier`).
 - **Multitask Mode / Build in Parallel:** does **not** collapse roles — no single `generalPurpose`/Composer doing lab + implement + verify + release. Parent **always** spawns by role: `lab-runner` (`APPROVE`) → `implementer` → `verifier` (scout/maverick per gates). Monolithic worker **only** if the human explicitly asks.
 - **Enforcement:** Cursor can **audit** this policy (best-effort); it cannot fully force the parent. Prefer stronger edit/bash deny on OpenCode/Codex when available. Antigravity: follow `GEMINI.md` + role agents.
@@ -20,14 +20,14 @@ Reusable root policy for any repo that installs this pack. **Merge** with local 
 
 | Gate | Rule |
 |------|------|
-| Header | Every orch turn: `## Complexity`, `## Role: Orchestrator`, `## Action: Delegate…`, `## Wave` |
+| Header | Every orch turn: `## Complexity`, `## Role: Orchestrator`, `## Action: Delegate…`, `## Run`, `## Oleada`, `## Fase`, `## Batch` |
 | Scout | Soft-mandatory on greenfield / anomaly / post-ESCALATE |
 | Lab | Greenfield → **`.lab/YYYY-MM-DD-<slug>/`** APPROVE before prod implementer (**not** `projects/.lab/`) |
 | Maverick | Env-anomaly T2+ REQUIRED |
 | Verifier | REQUIRED after any implementer/executor |
 | ESCALATE | After 2 failed approaches in-envelope (no soft-web in writers) |
 | ANOMALIA | Child reports → orch classifies → bounded retry / cascade +1 / lab |
-| Human brake | Fuzzy/high-stakes trade-offs → ask before expensive waves |
+| Human brake | Fuzzy/high-stakes trade-offs → ask before expensive oleadas |
 | Cascade | Acceptance fail or blocking ANOMALIA → +1 tier |
 
 ## Handoffs
