@@ -135,17 +135,22 @@ Ver [`docs/agent/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) y [`canon/07
 
 ---
 
-## Codex (Q3) — evidencia 2026-08-05
+## Codex (Q3) — evidencia 2026-08-06 (actualizado)
 
 | Canal | Estado | Evidencia |
 |-------|--------|-----------|
-| **A App ChatGPT** | **SÍ** | winget MS Store ChatGPT 26.715.4045.0; runtime `%LOCALAPPDATA%\OpenAI\Codex\` con codex.exe embebido (~350 MB); `%USERPROFILE%\.codex` |
-| **B CLI PATH** | **NO** | `Get-Command` / `where codex` fallan Win+WSL; npm global vacío |
-| **C Pack** | deferred correcto | [`06-INSTALL-CODEX-WINDOWS.md`](../06-INSTALL-CODEX-WINDOWS.md); **app unificada ≠ CLI en PATH** |
+| **A App ChatGPT / OpenAI.Codex** | **SÍ** | Store Appx `OpenAI.Codex`; `Codex.exe` + `ChatGPT.exe`; `%USERPROFILE%\.codex` |
+| **B Embedded CLI** | **SÍ** | `%LOCALAPPDATA%\OpenAI\Codex\bin\<hash>\codex.exe` (p.ej. `codex-cli 0.147.x`); `CODEX_CLI_PATH` en config |
+| **C CLI PATH** | a menudo **NO** | `where codex` puede fallar — **no** bloquear install |
+| **D Pack** | **activo** | `runtime/codex/` remapeado Sol/Terra/Luna + effort; `-IncludeCodex` merge `[agents]` |
 
-**Scout contrast:** fusión desktop 9 jul 2026 Chat/Work/Codex; CLI install aparte (`install.ps1` / npm); cloud aparte. Fuentes: learn.chatgpt.com whats-new, openai/codex github install.ps1, developers.openai.com/codex/cli.
+**Ready = A ∨ B ∨ C ∨ `~\.codex`.** Detector: `Test-CodexHostReady` en `Install-Orchestrator.ps1`.
 
-**No activar `-IncludeCodex`** hasta `codex` en PATH.
+**Scout contrast:** Desktop + CLI + IDE comparten `config.toml`; Luna/Terra/Sol tiers; Ultra = fan-out libre (no org chart SpaceX). Fuentes: developers.openai.com/codex/{models,subagents,config-reference}.
+
+**Activar `-IncludeCodex`** cuando el host esté ready (Desktop-first). Merge config — **nunca** overwrite ciego de `~\.codex\config.toml` (plugins/MCP).
+
+Model + effort pins: [`../human/install/codex-windows.md`](../human/install/codex-windows.md) · [`../../canon/07-MODELS-MATRIX.md`](../../canon/07-MODELS-MATRIX.md) §5.
 
 ---
 
@@ -189,11 +194,12 @@ No usar JSONL inconclusos para ranking ni declarar ganador local.
 
 ## Pendientes honestos
 
-- Codex CLI no en PATH pese a app unificada.
+- Codex CLI a menudo no está en PATH pese a Desktop + embedded CLI — el pack ya detecta Desktop-first.
 - Cloud Agents: límites no documentados formalmente en pack (esta nota es la honestidad).
 - Pack root sin project install.
 - IDs OpenCode Zen free requieren remap por host.
 - Wave-1 inicial: 3 agentes hung → interrupt/relaunch (orquestación OK tras recover).
+- Algunos builds Codex ignoran `reasoning_effort` del hijo al spawn — smoke obligatorio.
 
 ---
 
@@ -202,5 +208,5 @@ No usar JSONL inconclusos para ranking ni declarar ganador local.
 - [`docs/human/FIRST-RUN.md`](../human/FIRST-RUN.md) — 5 min humano
 - [`docs/agent/AGENT-BOOTSTRAP-PROMPT.md`](AGENT-BOOTSTRAP-PROMPT.md) — prompt agente
 - [`03-INSTALL-CURSOR-WINDOWS.md`](../03-INSTALL-CURSOR-WINDOWS.md) — Cursor project scope
-- [`06-INSTALL-CODEX-WINDOWS.md`](../06-INSTALL-CODEX-WINDOWS.md) — Codex deferred
+- [`docs/human/install/codex-windows.md`](../human/install/codex-windows.md) — Codex Desktop-first + Sol/Terra/Luna
 - [`docs/agent/MODEL-ROUTING-POLICY.md`](MODEL-ROUTING-POLICY.md) — política modelos

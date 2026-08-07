@@ -267,8 +267,87 @@ append_codex_entries() {
     "codex/agents/executor_fast.toml|.codex/agents/executor_fast.toml"
     "codex/agents/verifier.toml|.codex/agents/verifier.toml"
     "codex/agents/verifier_like_human.toml|.codex/agents/verifier_like_human.toml"
-    "codex/config.toml.example|.codex/config.toml"
   )
+  # config.toml merged via merge_codex_agents_config — never blind-overwrite
+}
+
+test_codex_host_ready() {
+  if command -v codex >/dev/null 2>&1; then
+    echo "PATH"
+    return 0
+  fi
+  if [[ -d "${LOCALAPPDATA:-}/OpenAI/Codex/bin" ]] || [[ -d "$HOME/.codex" ]]; then
+    echo "userprofile:.codex-or-embedded"
+    return 0
+  fi
+  echo "none"
+  return 1
+}
+
+merge_codex_agents_config() {
+  local example="$1"
+  local dest="$2"
+  local backup_root="$3"
+  local allow_over="$4"
+
+  if [[ ! -f "$example" ]]; then
+    echo "missing:codex/config.toml.example"
+    return
+  fi
+  mkdir -p "$(dirname "$dest")"
+
+  if [[ ! -f "$dest" ]]; then
+    cp "$example" "$dest"
+    echo "copied:$dest"
+    return
+  fi
+
+  local tmp
+  tmp="$(mktemp)"
+  cp "$dest" "$tmp"
+
+  ensure_key() {
+    local key="$1"
+    local val="$2"
+    if grep -qE "^[[:space:]]*${key}[[:space:]]*=" "$tmp"; then
+      if [[ "$allow_over" == true ]]; then
+        # portable sed-ish via awk
+        awk -v k="$key" -v v="$val" '
+          BEGIN{done=0}
+          $0 ~ "^[[:space:]]*"k"[[:space:]]*=" && !done { print k" = "v; done=1; next }
+          { print }
+        ' "$tmp" > "${tmp}.n" && mv "${tmp}.n" "$tmp"
+      fi
+    else
+      if grep -qE '^[[:space:]]*\[agents\][[:space:]]*$' "$tmp"; then
+        awk -v k="$key" -v v="$val" '
+          { print }
+          $0 ~ /^[[:space:]]*\[agents\][[:space:]]*$/ { print k" = "v }
+        ' "$tmp" > "${tmp}.n" && mv "${tmp}.n" "$tmp"
+      else
+        printf '\n[agents]\n%s = %s\n' "$key" "$val" >> "$tmp"
+      fi
+    fi
+  }
+
+  if ! grep -qE '^[[:space:]]*\[agents\][[:space:]]*$' "$tmp"; then
+    printf '\n[agents]\nmax_concurrent_threads_per_session = 4\ndefault_subagent_model = "gpt-5.6-luna"\ndefault_subagent_reasoning_effort = "medium"\n' >> "$tmp"
+  else
+    ensure_key "max_concurrent_threads_per_session" "4"
+    ensure_key "default_subagent_model" '"gpt-5.6-luna"'
+    ensure_key "default_subagent_reasoning_effort" '"medium"'
+  fi
+
+  if cmp -s "$dest" "$tmp"; then
+    rm -f "$tmp"
+    echo "skipped:$dest"
+    return
+  fi
+
+  mkdir -p "$backup_root/.codex"
+  cp "$dest" "$backup_root/.codex/config.toml"
+  mv "$tmp" "$dest"
+  echo "refreshed:$dest"
 }
 
 INSTALL_TARGET="$(resolve_target)"
@@ -312,6 +391,17 @@ else
   [[ "$INCLUDE_CODEX" == true ]] && append_codex_entries ENTRIES
 fi
 
+CODEX_HOW="$(test_codex_host_ready 2>/dev/null || echo none)"
+if [[ "$INCLUDE_CODEX" == true ]]; then
+  if [[ "$CODEX_HOW" != "none" ]]; then
+    log "Codex host ready ($CODEX_HOW) — installing agents + merging [agents] config"
+  else
+    warn "Codex host not detected; continuing with --include-codex templates."
+  fi
+elif [[ "$CODEX_HOW" != "none" ]]; then
+  log "Codex host detected ($CODEX_HOW) but --include-codex not set — skip .codex templates."
+fi
+
 ALLOW_OVER=false
 [[ "$REFRESH_SANDBOX" == true ]] && ALLOW_OVER=true
 
@@ -330,6 +420,16 @@ for entry in "${ENTRIES[@]}"; do
     missing:*)   MISSING+=("${result#missing:}"); warn "  ! ${result#missing:}" ;;
   esac
 done
+
+if [[ "$INCLUDE_CODEX" == true ]]; then
+  result="$(merge_codex_agents_config "$RUNTIME_ROOT/codex/config.toml.example" "$INSTALL_TARGET/.codex/config.toml" "$BACKUP_DIR" "$ALLOW_OVER")"
+  case "$result" in
+    copied:*)    COPIED+=("${result#copied:}"); log "  + ${result#copied:} (Codex config new)" ;;
+    refreshed:*) REFRESHED+=("${result#refreshed:}"); log "  ~ ${result#refreshed:} ([agents] merge)" ;;
+    skipped:*)   SKIPPED+=("${result#skipped:}"); log "  = skip ${result#skipped:} (Codex config)" ;;
+    missing:*)   MISSING+=("${result#missing:}"); warn "  ! ${result#missing:}" ;;
+  esac
+fi
 
 if [[ "$SCOPE" == "user" ]]; then
   gemini_dst="$INSTALL_TARGET/.gemini/GEMINI.md"

@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.3.5] - 2026-08-06
+
+### Added
+
+- **Codex Desktop-first:** detector `Test-CodexHostReady` (PATH ∥ embedded CLI ∥ Appx ∥ `~\.codex`); merge seguro de `[agents]` en `config.toml` (no overwrite de plugins/MCP).
+- **Codex model+effort pins:** Sol/Terra/Luna + `model_reasoning_effort` en todos los `runtime/codex/agents/*.toml`; defaults Luna en `config.toml.example`.
+- **SKILL / reference:** sección Codex Desktop/CLI (spawn, Ultra ban, effort bump acotado); pointer a `07-MODELS-MATRIX` §5.
+
+### Changed
+
+- **Codex ya no “deferred PATH-only”:** install docs + AGENT-HANDOFF alineados a Desktop + CLI embebido.
+- **`07-MODELS-MATRIX` §5** + **MODEL-ROUTING-POLICY** §5.1: tabla esfuerzo CursorBench-aware; orch bump once on ESCALATE.
+- **Validate:** tokens `gpt-5.6-`, `model_reasoning_effort`, `default_subagent_model`; rechaza `remap-after-codex` / `max_depth`.
+- **Pin hygiene:** VERSION `1.3.5`; `SCAFFOLD-FETCH.md`, `GEMINI.user.md`, `scaffold-manifest.json` → tag `v1.3.5`.
+
 ## [1.3.4] - 2026-08-06
 
 ### Added

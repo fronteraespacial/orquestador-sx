@@ -9,14 +9,14 @@ Primary reference for this pack. CJ-linux snapshot: `reference.cj-linux.md` (**a
 | **Cursor** | Task tool, `/name` | `.cursor/agents/*.md` | rules + skill; orchestrator **best-effort** zero-exec |
 | **Antigravity** | `invoke_subagent` | `.agents/agents/<role>/agent.md` | `GEMINI.md` |
 | **OpenCode** | Task / `@agent` | `opencode.json(c)` | orchestrator edit/bash deny when configured |
-| **Codex** | TOML agents / Task | `.codex/agents/*.toml` | `developer_instructions` / `AGENTS.md` |
+| **Codex** | `spawn_agent` / named TOML roles (prompt-driven) | `.codex/agents/*.toml` (+ `%USERPROFILE%\.codex`) | TOML `sandbox_mode` + `developer_instructions`; skill = repo `.agents/skills/orchestrator` |
 
 ## Hard rules
 
 1. **Never** document `invoke_subagent` as Cursor API.
 2. **Never** assume Cursor loads `.agents/agents/`.
 3. Prefer project-level `.cursor/agents/` (CLI may miss user-level).
-4. Models: list on host, then remap (`agent --list-models`, `agy models`, `opencode models`). Cursor pack pins: see below.
+4. Models: list on host, then remap (`agent --list-models`, `agy models`, `opencode models`, Codex Desktop picker / `models_cache.json`). Cursor pack pins: see below. Codex pins: § Codex below + `07-MODELS-MATRIX` §5.
 5. Gates: Scout soft; Lab greenfield REQUIRED under **`.lab/`**; Discovery ⊂ research-lab; Maverick env-anomaly T2+ + early/Harvest CONSULT; Verifier after implementer; VLH after tech PASS on T2/T3 human-facing; **Run → Oleada O1–O3 → Fase → Batch** (not Wave 0–3); zero-exec parent.
 6. **Taxonomy:** Run ⊃ Oleada O1–O3 ⊃ Fase (`prep` \| `research-lab` \| `execute` \| `verify`) ⊃ Batch \| Spawn. Independent workstreams → **Batch B-… REQUIRED** (multiple Task / `invoke_subagent` **same turn** when deps allow). verify FAIL reproducible local → **one O2** corrective (full gap inventory consolidated → `execute` → `verify`); design/env/hipótesis → **O3** (+ `research-lab`); no O4 / “Wave 4” by default. VLH **never** opens O2.
 7. Cursor can **audit** zero-exec (readonly + logs); it cannot **fully enforce** it — OpenCode/Codex deny is stronger when wired.
@@ -91,6 +91,21 @@ After T2/T3 tech PASS (+ VLH if gated): parent Ledger → Maverick CONSULT manda
 Verify loop (1.3.1): FAIL → full gap inventory; **one O2** per fan-in; input envelopes long OK, output handoffs ≤40 lines; RELEASE CHECKLIST fase for publish steps.
 
 Policy + evidence tiers: pack `docs/agent/MODEL-ROUTING-POLICY.md`. Matrix: `07-MODELS-MATRIX.md`.
+
+## Codex Desktop / CLI
+
+**Ready when:** `codex` on PATH **or** embedded `%LOCALAPPDATA%\OpenAI\Codex\bin\**\codex.exe` **or** Store Appx `OpenAI.Codex` **or** existing `%USERPROFILE%\.codex` (Desktop). Install agents with `-IncludeCodex` / `--include-codex`; **merge** `[agents]` into `config.toml` — never blind-overwrite `mcp_servers` / `plugins` / `notify` / `[desktop]` / `[windows]`.
+
+| Piece | Path |
+|-------|------|
+| User config / agents | `%USERPROFILE%\.codex\config.toml`, `%USERPROFILE%\.codex\agents\` |
+| Project agents | `<repo>\.codex\agents\*.toml` |
+| Skill (methodology) | `<repo>\.agents\skills\orchestrator\` (not `~/.codex/skills` as SoT) |
+| Pack templates | `runtime/codex/` |
+
+**Config keys:** `agents.max_concurrent_threads_per_session` (legacy alias `max_threads`), `agents.default_subagent_model = "gpt-5.6-luna"`, `agents.default_subagent_reasoning_effort = "medium"`. Per-role: `model`, `model_reasoning_effort` in each agent TOML. Spawn may pass `reasoning_effort` / `model` (some builds ignore child effort — smoke).
+
+**Pins:** parent `gpt-5.6-terra`+`medium`; workers Luna; judgment (mav/ver/VLH/lab-single) Terra+`high`. **Ultra ≠ SpaceX org chart.** Full table: [SKILL.md](SKILL.md) § Codex · `07-MODELS-MATRIX` §5 · `docs/human/install/codex-windows.md`.
 
 ## Lab (canonical)
 

@@ -336,6 +336,83 @@ sys.exit(2)
     Add-Pass "TOML fallback fields OK: $Label"
 }
 
+function Test-CodexHostWiring {
+    $agentsDir = Join-Path $PackRoot 'runtime\codex\agents'
+    $example = Join-Path $PackRoot 'runtime\codex\config.toml.example'
+    $skill = Join-Path $PackRoot 'runtime\skills\orchestrator\SKILL.md'
+    $reference = Join-Path $PackRoot 'runtime\skills\orchestrator\reference.md'
+
+    Get-ChildItem (Join-Path $agentsDir '*.toml') -ErrorAction SilentlyContinue | ForEach-Object {
+        $text = Get-Content -LiteralPath $_.FullName -Raw
+        $label = $_.Name
+        if ($text -match 'remap-after-codex') {
+            Add-Error "Codex agent still has placeholder remap-after-codex: $label"
+        }
+        if ($text -match '(?i)STATUS:\s*deferred') {
+            Add-Error "Codex agent still STATUS deferred: $label"
+        }
+        if ($text -notmatch '(?m)^\s*model\s*=\s*"gpt-5\.6-') {
+            Add-Error "Codex agent missing gpt-5.6 model pin: $label"
+        }
+        if ($text -notmatch '(?m)^\s*model_reasoning_effort\s*=') {
+            Add-Error "Codex agent missing model_reasoning_effort: $label"
+        }
+        else {
+            Add-Pass "Codex model+effort pins: $label"
+        }
+    }
+
+    if (Test-Path -LiteralPath $example) {
+        $ex = Get-Content -LiteralPath $example -Raw
+        if ($ex -match '(?m)^\s*max_depth\s*=') {
+            Add-Error 'config.toml.example must not set max_depth (not in official schema)'
+        }
+        if ($ex -notmatch 'default_subagent_model\s*=\s*"gpt-5\.6-luna"') {
+            Add-Error 'config.toml.example must set default_subagent_model = "gpt-5.6-luna"'
+        }
+        if ($ex -notmatch 'default_subagent_reasoning_effort\s*=\s*"medium"') {
+            Add-Error 'config.toml.example must set default_subagent_reasoning_effort = "medium"'
+        }
+        if ($ex -notmatch 'max_concurrent_threads_per_session\s*=\s*4') {
+            Add-Error 'config.toml.example must set max_concurrent_threads_per_session = 4'
+        }
+        else {
+            Add-Pass 'Codex config.toml.example [agents] defaults OK'
+        }
+    }
+
+    foreach ($pair in @(
+            @{ Path = $skill; Label = 'SKILL.md' },
+            @{ Path = $reference; Label = 'reference.md' }
+        )) {
+        if (-not (Test-Path -LiteralPath $pair.Path)) {
+            Add-Error "Missing $($pair.Label) for Codex wiring check"
+            continue
+        }
+        $t = Get-Content -LiteralPath $pair.Path -Raw
+        if ($t -notmatch 'Codex') {
+            Add-Error "$($pair.Label) must mention Codex"
+        }
+        if ($t -notmatch 'gpt-5\.6' -and $t -notmatch 'default_subagent') {
+            Add-Error "$($pair.Label) must mention gpt-5.6 or default_subagent (Codex Host remap)"
+        }
+        else {
+            Add-Pass "Codex wiring documented in $($pair.Label)"
+        }
+    }
+
+    $installer = Join-Path $PackRoot 'tooling\scripts\Install-Orchestrator.ps1'
+    if (Test-Path -LiteralPath $installer) {
+        $inst = Get-Content -LiteralPath $installer -Raw
+        if ($inst -notmatch 'Test-CodexHostReady' -or $inst -notmatch 'Merge-CodexAgentsConfig') {
+            Add-Error 'Install-Orchestrator.ps1 must define Test-CodexHostReady and Merge-CodexAgentsConfig'
+        }
+        else {
+            Add-Pass 'Installer Codex Desktop-first + merge helpers present'
+        }
+    }
+}
+
 function Test-GatesDocumented {
     $gateFiles = @(
         'runtime\cursor\rules\cj-orchestrator-mandatory.mdc',
@@ -644,6 +721,7 @@ Test-JsoncFile -Path (Join-Path $PackRoot 'runtime\opencode\opencode.jsonc.examp
 Get-ChildItem (Join-Path $PackRoot 'runtime\codex\agents\*.toml') -ErrorAction SilentlyContinue |
     ForEach-Object { Test-TomlFile -Path $_.FullName -Label $_.Name }
 Test-TomlFile -Path (Join-Path $PackRoot 'runtime\codex\config.toml.example') -Label 'config.toml.example'
+Test-CodexHostWiring
 
 Test-OperationalProjectsLab -ScanRoots @(
     (Join-Path $PackRoot 'runtime'),

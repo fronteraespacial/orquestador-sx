@@ -1,9 +1,11 @@
 # SpaceX Orchestrator pack — Codex agent role
-# STATUS: deferred until `codex` is installed. Verify keys against your Codex version.
-# model = "<remap-after-codex>"  # placeholder — do not invent model IDs
+# Activate when Codex Desktop / embedded CLI / PATH codex detected.
+# Host remap: gpt-5.6-luna + medium.
 
 name = "scout"
 description = "External contrast read-only; soft-mandatory before greenfield; no code edits"
+model = "gpt-5.6-luna"
+model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 web_search = "live"
 

@@ -13,7 +13,7 @@ Marcar **después** de copiar archivos. No omitir filas.
 [ ] Antigravity: .agents/agents/{explore,scout,maverick,implementer,lab-runner,verifier,verifier-like-human}/agent.md
 [ ] Antigravity: GEMINI.md con gates + zero-exec
 [ ] OpenCode: default_agent=orchestrator + workers (incl. VLH); edit/bash deny en orch si el runtime lo permite
-[ ] Codex: stubs OR “deferred” documentado (incl. VLH cuando exista)
+[ ] Codex: Desktop/embedded/PATH detected; agents TOML + VLH; Sol/Terra/Luna + effort pins; `[agents]` Luna defaults merged (not PATH-only deferred)
 [ ] .lab/README.md en raíz (NO projects/.lab)
 [ ] AGENTS.md con sección Orchestration (desde runtime/project/AGENTS.md)
 ```

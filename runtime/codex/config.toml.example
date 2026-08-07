@@ -1,20 +1,25 @@
 # SpaceX Orchestrator pack — Codex config example
-# STATUS: deferred — Codex is NOT installed on this pack host; do not activate until `codex` is on PATH.
-# Copy to %USERPROFILE%\.codex\config.toml (or project .codex/) only after verifying schema for your Codex version.
-# Models are placeholders/remappable — run Codex docs / model list on the host; do NOT invent model IDs.
-# No user secrets belong in this file.
+# Activate when ChatGPT Codex Desktop / embedded CLI / `codex` on PATH is detected.
+# Copy or MERGE into %USERPROFILE%\.codex\config.toml and/or <repo>\.codex\config.toml.
+# MERGE RULE: never overwrite existing mcp_servers, plugins, notify, [desktop], [windows], auth.
+# Only ensure [agents] keys below exist (or update spacex-managed keys). Verify against live Codex docs.
+# Parent model: prefer session/UI picker — gpt-5.6-terra + medium (see 07-MODELS-MATRIX §5).
+# Do NOT invent model IDs. Official: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna.
 
-# Optional globals (leave commented until remapped on an installed host):
-# model = "<remap-after-codex>"
+# Optional parent defaults (leave commented if the Desktop picker owns the thread):
+# model = "gpt-5.6-terra"
+# model_reasoning_effort = "medium"
 # approval_policy = "on-request"
 # sandbox_mode = "read-only"
 
 [agents]
-# Current Codex [agents] limits — tune after install; verify against live docs.
-max_threads = 4
-max_depth = 2
+# Official key (max_threads is a legacy alias — prefer this):
+max_concurrent_threads_per_session = 4
+# Cheap child defaults — role TOMLs override judgment roles to terra+high:
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "medium"
 
-# Roles are auto-discovered from .codex/agents/*.toml when installed.
-# Optional explicit role pointers (uncomment and adjust paths for your layout):
+# Roles auto-discovered from .codex/agents/*.toml when installed.
+# Optional explicit pointers:
 # [agents.orchestrator]
 # config_file = "agents/orchestrator.toml"

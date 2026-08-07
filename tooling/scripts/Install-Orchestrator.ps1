@@ -107,7 +107,7 @@ function Get-UserTemplateMap {
         foreach ($a in $codexAgents) {
             $map.Add(@{ Src = "codex\agents\$a.toml"; Dst = ".codex\agents\$a.toml" })
         }
-        $map.Add(@{ Src = 'codex\config.toml.example'; Dst = '.codex\config.toml' })
+        # config.toml is merged via Merge-CodexAgentsConfig — never blind-overwrite
     }
 
     return @($map)
@@ -122,8 +122,154 @@ function Get-CodexTemplateEntries {
     foreach ($a in $codexAgents) {
         $entries.Add(@{ Src = "codex\agents\$a.toml"; Dst = ".codex\agents\$a.toml" })
     }
-    $entries.Add(@{ Src = 'codex\config.toml.example'; Dst = '.codex\config.toml' })
+    # config.toml handled by Merge-CodexAgentsConfig (not a blind copy)
     return @($entries)
+}
+
+function Test-CodexHostReady {
+    <#
+    .SYNOPSIS
+      Desktop-first Codex readiness: PATH, embedded CLI, config CODEX_CLI_PATH, or Store Appx.
+    #>
+    if (Get-Command codex -ErrorAction SilentlyContinue) {
+        return [pscustomobject]@{ Ready = $true; How = 'PATH' }
+    }
+
+    $binRoot = Join-Path $env:LOCALAPPDATA 'OpenAI\Codex\bin'
+    if (Test-Path -LiteralPath $binRoot) {
+        $exe = Get-ChildItem -LiteralPath $binRoot -Recurse -Filter 'codex.exe' -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+        if ($exe) {
+            return [pscustomobject]@{ Ready = $true; How = "embedded:$($exe.FullName)" }
+        }
+    }
+
+    $userCfg = Join-Path $env:USERPROFILE '.codex\config.toml'
+    if (Test-Path -LiteralPath $userCfg) {
+        if (Select-String -LiteralPath $userCfg -Pattern 'CODEX_CLI_PATH' -Quiet -ErrorAction SilentlyContinue) {
+            return [pscustomobject]@{ Ready = $true; How = 'config:CODEX_CLI_PATH' }
+        }
+        # Existing ~/.codex with Desktop state counts as host present
+        return [pscustomobject]@{ Ready = $true; How = 'userprofile:.codex' }
+    }
+
+    try {
+        $pkg = Get-AppxPackage -Name 'OpenAI.Codex' -ErrorAction SilentlyContinue
+        if ($pkg) {
+            return [pscustomobject]@{ Ready = $true; How = "appx:$($pkg.Version)" }
+        }
+    }
+    catch {
+        # Appx cmdlet unavailable on some hosts
+    }
+
+    return [pscustomobject]@{ Ready = $false; How = 'none' }
+}
+
+function Merge-CodexAgentsConfig {
+    param(
+        [string] $DestFile,
+        [string] $ExampleFile,
+        [hashtable] $Manifest,
+        [string] $BackupRoot,
+        [string] $InstallTargetRoot,
+        [bool] $AllowOverwrite
+    )
+
+    $relSrc = 'codex\config.toml.example'
+    if (-not (Test-Path -LiteralPath $ExampleFile)) {
+        $Manifest.missing_source.Add($relSrc) | Out-Null
+        Write-Warning "Missing template source: $relSrc"
+        return
+    }
+
+    $destDir = Split-Path -Parent $DestFile
+    if ($destDir -and -not (Test-Path -LiteralPath $destDir)) {
+        if ($PSCmdlet.ShouldProcess($destDir, 'Create directory')) {
+            New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+        }
+    }
+
+    $managedBlock = @'
+[agents]
+max_concurrent_threads_per_session = 4
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "medium"
+'@
+
+    $exists = Test-Path -LiteralPath $DestFile
+    if (-not $exists) {
+        if ($PSCmdlet.ShouldProcess($DestFile, 'Copy Codex config example (new file)')) {
+            Copy-Item -LiteralPath $ExampleFile -Destination $DestFile -Force
+            $hash = if (-not $WhatIfPreference) { (Get-FileHash -LiteralPath $DestFile -Algorithm SHA256).Hash } else { '(whatif)' }
+            $Manifest.copied.Add(@{ source = $relSrc; dest = $DestFile; sha256 = $hash; merge = 'copy-new' }) | Out-Null
+            Write-Host "  + $DestFile (Codex config new)" -ForegroundColor Green
+        }
+        return
+    }
+
+    # Existing config: merge [agents] keys only — never overwrite mcp/plugins/notify/desktop/windows
+    $existing = Get-Content -LiteralPath $DestFile -Raw
+    if ($null -eq $existing) { $existing = '' }
+
+    $keys = @(
+        @{ Name = 'max_concurrent_threads_per_session'; Value = '4' },
+        @{ Name = 'default_subagent_model'; Value = '"gpt-5.6-luna"' },
+        @{ Name = 'default_subagent_reasoning_effort'; Value = '"medium"' }
+    )
+
+    $changed = $false
+    $newContent = $existing
+
+    if ($newContent -notmatch '(?m)^\s*\[agents\]\s*$') {
+        $trimmed = $newContent.TrimEnd()
+        $newContent = if ($trimmed) { "$trimmed`r`n`r`n$managedBlock`r`n" } else { "$managedBlock`r`n" }
+        $changed = $true
+    }
+    else {
+        foreach ($k in $keys) {
+            $pat = "(?m)^\s*$([regex]::Escape($k.Name))\s*=\s*.*$"
+            $line = "$($k.Name) = $($k.Value)"
+            if ($newContent -match $pat) {
+                if ($AllowOverwrite) {
+                    $updated = [regex]::Replace($newContent, $pat, $line)
+                    if ($updated -ne $newContent) {
+                        $newContent = $updated
+                        $changed = $true
+                    }
+                }
+            }
+            else {
+                # Insert after [agents] header
+                $newContent = [regex]::Replace(
+                    $newContent,
+                    '(?m)^(\s*\[agents\]\s*)$',
+                    "`$1`r`n$line"
+                )
+                $changed = $true
+            }
+        }
+        # Drop obsolete max_depth under [agents] when refreshing
+        if ($AllowOverwrite -and $newContent -match '(?m)^\s*max_depth\s*=') {
+            $newContent = [regex]::Replace($newContent, '(?m)^\s*max_depth\s*=.*\r?\n?', '')
+            $changed = $true
+        }
+    }
+
+    if (-not $changed) {
+        $Manifest.skipped.Add(@{ path = $DestFile; reason = 'codex_agents_keys_present' }) | Out-Null
+        Write-Verbose "Skip Codex config merge (keys present): $DestFile"
+        return
+    }
+
+    if ($PSCmdlet.ShouldProcess($DestFile, 'Merge Codex [agents] keys into existing config.toml')) {
+        Backup-ExistingFile -FilePath $DestFile -BackupRoot $BackupRoot -InstallTargetRoot $InstallTargetRoot
+        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($DestFile, $newContent, $utf8NoBom)
+        $hash = if (-not $WhatIfPreference) { (Get-FileHash -LiteralPath $DestFile -Algorithm SHA256).Hash } else { '(whatif)' }
+        $Manifest.refreshed.Add(@{ source = $relSrc; dest = $DestFile; sha256 = $hash; merge = 'agents-keys' }) | Out-Null
+        Write-Host "  ~ merge $DestFile ([agents] keys)" -ForegroundColor Yellow
+    }
 }
 
 function Test-IsPackSandbox {
@@ -405,7 +551,7 @@ if ($Scope -eq 'User') {
     Write-Warning "USER SCOPE - global paths only under $installTarget"
     Write-Warning '  Installs: .cursor/agents, .cursor/rules, .agents/skills/orchestrator, .config/opencode/opencode.jsonc'
     Write-Warning '  Antigravity Desktop: merge ~/.gemini/GEMINI.md (spacex-orchestrator-sx block)'
-    if ($IncludeCodex) { Write-Warning '  Also: .codex/agents, .codex/config.toml ( -IncludeCodex )' }
+    if ($IncludeCodex) { Write-Warning '  Also: .codex/agents + merge [agents] into .codex/config.toml ( -IncludeCodex )' }
     Write-Warning 'NOT installed under User scope (project-level - invalid global config):'
     Write-Warning '  .agents/agents/*, repo-root GEMINI.md, AGENTS.md, .lab/'
     if (-not $WhatIfPreference -and -not $PSCmdlet.ShouldProcess($installTarget, 'Install orchestrator (User scope - global paths only)')) {
@@ -423,6 +569,19 @@ elseif ($Scope -eq 'Sandbox') {
 }
 else {
     Write-Host "Target (project): $installTarget" -ForegroundColor Cyan
+}
+
+$codexHost = Test-CodexHostReady
+if ($IncludeCodex) {
+    if ($codexHost.Ready) {
+        Write-Host "Codex host ready ($($codexHost.How)) — installing agents + merging [agents] config" -ForegroundColor Cyan
+    }
+    else {
+        Write-Warning "Codex host not detected (PATH / embedded CLI / Appx / ~/.codex). Continuing with -IncludeCodex templates; verify Desktop install before use."
+    }
+}
+elseif ($codexHost.Ready) {
+    Write-Host "Codex host detected ($($codexHost.How)) but -IncludeCodex not set — skip .codex templates. Re-run with -IncludeCodex to install." -ForegroundColor DarkYellow
 }
 
 $templateMap = if ($Scope -eq 'User') {
@@ -445,6 +604,13 @@ foreach ($entry in $templateMap) {
     $src = Join-Path $RuntimeRoot $entry.Src
     $dst = Join-Path $installTarget $entry.Dst
     Copy-TemplateSafe -SourceFile $src -DestFile $dst -Manifest $manifest `
+        -BackupRoot $backupRoot -InstallTargetRoot $installTarget -AllowOverwrite:$allowOverwrite
+}
+
+if ($IncludeCodex) {
+    $codexExample = Join-Path $RuntimeRoot 'codex\config.toml.example'
+    $codexDest = Join-Path $installTarget '.codex\config.toml'
+    Merge-CodexAgentsConfig -DestFile $codexDest -ExampleFile $codexExample -Manifest $manifest `
         -BackupRoot $backupRoot -InstallTargetRoot $installTarget -AllowOverwrite:$allowOverwrite
 }
 

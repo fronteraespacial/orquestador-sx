@@ -95,9 +95,27 @@ Validate with `agy models` / UI. If `gemini-3.1-pro-high` missing → nearest do
 
 **No** writers en flash free ya degradado en el org. Prose: **Grok Fast when exposed** for Mav/Ver/VLH; else **Host remap**.
 
-## 5. Codex
+## 5. Codex (Desktop + CLI — Host remap GPT-5.6)
 
-IDs OpenAI de la cuenta. Same **roles** (incl. VerifierLikeHuman). Prefer Grok-equivalent high-fast when the account exposes it for Mav/Ver/VLH; else **`Host remap`** to best high-reasoning OpenAI ID — never invent Gemini/OpenCode IDs or label non-Grok as Grok.
+Same **roles** (incl. VerifierLikeHuman). ChatGPT Codex Desktop, CLI, and IDE extension share `%USERPROFILE%\.codex` (+ project `.codex/`). Ready when Desktop/Store app **or** embedded CLI **or** `codex` on PATH — not PATH-only.
+
+**IDs (do not invent):** `gpt-5.6-sol` | `gpt-5.6-terra` | `gpt-5.6-luna`. Effort: `minimal` | `low` | `medium` | `high` | `xhigh` (UI ES: Mínimo / Medio / Alto / Muy alta). **Ultra/Max ≠ effort pin** — Ultra is free-form subagent fan-out; **never** use Ultra as SpaceX org chart.
+
+| Role | Model | `model_reasoning_effort` | Notes |
+|------|-------|--------------------------|-------|
+| Parent orchestrator (session) | `gpt-5.6-terra` | `medium` (T3/fuzzy → `high`) | Picker/UI; avoid default `xhigh` for routing-only |
+| `[agents]` child defaults | `gpt-5.6-luna` | `medium` | `default_subagent_model` / `default_subagent_reasoning_effort` |
+| explore / scout | `gpt-5.6-luna` | `medium` (T0 inventory → `low`) | Cheap RO |
+| executor_fast / Lab Batch ≥2 | `gpt-5.6-luna` | `high` | CursorBench Luna High ≈ Composer 2.5 band, lower $ |
+| lab (single hyp) | `gpt-5.6-terra` | `high` | Spawn override; never Luna for single lab |
+| maverick / verifier / VLH | `gpt-5.6-terra` | `high` | Judgment tier; Sol+`high` only post-ESCALATE |
+| diagnostic synthesizer | `gpt-5.6-terra` | `high` | Same judgment tier |
+
+**Orch effort/model bump:** at most **+1** effort step **or** Terra→Sol on cascade/ESCALATE — not free-float every turn. Pin in `.codex/agents/*.toml`; spawn may pass `reasoning_effort` / `model`. Some builds ignore child effort overrides — smoke and document.
+
+**CursorBench 3.2 anchors (cost/quality guidance, not DoD):** Luna High ~56.8% @ ~$0.16; Luna Extra High ~57.7% @ ~$0.23; Terra High ~54.2% @ ~$0.71; Terra Extra High ~59.2% @ ~$1.15. Prefer Luna High workers over Terra `xhigh` parent for routine routing.
+
+Detail: [`docs/agent/MODEL-ROUTING-POLICY.md`](../docs/agent/MODEL-ROUTING-POLICY.md) §5.1 Codex + [`docs/human/install/codex-windows.md`](../docs/human/install/codex-windows.md).
 
 ## 6. Checklist instalador
 
@@ -108,7 +126,9 @@ IDs OpenAI de la cuenta. Same **roles** (incl. VerifierLikeHuman). Prefer Grok-e
 [ ] Maverick/VLH/Verifier Cursor = cursor-grok-4.5-high-fast when exposed
 [ ] Lab single-spawn Cursor = cursor-grok-4.5-high-fast; Lab Batch ≥2 = composer-2.5-fast each
 [ ] Maverick/VLH/Verifier AGY = Host remap gemini-3.1-pro-high (never labeled Grok)
-[ ] OpenCode/Codex: Grok when exposed for Mav/Ver/VLH; else Host remap high-reasoning
+[ ] OpenCode: Grok when exposed for Mav/Ver/VLH; else Host remap high-reasoning
+[ ] Codex: Desktop/embedded CLI detected; agents TOML pin Sol/Terra/Luna + effort; `[agents]` Luna defaults; Ultra not used as org chart
+[ ] Codex judgment (mav/ver/VLH/lab-single) = terra+high (not luna); workers = luna+high/medium
 [ ] Writers ≠ flash free fallido
 [ ] Maverick / VLH / Verifier techo ≥ implementer; roles not disabled on AGY
 [ ] Orchestrator configurado para no ser el writer (deny o disciplina)

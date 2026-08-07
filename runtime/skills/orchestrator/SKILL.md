@@ -24,7 +24,8 @@ Applies to **Cursor**, **OpenCode**, **Antigravity**, and **Codex** on any host.
 | Surface | Policy strength |
 |---------|-----------------|
 | **Cursor** | Best-effort. `readonly` / rules / skill can **audit** and nudge zero-exec; the product **cannot fully force** the parent never to read or tool. Treat violations as process fails. |
-| **OpenCode / Codex** | Stronger deny on edit/bash for the orchestrator agent when configured. |
+| **OpenCode** | Stronger deny on edit/bash for the orchestrator agent when configured. |
+| **Codex** | Orchestrator TOML `sandbox_mode = read-only`; spawn is prompt-driven (`spawn_agent` / `.codex/agents/*.toml`) — not Cursor Task. Stronger than Cursor audit when sandboxes are wired; still not hard role enforcement. **Ultra ≠ org chart.** |
 | **Antigravity** | Strong via `GEMINI.md` + role agents; still best-effort if the session agent ignores docs. |
 
 This skill defines **contract**. Runtimes vary in how hard they enforce it.
@@ -204,6 +205,25 @@ AGY has no Grok — keep maverick/VLH enabled with the **`Host remap`** above. C
 Gates: Lab greenfield REQUIRED; Discovery budget; Maverick env-anomaly T2+ + early/Harvest CONSULT; Verifier after implementer; VLH after tech PASS on T2/T3 human-facing; ESCALATE→scout.
 
 See also: [reference.antigravity.md](reference.antigravity.md) (optional install).
+
+## Codex Desktop / CLI (Host remap GPT-5.6)
+
+**Surface:** ChatGPT Codex Desktop (Store/Appx), embedded CLI (`%LOCALAPPDATA%\OpenAI\Codex\bin\**\codex.exe`), and/or `codex` on PATH. Desktop + CLI + IDE share `%USERPROFILE%\.codex` (+ project `.codex/`). **Ready ≠ PATH-only.**
+
+**Spawn:** named roles in `.codex/agents/*.toml` (`developer_instructions` + `sandbox_mode`). Skill remains repo `.agents/skills/orchestrator/SKILL.md` — Codex does **not** load `.cursor/agents`. Gates identical to this skill (T0–T3, zero-exec, Lab, Verifier, VLH, Harvest, YIELD_PLAN → `/plan`).
+
+**Model + effort pins** (full table: pack `07-MODELS-MATRIX` §5 + `docs/agent/MODEL-ROUTING-POLICY.md` §5.1):
+
+| Role | Model | Effort |
+|------|-------|--------|
+| Parent orchestrator | `gpt-5.6-terra` | `medium` (T3/fuzzy → `high`) |
+| `[agents]` child defaults | `gpt-5.6-luna` | `medium` |
+| explore / scout | `gpt-5.6-luna` | `medium` (T0 → `low`) |
+| executor_fast / Lab Batch ≥2 | `gpt-5.6-luna` | `high` |
+| lab (single) | `gpt-5.6-terra` | `high` |
+| maverick / verifier / VLH | `gpt-5.6-terra` | `high` (Sol+`high` only post-ESCALATE) |
+
+Orch may bump **once** (+1 effort **or** Terra→Sol) on cascade/ESCALATE — not free-float. **Ultra/Max are not effort pins** and must not replace named roles. Config keys: `model`, `model_reasoning_effort`, `agents.default_subagent_model`, `agents.default_subagent_reasoning_effort`, `agents.max_concurrent_threads_per_session`. Wiring: [reference.md](reference.md) § Codex · install: `docs/human/install/codex-windows.md`.
 
 ## Idea
 

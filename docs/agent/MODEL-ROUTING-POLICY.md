@@ -160,9 +160,13 @@ The pack **does** pin **child** spawn IDs via Task `model:` / frontmatter:
 | **Cursor** (Grok exposed) | `cursor-grok-4.5-high-fast` | Pack Grok ID — not a remap |
 | **Antigravity** (no Grok) | `gemini-3.1-pro-high` | **`Host remap`** — documented AGY high-reasoning; **never** call it Grok |
 | **OpenCode** | `opencode-go/grok-4.5` when catalog has Grok | Else **`Host remap`** nearest high-reasoning (e.g. Nemotron) — never label “Grok” |
-| **Codex** | Grok-equivalent high-fast if account exposes it | Else **`Host remap`** best OpenAI high-reasoning ID |
+| **Codex** | **`Host remap`:** `gpt-5.6-terra` + `high` (Sol+`high` only post-ESCALATE) | Never call OpenAI remap “Grok”; never Luna for mav/ver/VLH |
 
-**Hard:** do not disable maverick, verifier judgment tier, or VLH on AGY. Do not put `grok-*` frontmatter on AGY. Do not narrate a Gemini/OpenAI remap as “Grok”. OpenCode/Codex prose: **Grok Fast when exposed** for Mav/Ver/VLH; else **Host remap**.
+**Codex workers (not judgment):** explore/scout → `gpt-5.6-luna` + `medium` (T0 → `low`); executor_fast / Lab Batch ≥2 → `gpt-5.6-luna` + `high`; lab single → `gpt-5.6-terra` + `high`. Parent session → `gpt-5.6-terra` + `medium` (T3/fuzzy → `high`). Defaults: `agents.default_subagent_model = gpt-5.6-luna`, `agents.default_subagent_reasoning_effort = medium`.
+
+**Codex orch may bump once:** +1 effort **or** Terra→Sol only on cascade/ESCALATE — not free-float; **Ultra ≠ org chart**. Pins live in `.codex/agents/*.toml` (`model`, `model_reasoning_effort`); spawn may override. See `07-MODELS-MATRIX` §5.
+
+**Hard:** do not disable maverick, verifier judgment tier, or VLH on AGY. Do not put `grok-*` frontmatter on AGY. Do not narrate a Gemini/OpenAI remap as “Grok”. OpenCode prose: **Grok Fast when exposed** for Mav/Ver/VLH; else **Host remap**. Codex: use Sol/Terra/Luna table above — never Luna on judgment roles.
 
 ## 6. Pending (optional; does not block implementation)
 

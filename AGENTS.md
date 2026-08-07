@@ -10,7 +10,7 @@
 4. Skill canónica (post-install): `.agents/skills/orchestrator/SKILL.md`
 5. Entrypoint Cursor (post-install): `.cursor/agents/orchestrator.md`
 
-## Árbol v1.3.4
+## Árbol v1.3.5
 
 | Ruta | Rol |
 |------|-----|
@@ -38,3 +38,4 @@
 Los stubs en root (`00–09`, `templates/`, `scripts/`) redirigen al canónico v1.2.1.
 
 **Install vía agente:** [`docs/agent/DEVICE-INSTALL-PROMPT.md`](docs/agent/DEVICE-INSTALL-PROMPT.md) · **Update:** [`docs/agent/UPDATE-PHRASE.md`](docs/agent/UPDATE-PHRASE.md)
+
