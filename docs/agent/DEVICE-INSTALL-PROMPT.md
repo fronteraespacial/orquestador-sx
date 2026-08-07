@@ -59,6 +59,44 @@ Sos un agente de **instalación** (no orquestador de tareas). Podés ejecutar lo
 ## Frase alternativa (equivalente)
 
 `Instalá orquestador-sx desde https://github.com/fronteraespacial/orquestador-sx`
+
+---
+
+## Prompt Codex Desktop (copiar desde aquí)
+
+Pegar en **ChatGPT Codex** (Desktop) con el repo destino abierto o indicando la ruta. Apunta a **[releases/latest](https://github.com/fronteraespacial/orquestador-sx/releases/latest)** (v1.3.5+ Codex Desktop-first).
+
+```markdown
+Instalá **orquestador-sx** (latest) en este Windows para **ChatGPT Codex**, desde:
+https://github.com/fronteraespacial/orquestador-sx/releases/latest
+
+## Tu rol
+Agente de instalación (no orquestador de producto). Ejecutá solo scripts documentados del pack.
+
+## Contexto host
+- App Codex Desktop / Store `OpenAI.Codex` y/o CLI embebido en `%LOCALAPPDATA%\OpenAI\Codex\bin\**\codex.exe` cuentan como ready (no hace falta `codex` en PATH).
+- Config viva: `%USERPROFILE%\.codex\config.toml` — **merge** `[agents]`, nunca overwrite ciego (conservar mcp/plugins/notify/desktop).
+
+## Pasos
+1. Obtener pack: cloná `fronteraespacial/orquestador-sx` en tag/latest **o** descargá el zip de releases/latest + verificá `SHA256SUMS`.
+2. Preguntame la ruta absoluta del **repo proyecto** destino (o confirmá el workspace actual).
+3. Preview: `.\tooling\scripts\Install-Orchestrator.ps1 -Scope Project -TargetPath <repo> -IncludeCodex -WhatIf`
+4. Install real:
+   `.\tooling\scripts\Install-Orchestrator.ps1 -Scope Project -TargetPath <repo> -IncludeCodex`
+   (opcional global: `-Scope User -ConfirmUserScope -IncludeCodex` — solo agents + merge config.)
+5. Asegurá skill en el repo: `.agents/skills/orchestrator/SKILL.md` (init project si falta lock).
+6. Status / informe: versión lock, `.codex/agents/*.toml` presentes, `[agents]` Luna defaults, próximo smoke (parent Terra Medio → spawn explore → Luna).
+
+## Modelos (Host remap)
+Parent: `gpt-5.6-terra` + medium. Children default: `gpt-5.6-luna`. Judgment (mav/ver/VLH/lab-single): terra+high. Ultra ≠ org chart.
+
+## Prohibiciones
+No secrets. No `curl | bash`. No pisar `~\.codex\config.toml` entero. No orquestar features — solo instalar.
+```
+
+**Frase corta Codex:**
+
+`Instalá orquestador-sx latest con Codex (-IncludeCodex) desde https://github.com/fronteraespacial/orquestador-sx/releases/latest`
 ```
 
 ---
